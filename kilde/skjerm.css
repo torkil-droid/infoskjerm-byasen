@@ -125,6 +125,18 @@
 .nside .badge b.txt{font-size:calc(3.2*var(--u))}
 .nside .badge span{font-size:calc(0.95*var(--u));letter-spacing:.06em;margin-top:calc(0.2*var(--u))}
 
+/* Oppslag i julefarger */
+.note.jul{background:#a3122c;color:#fff6e8;border-left:0}
+.note.jul .kicker{color:#f2c94c}
+.note.jul p{color:#f7e4e2}
+.note.jul .act{color:#f2c94c}
+.note>.main,.note>.nside{position:relative;z-index:1}
+.art-tre{position:absolute;top:0;bottom:0;right:calc(1*var(--u));width:calc(52*var(--u));pointer-events:none}
+.art-tre svg{display:block;width:100%;height:100%}
+.note.jul .nside{color:#fff3e3}
+.note.jul .nart circle{fill:#a3122c}
+.note.jul .badge{background:#f2c94c;color:#6e0a1c}
+
 /* Fast innhold med bilde */
 .fast.medbilde .photo.img{width:calc(27*var(--u));height:calc(21.6*var(--u))}
 .fast.medbilde .photo.img img{object-position:50% 20%}

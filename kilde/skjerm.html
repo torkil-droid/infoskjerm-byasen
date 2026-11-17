@@ -34,29 +34,29 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
 </script>
 <script>
 (function(){
-  var DUR=10000, stage=document.getElementById("stage"), box=document.getElementById("slides"), dots=document.getElementById("dots");
-  var i=0, timer=null, count=0;
-  stage.style.setProperty("--dur",DUR+"ms");
+  var stage=document.getElementById("stage"), box=document.getElementById("slides"), dots=document.getElementById("dots");
+  var i=0, timer=null, count=0, durs=[], runde=0;
   function show(k){
     if(!count) return;
-    i=(k+count)%count;
-    var s=box.children, d=dots.children;
+    i=k;
+    var s=box.children, d=dots.children, dur=(durs[i]||8)*1000;
+    stage.style.setProperty("--dur",dur+"ms");
     for(var j=0;j<count;j++){s[j].classList.toggle("on",j===i);d[j].className=j<i?"done":"";}
     void d[i].offsetWidth; d[i].className="now";
-    clearTimeout(timer); timer=setTimeout(function(){show(i+1);},DUR);
+    clearTimeout(timer);
+    timer=setTimeout(function(){ if(i+1>=count){runde++;render();} else show(i+1); },dur);
   }
-  function render(now){
-    var r=Skjerm.build(now);
-    count=r.slides.length;
+  // Tegnes på nytt ved starten av hver runde: utløpte plakater forsvinner, og den vekslende plassen går videre
+  function render(){
+    var now=new Date(), r=Skjerm.build(now,runde);
+    count=r.slides.length; durs=r.durs;
     box.innerHTML=count?r.slides.join(""):'<div class="empty">Ingen kommende arrangementer er lagt inn</div>';
     dots.innerHTML=new Array(count+1).join("<i></i>");
     document.getElementById("next").textContent=r.next;
     document.getElementById("today").textContent=Skjerm.dLong(now);
-    show(0);
+    if(count) show(0); else {clearTimeout(timer);timer=setTimeout(render,15*60*1000);}
   }
-  // Tegn på nytt hvert kvarter, så utløpte plakater forsvinner av seg selv
-  render(new Date());
-  setInterval(function(){render(new Date());},15*60*1000);
+  render();
 })();
 </script>
 </body>

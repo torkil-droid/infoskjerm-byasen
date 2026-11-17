@@ -15,7 +15,7 @@ window.Skjerm=(function(){
     {d:"2026-11-22",t:"11.00",title:"Gudstjeneste og KRIK 10+",note:"Avskjed for kapellan Sara Krog",place:"Byåsen kirke",cat:"gud"},
     {d:"2026-11-23",t:"17.00",title:"Familiekoret, første øvelse",place:"Ungdomssalen",cat:"barn"},
     {d:"2026-11-24",t:"10.30",title:"Babykonsert",note:"Avslutning på høstens babysang",place:"Ungdomssalen",cat:"barn"},
-    {d:"2026-11-24",t:"11.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote",id:"kafe-rad"},
+    {d:"2026-11-24",t:"11.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote"},
     {d:"2026-11-28",t:"11.00",tt:"11.00–13.00",title:"Legokafé",note:"Barnesangstund kl. 12.30",place:"Kirkerommet",cat:"barn",alsoMote:true},
     {d:"2026-11-29",t:"11.00",title:"Gudstjeneste for liten og stor",note:"1. søndag i advent",place:"Byåsen kirke",cat:"gud",alsoBarn:true,jul:true},
     {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert",
@@ -49,10 +49,7 @@ window.Skjerm=(function(){
       img:"bilder/trondheimsolistene.jpg",credit:"Trondheimsolistene"},
     {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",erstatter:"adventskonsert-rad",utkast:true,art:"jul",pynt:"bjeller",
       lead:"Gjester er Byåsen skoleorkester, Harmonien kor og Else Bø på piano. Kafé fra 18.15, og kaffe og kaker er med i billetten.",
-      hint:"Billett 150 kr. Barn under 16 år gratis. Loddsalg før konserten."},
-    {d:"2026-11-24",t:"11.30",tt:"11.30–13.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote",feat:true,id:"kafe",erstatter:"kafe-rad",utkast:true,
-      lead:"God mat og drikke, og du forsyner deg så mye du vil. Anbefalt kaffegave er 75 kr, som går til maten.",
-      img:"bilder/kafe.jpg",credit:"Foto: Byåsen kirke"}
+      hint:"Billett 150 kr. Barn under 16 år gratis. Loddsalg før konserten."}
   ];
   var CAT = {
     gud:{name:"Gudstjenester",sub:"Velkommen til gudstjeneste i Byåsen kirke",c:"var(--gud)"},
@@ -64,7 +61,7 @@ window.Skjerm=(function(){
   var NOTES=[
     {id:"julemiddag",from:"2026-11-01",until:"2026-11-27",title:"Meld deg på julemiddagen",
      text:"Menighetens julemiddag med underholdning, lørdag 5. desember kl. 14.00 i menighetssalen. 450 kr per person.",
-     act:"Påmeldingsfrist fredag 27. november",art:"middag"}
+     act:"Påmeldingsfrist fredag 27. november",art:"middag",tema:"jul"}
   ];
   // Fast innhold: uten dato. Én per runde, og bare når det er plass.
   var FAST=[
@@ -72,6 +69,9 @@ window.Skjerm=(function(){
      kicker:"Støttelaget",qr:"https://www.kirken.no",qrtxt:"Skann for å bli giver"},
     {id:"ramallah",title:"Vår vennskapsmenighet i Ramallah",text:"Byåsen menighet har vennskapsavtale med Church of Hope i Ramallah. Vi ber for hverandre og besøker hverandre.",
      kicker:"Church of Hope",photo:"Bilde fra Church of Hope legges inn her"},
+    {id:"kafe",utkast:true,neste:"Åpen kafé",title:"Åpen kafé",
+     text:"God mat og drikke, og du forsyner deg så mye du vil. Anbefalt kaffegave er 75 kr, som går til maten. Velkommen!",
+     img:"bilder/kafe.jpg",credit:"Foto: Byåsen kirke",qrtxt:""},
     {id:"samisk",utkast:true,until:"2027-01-31",kicker:"Samisk kirkeråd",title:"Samisk konfirmantleir 2027",
      text:"For samiske konfirmanter fra hele landet, 11.–14. februar på Laberget leirsted i Skogn. Gratis reise og opphold, og du kan være med uansett hvor du bor.",
      img:"bilder/samisk.jpg",credit:"Bilde: Samisk kirkeråd",qr:"https://event.checkin.no/227741/samisk-konfirmantleir-2027",qrtxt:"Meld deg på"}
@@ -215,6 +215,17 @@ window.Skjerm=(function(){
         '<circle cx="146" cy="53" r="2.6" fill="#16151a"/><path d="M152 64c3 2 6 2 8 0" fill="none" stroke="#16151a" stroke-width="2" stroke-linecap="round"/><circle cx="160" cy="57" r="1.6" fill="#16151a"/>'+
         '</svg>';
     },
+    // Juletre i relieff: samme farge som bakgrunnen, med lys kant oppe og skygge nede
+    tre:function(){
+      var cx=260, T=[[40,150,74],[104,246,114],[178,346,156],[262,452,200]], f="";
+      T.forEach(function(q){f+='M'+cx+' '+q[0]+'L'+(cx+q[2])+' '+q[1]+'Q'+cx+' '+(q[1]+30)+' '+(cx-q[2])+' '+q[1]+'Z';});
+      f+='M'+(cx-22)+' 452h44v40h-44z';
+      var kuler=[[228,206,10],[302,292,12],[206,384,13],[334,414,10],[272,128,8],[250,316,9]].map(function(k){return 'M'+(k[0]-k[2])+' '+k[1]+'a'+k[2]+' '+k[2]+' 0 1 0 '+(2*k[2])+' 0a'+k[2]+' '+k[2]+' 0 1 0 '+(-2*k[2])+' 0z';}).join("");
+      var lag=function(d){return '<path d="'+d+'" transform="translate(5 6)" fill="#7e0c21"/><path d="'+d+'" transform="translate(-3 -3)" fill="#bd3049"/><path d="'+d+'" fill="#9e1129"/>';};
+      var st=[],r;for(var i=0;i<10;i++){r=i%2?9:22;st.push((cx+r*Math.sin(i*Math.PI/5)).toFixed(1)+' '+(30-r*Math.cos(i*Math.PI/5)).toFixed(1));}
+      return '<div class="art-tre"><svg viewBox="0 0 520 492" preserveAspectRatio="xMidYMax meet" aria-hidden="true">'+lag(f)+lag(kuler)+
+        '<path d="M'+st.join("L")+'Z" fill="#f2c94c"/></svg></div>';
+    },
     // Varm middagstallerken i strek
     middag:function(){
       return '<svg viewBox="0 0 160 120" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">'+
@@ -252,7 +263,7 @@ window.Skjerm=(function(){
   function noteSlide(N,now){
     var left=dayDiff(ymd(N.until),now);
     var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div>';
-    return '<section class="slide note'+(N.art?' medart':'')+'"><div class="main"><div class="kicker">Påmelding</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
+    return '<section class="slide note'+(N.art?' medart':'')+(N.tema==="jul"?' jul':'')+'">'+(N.tema==="jul"?ART.tre():'')+'<div class="main"><div class="kicker">Påmelding</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
       '</p><p class="act">'+esc(N.act)+'</p></div>'+(N.art&&ART[N.art]?'<div class="nside"><div class="nart">'+ART[N.art]()+'</div>'+badge+'</div>':badge)+'</section>';
   }
   function newsSlide(){
@@ -261,24 +272,31 @@ window.Skjerm=(function(){
       '</div><h2>'+esc(NEWS.title)+'</h2><p>'+esc(NEWS.text)+'</p><div class="src">'+esc(NEWS.src)+'</div></div><div class="side">'+
       (qr(NEWS.url)||'<div class="ico">'+icon("globe")+'</div>')+'<div class="qrtxt">Les hele saken</div></div></section>';
   }
-  function fastSlide(fa){
+  function nesteGang(title,now){
+    return E.filter(function(e){return e.title===title&&!e.utkast&&dt(e,e.last).getTime()>now.getTime();})[0];
+  }
+  function fastSlide(fa,now){
+    var kicker=fa.kicker;
+    if(fa.neste){var n=nesteGang(fa.neste,now||new Date());if(!n) return "";kicker="Neste gang "+dLong(dt(n)).toLowerCase()+" kl. "+(n.tt||n.t)+" · "+n.place;}
     var ph=fa.img?'<div class="photo img"><img src="'+esc(fa.img)+'" alt=""><span class="cred">'+esc(fa.credit||"")+'</span></div>':'';
-    var side=(fa.photo&&!fa.img)?'<div class="photo">'+esc(fa.photo)+'</div>':
+    var side=(fa.img&&!fa.qr)?'':(fa.photo&&!fa.img)?'<div class="photo">'+esc(fa.photo)+'</div>':
       '<div class="side">'+(qr(fa.qr)||'<div class="ico">'+icon("heart")+'</div>')+'<div class="qrtxt">'+esc(fa.qrtxt)+'</div></div>';
-    return '<section class="slide fast'+(fa.img?' medbilde':'')+'">'+ph+'<div class="main"><div class="kicker">'+esc(fa.kicker)+'</div><h2>'+esc(fa.title)+'</h2><p>'+esc(fa.text)+
+    return '<section class="slide fast'+(fa.img?' medbilde':'')+'">'+ph+'<div class="main"><div class="kicker">'+esc(kicker)+'</div><h2>'+esc(fa.title)+'</h2><p>'+esc(fa.text)+
       '</p></div>'+side+'</section>';
   }
 
   // ---- Regler for runden. Justeres her. ----
-  // Runden skal være kort nok til at den som står og venter, ser det de gikk glipp av igjen innen et minutt.
+  // Runden skal være så kort at den som står og venter, ser det de gikk glipp av igjen innen omtrent ett minutt.
   var REGLER={
-    maks:6,                 // plakater i runden (10 sek hver, altså høyst ett minutt)
-    fremhevet:{antall:2, dager:14, konsertDager:21},   // egen plakat: de to nærmeste, fra 14 dager før (konserter 21)
+    faste:6,                // faste plasser i runden, valgt etter prioritet
+    vekslende:1,            // pluss én plass som går på omgang mellom resten, én ny for hver runde
+    sek:{liste:10, annet:8},// visningstid: samlesider trenger litt lenger tid å lese
+    fremhevet:{dager:14, konsertDager:21},   // egen plakat fra 14 dager før (konserter 21). De to nærmeste får fast plass.
     liste:{                 // samlesider: hvor mange linjer og hvor langt fram
       gud:{antall:4,dager:21}, barn:{antall:5,dager:28}, mote:{antall:5,dager:28}, kons:{antall:4,dager:42}
     },
-    // Når det er flere kandidater enn plass, beholdes de øverst i lista. Rekkefølgen på skjermen er en annen (se build).
-    prioritet:["gud","feat1","note","barn","mote","feat2","kons","fast"]
+    // Rekkefølgen plassene fordeles i. Gudstjenester er alltid med.
+    prioritet:["gud","feat1","note","barn","mote","feat2","kons"]
   };
 
   // ---- Samlesidene for en gitt dato ----
@@ -293,7 +311,9 @@ window.Skjerm=(function(){
       gName="Advent og jul"; gSub="Gudstjenester fram til 1. juledag"; gC="var(--advent)"; gExtra=candles(now);
     }
     if(!season||!gudItems.length){
-      gudItems=up.filter(function(e){return e.cat==="gud";}).filter(within("gud")).slice(0,R.gud.antall);
+      var allGud=up.filter(function(e){return e.cat==="gud";});
+      gudItems=allGud.filter(within("gud")).slice(0,R.gud.antall);
+      if(!gudItems.length) gudItems=allGud.slice(0,R.gud.antall);
       gName=CAT.gud.name; gSub=CAT.gud.sub; gC=CAT.gud.c; gExtra=mark("gud");
     }
     I.gud=gudItems;
@@ -309,29 +329,38 @@ window.Skjerm=(function(){
   }
 
   // ---- Hele runden på skjermen ----
-  function build(now){
+  // runde: tellende rundenummer fra skjermsiden. Bestemmer hvem som har den vekslende plassen.
+  function build(now,runde){
+    runde=runde||0;
     var L=lists(now,false), S=L.S, RF=REGLER.fremhevet;
-    // Fremhevet: de nærmeste, fra 14 dager før (konserter 21)
+    // Fremhevet: alle som er innenfor horisonten, nærmeste først
     var FE=E.filter(function(e){return e.feat&&!e.utkast&&dt(e,e.last).getTime()+2*3600e3>now.getTime()&&L.days(e)<=(e.cat==="kons"?RF.konsertDager:RF.dager);})
-            .sort(function(a,b){return dt(a)-dt(b);}).slice(0,RF.antall);
+            .sort(function(a,b){return dt(a)-dt(b);});
     var C={feat1:FE[0]?featSlide(FE[0],now):"", feat2:FE[1]?featSlide(FE[1],now):""};
-    // En samleside vises bare når den har noe som ikke allerede har egen plakat i runden
+    // Samlesider tas bare med når de har noe som ikke allerede har egen plakat. Gudstjenester er alltid med.
     ["gud","barn","mote","kons"].forEach(function(k){
       var rest=L.I[k].filter(function(e){return FE.indexOf(e)<0;});
-      C[k]=rest.length?S[k]:"";
+      C[k]=(k==="gud"||rest.length)?S[k]:"";
     });
-    // Oppslag med frist: ett om gangen
     var N=NOTES.filter(function(n){return !n.utkast&&now>=ymd(n.from)&&now<new Date(ymd(n.until).getTime()+86399e3);})[0];
     C.note=N?noteSlide(N,now):"";
-    // Fast innhold: ny misjonssak har plassen alene i 14 dager, deretter bytter de på fra dag til dag. Kommer bare med når det er plass.
+    // Fast innhold: en ny misjonssak er alene om plassen i 14 dager
     var fast=FAST.filter(function(f){return !f.utkast&&(!f.until||now<new Date(ymd(f.until).getTime()+864e5));});
-    var rot=[NEWS.utkast?null:newsSlide()].concat(fast.map(fastSlide)).filter(Boolean);
-    var fresh=!NEWS.utkast&&dayDiff(now,NEWS.published)<=14, turn=rot.length?((dayDiff(now,new Date(2026,10,12))%rot.length)+rot.length)%rot.length:0;
-    C.fast=fresh?newsSlide():rot[turn]||"";
-    // Velg etter prioritet, vis i fast rekkefølge
-    var keep=REGLER.prioritet.filter(function(k){return C[k];}).slice(0,REGLER.maks);
-    var order=["feat1","gud","note","barn","feat2","mote","kons","fast"].filter(function(k){return keep.indexOf(k)>=0;}).map(function(k){return C[k];});
-    return {slides:order,next:nextText(now)};
+    var fresh=!NEWS.utkast&&dayDiff(now,NEWS.published)<=14;
+    var fastPool=fresh?[newsSlide()]:[NEWS.utkast?"":newsSlide()].concat(fast.map(function(f){return fastSlide(f,now);})).filter(Boolean);
+    // Faste plasser etter prioritet
+    var faste=REGLER.prioritet.filter(function(k){return C[k];}).slice(0,REGLER.faste);
+    // Resten deler på den vekslende plassen: samlesider som ikke fikk plass, flere fremhevede, og fast innhold
+    var pool=REGLER.prioritet.filter(function(k){return C[k]&&faste.indexOf(k)<0;}).map(function(k){return C[k];})
+      .concat(FE.slice(2).map(function(e){return featSlide(e,now);})).concat(fastPool);
+    // Ledige plasser fylles fra resten. Er det flere igjen enn plass, går den siste plassen på omgang.
+    var ledig=REGLER.faste+REGLER.vekslende-faste.length, fyll=[], omgang=[];
+    if(pool.length<=ledig) fyll=pool;
+    else if(ledig>0){fyll=pool.slice(0,ledig-1);omgang=pool.slice(ledig-1);fyll.push(omgang[runde%omgang.length]);}
+    var show=["feat1","gud","note","barn","feat2","mote","kons"].filter(function(k){return faste.indexOf(k)>=0;});
+    var slides=show.map(function(k){return C[k];}).concat(fyll);
+    var durs=slides.map(function(h){return /class="slide"/.test(h)?REGLER.sek.liste:REGLER.sek.annet;});
+    return {slides:slides,durs:durs,omgang:omgang.length,next:nextText(now)};
   }
   function nextText(now){
     var n=E.filter(function(e){return !e.utkast&&dt(e,e.last).getTime()+2*3600e3>now.getTime();})[0];
@@ -344,7 +373,7 @@ window.Skjerm=(function(){
     var p=key.split(":"), e;
     if(p[0]==="feat"){e=E.filter(function(x){return x.id===p[1];})[0];return e?featSlide(e,now):"";}
     if(p[0]==="note"){e=NOTES.filter(function(x){return x.id===p[1];})[0];return e?noteSlide(e,now):"";}
-    if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e?fastSlide(e):"";}
+    if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e?fastSlide(e,now):"";}
     if(p[0]==="nytt") return newsSlide();
     if(p[0]==="liste") return lists(now,true).S[p[1]]||"";
     return "";

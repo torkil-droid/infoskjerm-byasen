@@ -15,8 +15,9 @@ Innholdet er hentet fra den offentlige kalenderen på kirken.no. Dette er en pro
 
 Står i `REGLER` øverst i rundekoden i `kilde/motor.js`:
 
-- Høyst seks plakater, ti sekunder hver (én runde er høyst ett minutt).
-- Egen plakat for de to nærmeste arrangementene, fra 14 dager før (konserter 21).
+- Seks faste plasser etter prioritet: gudstjenester (alltid med), nærmeste egne plakat, påmelding, barn, møteplasser, egen plakat nr. 2, konserter.
+- Én plass til som går på omgang mellom resten, med nytt innhold for hver runde. Er det ledig plass, får resten fast plass i stedet.
+- Samlesider vises 10 sekunder, andre plakater 8. En runde tar omtrent ett minutt.
+- Egen plakat fra 14 dager før (konserter 21).
 - Samlesider: gudstjenester 3 uker fram, barn og møteplasser 4 uker, konserter 6 uker. En samleside vises bare når den har noe som ikke allerede har egen plakat.
-- Ett påmeldingsoppslag om gangen.
-- Prioritet når det er for mange: gudstjenester, nærmeste egne plakat, påmelding, barn, møteplasser, egen plakat nr. 2, konserter, fast innhold.
+- Faste, gjentakende ting får fast innhold uten dato (`neste:` henter neste dato fra kalenderen).
