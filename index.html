@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Infoskjerm Byåsen kirke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: én 16:9-flate (skjermen) som skalerer med bredden; demokontroller under. */
+  color-scheme: dark;
+  --room:#17171b;        /* rommet rundt skjermen */
+  --room-ink:#e9e7e2;
+  --room-dim:#a09d96;
+  --paper:#ffffff;       /* skjermflaten */
+  --ink:#16151a;
+  --dim:#5d5b63;
+  --rule:#e4e2dd;
+  --gud:#c8102e;         /* gudstjenester: kirkens rødfarge */
+  --kons:#1b1470;        /* konsert og kultur */
+  --barn:#e9a100;        /* barn og familier */
+  --mote:#1f6f5b;        /* møteplasser */
+  --advent:#5b2a86;      /* kirkeårets farge i advent */
+  --display:"Source Serif 4", Georgia, serif;
+  --body:"Nunito Sans", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--room);color:var(--room-ink);font-family:var(--body)}
+body{padding:20px 16px 48px}
+.wrap{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+
+/* ---------- Skjermen ---------- */
+.stage{position:relative;width:100%;aspect-ratio:16/9;background:var(--paper);color:var(--ink);
+  container-type:inline-size;overflow:hidden;border-radius:6px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.slide{position:absolute;inset:0 0 7cqw 0;display:flex;opacity:0;transition:opacity .7s ease;pointer-events:none}
+.slide.on{opacity:1;pointer-events:auto}
+
+/* Samleside */
+.panel{flex:0 0 33%;position:relative;background:var(--c);color:var(--on,#fff);padding:4.2cqw 5cqw 4.2cqw 3.4cqw;display:flex;flex-direction:column;gap:1.2cqw;
+  clip-path:polygon(0 0,100% 0,90% 100%,0 100%)}
+.panel::before{content:"";position:absolute;right:-9cqw;top:-9cqw;width:24cqw;height:24cqw;border-radius:50%;background:rgba(255,255,255,.13)}
+.kicker{font-size:1.35cqw;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85;position:relative}
+.panel h2{font-family:var(--display);font-weight:700;font-size:4.6cqw;line-height:1.02;margin:0;text-wrap:balance;position:relative}
+.panel .sub{font-size:1.7cqw;line-height:1.3;margin:0;opacity:.92;max-width:13em}
+.panel .mark{position:absolute;left:2.6cqw;bottom:2.4cqw;width:13cqw;height:13cqw;opacity:.28}
+.mark svg,.ico svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.candles{margin-top:auto;width:15cqw}
+.candles svg{display:block;width:100%}
+.candles small{display:block;font-size:1.25cqw;font-weight:700;margin-top:.6cqw;opacity:.9}
+.panel .qr{margin-top:auto;display:flex;align-items:flex-end;gap:1.4cqw;position:relative}
+.qrbox{background:#fff;padding:.9cqw;border-radius:.6cqw;width:11cqw;height:11cqw;flex:none}
+.qrbox svg{display:block;width:100%;height:100%}
+.qrtxt{font-size:1.35cqw;line-height:1.3;font-weight:600}
+.rows{flex:1;list-style:none;margin:0;padding:2.4cqw 4cqw 2.4cqw 1.6cqw;display:flex;flex-direction:column;justify-content:center}
+.rows li{display:grid;grid-template-columns:6.4cqw 6.6cqw 1fr;column-gap:1.3cqw;align-items:center;padding:1.3cqw 0;border-bottom:.12cqw solid var(--rule)}
+.rows li:last-child{border-bottom:0}
+.num{font-family:var(--display);font-weight:700;font-size:4.5cqw;line-height:1;text-align:right;color:var(--c);font-variant-numeric:tabular-nums}
+.wd{font-size:1.4cqw;font-weight:800;letter-spacing:.08em;text-transform:uppercase;line-height:1.25}
+.wd span{display:block;color:var(--dim);font-weight:600}
+.what h3{font-family:var(--display);font-weight:600;font-size:2.4cqw;line-height:1.12;margin:0}
+.what p{font-size:1.6cqw;color:var(--dim);margin:.45cqw 0 0}
+.what p b{color:var(--c);font-weight:800;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-family:var(--body);font-size:1.1cqw;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--c);color:#fff;border-radius:10cqw;padding:.25cqw .9cqw;margin-left:.8cqw;vertical-align:.4cqw}
+.slide.on .rows li{animation:rise .6s both}
+.slide.on .rows li:nth-child(2){animation-delay:.08s}.slide.on .rows li:nth-child(3){animation-delay:.16s}
+.slide.on .rows li:nth-child(4){animation-delay:.24s}.slide.on .rows li:nth-child(5){animation-delay:.32s}
+@keyframes rise{from{opacity:0;transform:translateY(1.2cqw)}to{opacity:1;transform:none}}
+
+/* Fremhevet */
+.feat{color:var(--on,#fff);padding:4.4cqw 5cqw;gap:4cqw;align-items:stretch;
+  background:radial-gradient(circle at 86% 4%,rgba(255,255,255,.15) 0 19cqw,transparent 19.1cqw),
+             radial-gradient(circle at 104% 108%,rgba(0,0,0,.16) 0 30cqw,transparent 30.1cqw),var(--c)}
+.feat .main{flex:1;display:flex;flex-direction:column}
+.chip{display:inline-block;background:#fff;color:var(--ink);font-size:1.25cqw;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:10cqw;padding:.35cqw 1.1cqw;margin-left:1cqw;opacity:1}
+.feat h2{font-family:var(--display);font-weight:700;font-size:7.2cqw;line-height:.98;margin:2.4cqw 0 0;text-wrap:balance}
+.feat .lead{font-size:2.15cqw;line-height:1.35;max-width:28em;margin:1.8cqw 0 0}
+.feat .place{margin-top:auto;font-size:1.8cqw;font-weight:600}
+.feat .side{flex:0 0 18cqw;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;text-align:right}
+.big b{display:block;font-family:var(--display);font-weight:700;font-size:15cqw;line-height:.82;font-variant-numeric:tabular-nums}
+.big span{display:block;font-size:3cqw;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-top:.8cqw}
+.big em{display:block;font-style:normal;font-size:1.8cqw;font-weight:600;margin-top:.5cqw}
+.feat .side .qrbox{width:13cqw;height:13cqw;padding:1cqw}
+.feat .side .qrtxt{font-size:1.3cqw;margin-top:.5cqw}
+
+/* Oppslag: beskjed med frist */
+.note{background:#f4f1ea;padding:4.4cqw 5cqw;gap:4cqw;align-items:center;border-left:1.6cqw solid var(--gud)}
+.note .main{flex:1}
+.note .kicker{color:var(--gud);opacity:1}
+.note h2{font-family:var(--display);font-weight:700;font-size:5.6cqw;line-height:1.02;margin:1.4cqw 0 0;text-wrap:balance}
+.note p{font-size:2.2cqw;line-height:1.35;margin:1.6cqw 0 0;max-width:24em}
+.note .act{font-weight:800}
+.badge{flex:0 0 19cqw;height:19cqw;border-radius:50%;background:var(--gud);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.badge b{font-family:var(--display);font-size:8.5cqw;line-height:.9;font-variant-numeric:tabular-nums}
+.badge span{font-size:1.5cqw;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-top:.6cqw}
+
+/* Fast innhold: uten dato */
+.fast{background:var(--ink);color:#fff;padding:4.4cqw 5cqw;gap:4cqw;align-items:center}
+.fast .main{flex:1}
+.fast .kicker{color:#ffb3bd;opacity:1}
+.fast h2{font-family:var(--display);font-weight:700;font-size:5.8cqw;line-height:1.02;margin:1.4cqw 0 0;text-wrap:balance}
+.fast p{font-size:2.2cqw;line-height:1.38;margin:1.6cqw 0 0;max-width:24em;color:#e6e3dc}
+.fast .side{flex:0 0 17cqw;display:flex;flex-direction:column;align-items:center;gap:1cqw;text-align:center}
+.fast .side .qrbox{width:15cqw;height:15cqw;padding:1.1cqw}
+.fast .ico{width:15cqw;height:15cqw;color:#ffb3bd}
+.nytt h2{font-size:4.3cqw}.nytt p{font-size:2cqw}.nytt .src{font-size:1.35cqw;color:#a9a6b0;margin-top:1.8cqw;font-weight:600}
+.photo{flex:none;width:24cqw;height:30cqw;border-radius:.8cqw;border:.14cqw dashed #6d6a75;display:flex;align-items:center;justify-content:center;
+  font-size:1.3cqw;color:#a9a6b0;text-align:center;padding:2cqw;
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 1.2cqw,transparent 1.2cqw 2.4cqw)}
+
+/* Fast bunnlinje */
+.foot{position:absolute;left:0;right:0;bottom:0;height:7cqw;background:var(--ink);color:#fff;display:flex;align-items:center;
+  gap:2cqw;padding:0 3.4cqw;font-size:1.7cqw}
+.foot .lbl{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:1.2cqw;color:#ffb3bd;flex:none}
+.foot .next{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.foot .today{flex:none;opacity:.8}
+.dots{position:absolute;left:0;right:0;bottom:7cqw;height:.5cqw;display:flex;gap:.3cqw;background:var(--paper)}
+.dots i{flex:1;background:var(--rule);position:relative;overflow:hidden}
+.dots i.done{background:var(--ink)}
+.dots i.now::after{content:"";position:absolute;inset:0;background:var(--ink);transform-origin:left;animation:fill var(--dur) linear forwards}
+.paused .dots i.now::after{animation-play-state:paused}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.empty{position:absolute;inset:0 0 7cqw 0;display:flex;align-items:center;justify-content:center;font-size:2.4cqw;color:var(--dim)}
+
+/* ---------- Demokontroller ---------- */
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.bar .grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bar .cap{font-size:13px;color:var(--room-dim);margin-right:4px}
+button{font:600 14px var(--body);color:var(--room-ink);background:#26262c;border:1px solid #3a3a42;border-radius:6px;padding:8px 12px;cursor:pointer}
+button:hover{background:#30303a}
+button[aria-pressed="true"]{background:var(--room-ink);color:#17171b;border-color:var(--room-ink)}
+button:focus-visible{outline:2px solid #ffb3bd;outline-offset:2px}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:#1f1f24;border:1px solid #2e2e36;border-radius:8px;padding:16px 18px}
+.card h3{margin:0 0 8px;font:700 15px var(--body);letter-spacing:.02em}
+.card ul{margin:0;padding-left:18px;font-size:14px;line-height:1.5;color:#cfccc5}
+.card li+li{margin-top:6px}
+.card p{margin:0;font-size:14px;line-height:1.5;color:#cfccc5}
+.pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:20px;padding:2px 8px;margin-right:6px}
+.pill.q{background:#5a4300;color:#ffe08a}
+.pill.n{background:#103d31;color:#9fe3cc}
+.pill.x{background:#3b3b44;color:#d6d4cf}
+h1{font:700 20px var(--display);margin:0}
+.intro{font-size:14px;color:var(--room-dim);margin:4px 0 0;max-width:70ch;line-height:1.5}
+/* Skjermversjon: bare plakatflaten, fyller hele skjermen */
+body.kiosk{padding:0;overflow:hidden;background:#000}
+body.kiosk header,body.kiosk .bar,body.kiosk .notes{display:none}
+body.kiosk .wrap{max-width:none;gap:0;height:100vh;align-items:center;justify-content:center}
+body.kiosk .stage{width:min(100vw,177.78vh);border-radius:0;box-shadow:none}
+@media (prefers-reduced-motion:reduce){.slide{transition:none}.slide.on .rows li{animation:none}}
+</style>
+</head>
+<body class="kiosk">
+<div class="wrap">
+  <header>
+    <h1>Infoskjerm i våpenhuset, demo</h1>
+    <p class="intro">Flaten under er det skjermen ville vist. Innholdet er hentet fra menighetens kalender på kirken.no 12. november 2026. Bytt demodato for å se at plakater forsvinner og bytter tema av seg selv.</p>
+  </header>
+
+  <div class="stage" id="stage" aria-live="off">
+    <div id="slides"></div>
+    <div class="dots" id="dots"></div>
+    <div class="foot">
+      <span class="lbl">Neste i kirka</span>
+      <span class="next" id="next"></span>
+      <span class="today" id="today"></span>
+    </div>
+  </div>
+
+  <div class="bar">
+    <div class="grp" id="dates"><span class="cap">Demodato</span></div>
+    <div class="grp">
+      <button id="prev" type="button">Forrige</button>
+      <button id="pause" type="button" aria-pressed="false">Pause</button>
+      <button id="nxt" type="button">Neste</button>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="card">
+      <h3>Agentens ukesforslag, uke 47</h3>
+      <ul>
+        <li><span class="pill n">Nytt</span>Julemessa 21. november fremheves på egen plakat.</li>
+        <li><span class="pill n">Nytt</span>Julekonserten 4. desember fremheves fra 13. november, med QR til billetter.</li>
+        <li><span class="pill n">Nytt</span>Oppslag om påmelding til julemiddagen, med nedtelling til fristen 27. november.</li>
+        <li><span class="pill x">Ute</span>Graceland Band 11. november er fjernet automatisk.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Trenger svar før publisering</h3>
+      <ul>
+        <li><span class="pill q">Sted</span>Adventssamling 6. desember: tittelen sier Selsbakk menighetshus, stedsfeltet sier Byåsen kirke. Holdt utenfor skjermen til det er avklart.</li>
+        <li><span class="pill q">Skjult</span>Skolegudstjenesten 16. desember vises ikke, siden den ikke er åpen for alle. Riktig?</li>
+        <li><span class="pill q">Lenke</span>Billettlenkene til konsertene mangler. QR-kodene peker til hoopla.no i demoen.</li>
+        <li><span class="pill q">Tekst</span>Julemiddagen: hvordan melder man seg på? Jeg har bare tatt med pris og frist.</li>
+        <li><span class="pill q">Bilde</span>Misjonsnytt: er det greit for NMS at toppbildet vises på skjermen? Siste sak handler om Myanmar, ikke Thailand.</li>
+        <li><span class="pill q">Lenke</span>Støttelaget: QR-koden peker til kirken.no i demoen. Bildet fra Ramallah mangler.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Regler som styrer demoen</h3>
+      <ul>
+        <li>Et arrangement forsvinner to timer etter start.</li>
+        <li>Fremhevet: fra tre uker før, maks to om gangen.</li>
+        <li>Samlesider viser de fem nærmeste. Tom side vises ikke.</li>
+        <li>Oppslag vises til fristen er ute.</li>
+        <li>Fast innhold (misjonsnytt, støttelaget, vennskapsmenigheten) bytter fra dag til dag, og viker når runden har mer enn sju plakater.</li>
+        <li>En ny sak fra NMS får plassen alene i 14 dager.</li>
+        <li>Fra 23. november til 2. juledag blir gudstjenestesiden til «Advent og jul».</li>
+        <li>Lange kalendertitler er kortet ned for skjermen.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+(function(){
+  // ---- Arrangementslista: den eneste kilden. Sidene er visninger av denne. ----
+  // cat: gud | kons | barn | mote.  feat: egen plakat.  jul: med på sesongsiden.
+  var E = [
+    {d:"2026-11-15",t:"11.00",title:"Gudstjeneste med søndagsskole",place:"Byåsen kirke",cat:"gud"},
+    {d:"2026-11-17",t:"10.30",title:"Babymassasje og babysang",note:"Babymassasje 10.30, babysang 11.00",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-11-17",t:"11.30",title:"Menighetens hyggestund",note:"Ønskesnutter fra YouTube. Siste før jul",place:"Menighetssalen",cat:"mote"},
+    {d:"2026-11-21",t:"11.00",title:"Julemesse",place:"Byåsen kirke",cat:"mote",feat:true,
+      lead:"Hjemmelagde varer, julebakst, gaver og loddsalg. Barnekorene synger, og det serveres grøt fra 12.30."},
+    {d:"2026-11-22",t:"11.00",title:"Gudstjeneste og KRIK 10+",note:"Avskjed for kapellan Sara Krog",place:"Byåsen kirke",cat:"gud"},
+    {d:"2026-11-23",t:"17.00",title:"Familiekoret, første øvelse",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-11-24",t:"10.30",title:"Babykonsert",note:"Avslutning på høstens babysang",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-11-24",t:"11.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote"},
+    {d:"2026-11-28",t:"11.00",tt:"11.00–13.00",title:"Legokafé",note:"Barnesangstund kl. 12.30",place:"Kirkerommet",cat:"barn",alsoMote:true},
+    {d:"2026-11-29",t:"11.00",title:"Gudstjeneste for liten og stor",note:"1. søndag i advent",place:"Byåsen kirke",cat:"gud",alsoBarn:true,jul:true},
+    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,
+      lead:"Trondheimsolistene og Stine Bogsveen. Billetter på Hoopla.",qr:"https://www.hoopla.no"},
+    {d:"2026-12-05",t:"14.00",title:"Menighetens julemiddag",note:"Med underholdning",place:"Menighetssalen",cat:"mote"},
+    {d:"2026-12-06",t:"15.00",title:"Adventsgudstjeneste ute på Lian",note:"Julemagi Lian gård",place:"Lianvannet, ved gressletta",cat:"gud",feat:true,jul:true,
+      lead:"Utendørs gudstjeneste under Julemagi på Lian gård. Kle deg etter været."},
+    {d:"2026-12-06",t:"19.00",title:"Kveldsgudstjeneste",place:"Byåsen kirke",cat:"gud",jul:true},
+    {d:"2026-12-07",t:"17.00",title:"Familiekoret, øvelse",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons"},
+    {d:"2026-12-12",t:"13.00",title:"Lørdagsskolen 40 år, jubileumskonsert",place:"Byåsen kirke",cat:"kons"},
+    {d:"2026-12-13",t:"11.00",title:"Vi synger julen inn",note:"Gudstjeneste",place:"Byåsen kirke",cat:"gud",jul:true},
+    {d:"2026-12-24",t:"13.00",tt:"13.00 · 14.30 · 16.00",last:"16.00",title:"Julaftensgudstjenester",note:"Byåsen skolemusikkorps spiller kl. 13.00",place:"Byåsen kirke",cat:"gud",jul:true},
+    {d:"2026-12-25",t:"13.00",title:"Høytidsgudstjeneste",note:"1. juledag",place:"Byåsen kirke",cat:"gud",jul:true},
+    {d:"2027-01-10",t:"11.00",title:"Juletrefest for liten og stor",note:"Gudstjeneste",place:"Byåsen kirke",cat:"gud",alsoBarn:true},
+    {d:"2027-01-12",t:"11.30",title:"Åpen kafé",note:"Oppstart etter nyttår",place:"Ungdomssalen",cat:"mote"},
+    {d:"2027-01-17",t:"11.00",title:"Gudstjeneste",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-01-19",t:"11.30",title:"Hyggestund: nyttårsfest",note:"Trekkspillmusikk ved Dagfinn Gården",place:"Menighetssalen",cat:"mote"},
+    {d:"2027-01-24",t:"11.00",title:"Gudstjeneste",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-01-31",t:"11.00",title:"Gudstjeneste med søndagsskole",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-02-02",t:"11.30",title:"Hyggestund: «Fra gata til Nordkapp»",note:"Dokumentar på storskjerm",place:"Menighetssalen",cat:"mote"}
+  ];
+  var CAT = {
+    gud:{name:"Gudstjenester",sub:"Velkommen til gudstjeneste i Byåsen kirke",c:"var(--gud)"},
+    kons:{name:"Konserter",sub:"Musikk i kirka de neste ukene",c:"var(--kons)"},
+    barn:{name:"For barn og familier",sub:"Sang, kor og gudstjenester for de minste",c:"var(--barn)",on:"#16151a"},
+    mote:{name:"Møteplasser",sub:"Kaffe, prat og fellesskap. Alle er velkomne",c:"var(--mote)"}
+  };
+  var DAYS=["Søn","Man","Tir","Ons","Tor","Fre","Lør"], DAYL=["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"];
+  var MON=["jan","feb","mars","april","mai","juni","juli","aug","sep","okt","nov","des"];
+  var MONL=["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
+  var DUR=10000;
+
+  function dt(e,time){var p=e.d.split("-"),h=(time||e.t).split(".");return new Date(+p[0],+p[1]-1,+p[2],+h[0],+h[1]);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function dShort(x){return DAYS[x.getDay()]+" "+x.getDate()+". "+MON[x.getMonth()];}
+  function dLong(x){return DAYL[x.getDay()]+" "+x.getDate()+". "+MONL[x.getMonth()];}
+  function qr(url){
+    if(typeof qrcode!=="function") return "";
+    try{var q=qrcode(0,"M");q.addData(url);q.make();return '<div class="qrbox">'+q.createSvgTag({cellSize:4,margin:0,scalable:true})+'</div>';}catch(err){return "";}
+  }
+
+  var ICON={
+    gud:'<path d="M24 6v36M13 17h22"/>',
+    kons:'<path d="M18 34V12l18-4v22"/><circle cx="14" cy="34" r="4"/><circle cx="32" cy="30" r="4"/>',
+    barn:'<ellipse cx="24" cy="18" rx="10" ry="12"/><path d="M24 30l-2 3h4zM24 33c0 5-5 5-5 10"/>',
+    mote:'<path d="M10 18h22v10a11 11 0 0 1-22 0zM32 20h4a5 5 0 0 1 0 10h-4M14 8c0 3 3 3 3 6M22 8c0 3 3 3 3 6M8 42h26"/>',
+    heart:'<path d="M24 40S8 30 8 18a8 8 0 0 1 16-3 8 8 0 0 1 16 3c0 12-16 22-16 22z"/>',
+    globe:'<circle cx="24" cy="24" r="17"/><ellipse cx="24" cy="24" rx="7" ry="17"/><path d="M7 24h34"/>'
+  };
+  function icon(k){return '<svg viewBox="0 0 48 48" aria-hidden="true">'+ICON[k]+'</svg>';}
+  // Oppslag: beskjeder med frist. Forsvinner når fristen er ute.
+  var NOTES=[
+    {from:"2026-11-01",until:"2026-11-27",title:"Meld deg på julemiddagen",
+     text:"Menighetens julemiddag med underholdning, lørdag 5. desember kl. 14.00 i menighetssalen. 450 kr per person.",
+     act:"Påmeldingsfrist fredag 27. november"}
+  ];
+  // Fast innhold: uten dato. Én per runde, og bare når det er plass.
+  var FAST=[
+    {title:"Bli fast giver",text:"Arbeidet i menigheten er avhengig av gaver. Faste givere gir oss stabile og forutsigbare rammer.",
+     kicker:"Støttelaget",qr:"https://www.kirken.no",qrtxt:"Skann for å bli giver"},
+    {title:"Vår vennskapsmenighet i Ramallah",text:"Byåsen menighet har vennskapsavtale med Church of Hope i Ramallah. Vi ber for hverandre og besøker hverandre.",
+     kicker:"Church of Hope",photo:"Bilde fra Church of Hope legges inn her"}
+  ];
+  // Siste nyhetssak fra misjonsprosjektet. Byttes når NMS publiserer en ny.
+  var NEWS={published:new Date(2026,9,5),kicker:"Misjonsprosjektet vårt · NMS i Asia",
+    title:"Tretti deltakere kartla talentene sine i Yangon",
+    text:"NMS holdt et tredagers kurs for fire lutherske kirker i Myanmar. Boka «Use Your Talents Asia» ble lansert på burmesisk, og kirkene fikk 500 eksemplarer.",
+    src:"nms.no · 5. oktober 2026",url:"https://nms.no/nyhet/entusiasme-for-use-your-talents-i-myanmar",
+    photo:"Toppbildet fra nyhetssaken hentes inn her. Foto: Marieke Rode-Christoffersen"};
+  var ADVENT=[new Date(2026,10,29),new Date(2026,11,6),new Date(2026,11,13),new Date(2026,11,20)];
+  function candles(now){
+    var lit=ADVENT.filter(function(d){return d<=now;}).length,h="";
+    for(var k=0;k<4;k++){
+      var x=6+k*22;
+      h+='<rect x="'+x+'" y="24" width="10" height="36" rx="1.5" fill="#fff" opacity="'+(k<lit?1:.45)+'"/><path d="M'+(x+5)+' 24v-4" stroke="#fff" stroke-width="1"/>';
+      if(k<lit) h+='<ellipse cx="'+(x+5)+'" cy="13" rx="3.6" ry="6.5" fill="#ffd35a"/>';
+    }
+    var txt=lit?lit+". søndag i advent":"Advent begynner 29. november";
+    return '<div class="candles"><svg viewBox="0 0 88 62" aria-hidden="true">'+h+'</svg><small>'+txt+'</small></div>';
+  }
+  function mid(x){return new Date(x.getFullYear(),x.getMonth(),x.getDate());}
+  function dayDiff(x,now){return Math.round((mid(x)-mid(now))/864e5);}
+  function rel(x,now){var n=dayDiff(x,now);return n<=0?"I dag":n===1?"I morgen":"Om "+n+" dager";}
+
+  function build(now){
+    var up=E.filter(function(e){return dt(e,e.last).getTime()+2*3600e3>now.getTime();});
+    var days=function(e){return (dt(e)-now)/864e5;};
+    var season=now>=new Date(2026,10,23)&&now<new Date(2026,11,27);
+    var S={};
+
+    function row(e){
+      var x=dt(e),n=dayDiff(x,now),tag=n<=0?'<span class="tag">I dag</span>':n===1?'<span class="tag">I morgen</span>':'';
+      return '<li><span class="num">'+x.getDate()+'</span><span class="wd">'+DAYS[x.getDay()]+'<span>'+MON[x.getMonth()]+'</span></span><div class="what"><h3>'+
+        esc(e.title)+tag+'</h3><p><b>kl. '+esc(e.tt||e.t)+'</b> · '+esc((e.note?e.note+" · ":"")+e.place)+'</p></div></li>';
+    }
+    function list(key,name,sub,c,on,items,extra){
+      if(!items.length) return;
+      S[key]='<section class="slide" style="--c:'+c+(on?';--on:'+on:'')+'"><aside class="panel"><div class="kicker">Byåsen kirke</div><h2>'+
+        esc(name)+'</h2><p class="sub">'+esc(sub)+'</p>'+(extra||'')+'</aside><ol class="rows" style="--c:'+(on?'var(--ink)':c)+'">'+
+        items.map(row).join("")+'</ol></section>';
+    }
+    function feat(e){
+      var k=CAT[e.cat],x=dt(e),code=e.qr?qr(e.qr):"";
+      return '<section class="slide feat" style="--c:'+k.c+(k.on?';--on:'+k.on:'')+'"><div class="main"><div class="kicker">'+
+        esc(e.cat==="gud"?"Gudstjeneste":e.cat==="kons"?"Konsert":"Byåsen kirke")+'<span class="chip">'+rel(x,now)+'</span></div><h2>'+
+        esc(e.title)+'</h2><p class="lead">'+esc(e.lead||e.note||"")+'</p><div class="place">'+esc(e.place)+'</div></div><div class="side"><div class="big"><b>'+
+        x.getDate()+'</b><span>'+MON[x.getMonth()]+'</span><em>'+DAYL[x.getDay()]+' kl. '+esc(e.t)+'</em></div>'+
+        (code?'<div>'+code+'<div class="qrtxt">Skann for billetter</div></div>':'')+'</div></section>';
+    }
+    function mark(k){return '<div class="mark">'+icon(k)+'</div>';}
+
+    var F=up.filter(function(e){return e.feat&&days(e)<=21;}).slice(0,2).map(feat);
+
+    var gudItems, gName, gSub, gC, gExtra;
+    if(season){
+      gudItems=up.filter(function(e){return e.cat==="gud"&&e.jul;}).slice(0,5);
+      gName="Advent og jul"; gSub="Gudstjenester fram til 1. juledag"; gC="var(--advent)"; gExtra=candles(now);
+    }
+    if(!season||!gudItems.length){
+      gudItems=up.filter(function(e){return e.cat==="gud";}).slice(0,4);
+      gName=CAT.gud.name; gSub=CAT.gud.sub; gC=CAT.gud.c; gExtra=mark("gud");
+    }
+    var kons=up.filter(function(e){return e.cat==="kons"&&days(e)<=56;}).slice(0,4);
+    var barn=up.filter(function(e){return e.cat==="barn"||e.alsoBarn;}).slice(0,5);
+    var mote=up.filter(function(e){return e.cat==="mote"||e.alsoMote;}).slice(0,5);
+    var kqr=kons.length?qr("https://www.hoopla.no"):"";
+
+    list("gud",gName,gSub,gC,null,gudItems,gExtra);
+    list("barn",CAT.barn.name,CAT.barn.sub,CAT.barn.c,CAT.barn.on,barn,mark("barn"));
+    list("kons",CAT.kons.name,CAT.kons.sub,CAT.kons.c,null,kons,kqr?'<div class="qr">'+kqr+'<div class="qrtxt">Billetter og<br>mer informasjon</div></div>':mark("kons"));
+    list("mote",CAT.mote.name,CAT.mote.sub,CAT.mote.c,null,mote,mark("mote"));
+
+    var N=NOTES.filter(function(n){var a=n.from.split("-"),b=n.until.split("-");
+      return now>=new Date(+a[0],+a[1]-1,+a[2])&&now<new Date(+b[0],+b[1]-1,+b[2],23,59);})[0];
+    if(N){
+      var u=N.until.split("-"),left=dayDiff(new Date(+u[0],+u[1]-1,+u[2]),now);
+      S.note='<section class="slide note"><div class="main"><div class="kicker">Påmelding</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
+        '</p><p class="act">'+esc(N.act)+'</p></div><div class="badge"><b>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div></section>';
+    }
+    // Fast plass: ny misjonssak har plassen alene i 14 dager, deretter bytter de tre på fra dag til dag.
+    var fresh=dayDiff(now,NEWS.published)<=14, turn=((dayDiff(now,new Date(2026,10,12))%3)+3)%3;
+    if(fresh||turn===0){
+      S.fast='<section class="slide fast nytt"><div class="photo">'+esc(NEWS.photo)+'</div><div class="main"><div class="kicker">'+esc(NEWS.kicker)+
+        '</div><h2>'+esc(NEWS.title)+'</h2><p>'+esc(NEWS.text)+'</p><div class="src">'+esc(NEWS.src)+'</div></div><div class="side">'+
+        (qr(NEWS.url)||'<div class="ico">'+icon("globe")+'</div>')+'<div class="qrtxt">Les hele saken</div></div></section>';
+    } else {
+      var fa=FAST[turn-1];
+      S.fast='<section class="slide fast"><div class="main"><div class="kicker">'+esc(fa.kicker)+'</div><h2>'+esc(fa.title)+'</h2><p>'+esc(fa.text)+
+        '</p></div>'+(fa.photo?'<div class="photo">'+esc(fa.photo)+'</div>':'<div class="side">'+(qr(fa.qr)||'<div class="ico">'+icon("heart")+'</div>')+
+        '<div class="qrtxt">'+esc(fa.qrtxt)+'</div></div>')+'</section>';
+    }
+
+    // Rekkefølge i runden. Blir det flere enn sju, viker fast innhold først.
+    var order=[F[0],S.gud,S.note,S.barn,F[1],S.kons,S.mote,S.fast].filter(Boolean);
+    if(order.length>7) order=order.filter(function(x){return x!==S.fast;});
+    var n=up[0];
+    return {slides:order,next:n?dShort(dt(n)).toLowerCase()+" kl. "+n.t+"  "+n.title:"Se kirken.no for program"};
+  }
+
+  // ---- Avspilling ----
+  var stage=document.getElementById("stage"),box=document.getElementById("slides"),dots=document.getElementById("dots");
+  var i=0,timer=null,paused=false,count=0;
+  stage.style.setProperty("--dur",DUR+"ms");
+  function show(k){
+    if(!count) return;
+    i=(k+count)%count;
+    var s=box.children,d=dots.children;
+    for(var j=0;j<count;j++){s[j].classList.toggle("on",j===i);d[j].className=j<i?"done":"";}
+    void d[i].offsetWidth; d[i].className="now";
+    clearTimeout(timer); if(!paused) timer=setTimeout(function(){show(i+1);},DUR);
+  }
+  function render(now){
+    var r=build(now);
+    count=r.slides.length;
+    box.innerHTML=count?r.slides.join(""):'<div class="empty">Ingen kommende arrangementer er lagt inn</div>';
+    dots.innerHTML=new Array(count+1).join("<i></i>");
+    document.getElementById("next").textContent=r.next;
+    document.getElementById("today").textContent=dLong(now);
+    show(0);
+  }
+
+  var DATES=[["12. nov",new Date(2026,10,12,9)],["22. nov",new Date(2026,10,22,16)],["1. des",new Date(2026,11,1,9)],["14. des",new Date(2026,11,14,9)],["27. des",new Date(2026,11,27,9)]];
+  var grp=document.getElementById("dates");
+  DATES.forEach(function(p,k){
+    var b=document.createElement("button");b.type="button";b.textContent=p[0];b.setAttribute("aria-pressed",k===0?"true":"false");
+    b.addEventListener("click",function(){
+      [].forEach.call(grp.querySelectorAll("button"),function(x){x.setAttribute("aria-pressed","false");});
+      b.setAttribute("aria-pressed","true");render(p[1]);
+    });
+    grp.appendChild(b);
+  });
+  document.getElementById("prev").addEventListener("click",function(){show(i-1);});
+  document.getElementById("nxt").addEventListener("click",function(){show(i+1);});
+  var pb=document.getElementById("pause");
+  pb.addEventListener("click",function(){
+    paused=!paused;pb.setAttribute("aria-pressed",paused?"true":"false");pb.textContent=paused?"Spill av":"Pause";
+    stage.classList.toggle("paused",paused);
+    if(paused) clearTimeout(timer); else show(i);
+  });
+  document.addEventListener("keydown",function(e){if(e.key==="ArrowRight")show(i+1);if(e.key==="ArrowLeft")show(i-1);});
+  // Skjermversjon: bruk ekte dato, tegn på nytt hvert kvarter så utløpte plakater forsvinner
+  render(new Date());
+  setInterval(function(){render(new Date());},15*60*1000);
+})();
+</script>
+</body>
+</html>
