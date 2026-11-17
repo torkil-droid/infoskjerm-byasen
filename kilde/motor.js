@@ -61,7 +61,7 @@ window.Skjerm=(function(){
   var NOTES=[
     {id:"julemiddag",from:"2026-11-01",until:"2026-11-27",title:"Meld deg på julemiddagen",
      text:"Menighetens julemiddag med underholdning, lørdag 5. desember kl. 14.00 i menighetssalen. 450 kr per person.",
-     act:"Påmeldingsfrist fredag 27. november",art:"middag",tema:"jul"}
+     act:"Påmeldingsfrist fredag 27. november",art:"middag",relieff:"tre"}
   ];
   // Fast innhold: uten dato. Én per runde, og bare når det er plass.
   var FAST=[
@@ -140,34 +140,25 @@ window.Skjerm=(function(){
           }
         }
         cx=k*250+125;
-        bb+='<path d="M'+cx+' 38v13" stroke="#f2e6c9" stroke-width="1.6"/><rect x="'+(cx-3.5)+'" y="49" width="7" height="5" rx="1" fill="#e9b949"/>'+
-            '<circle cx="'+cx+'" cy="65" r="12" fill="'+(k%2?'#e9b949':'#d6223c')+'"/><ellipse cx="'+(cx-4.5)+'" cy="60" rx="3.2" ry="5" fill="#fff" opacity=".5"/>';
-        [55,95,190].forEach(function(bx){var u=bx/250,by=4+34*4*u*(1-u);bx+=k*250;
-          bb+='<circle cx="'+bx+'" cy="'+(by+3).toFixed(1)+'" r="4" fill="#d6223c"/><circle cx="'+(bx+6)+'" cy="'+(by+6).toFixed(1)+'" r="3.6" fill="#d6223c"/>';});
+        bb+='<path d="M'+cx+' 38v13" stroke="rgba(255,255,255,.22)" stroke-width="1.6"/><circle cx="'+cx+'" cy="64" r="11" fill="rgba(0,0,0,.16)" transform="translate(2 2)"/>'+
+            '<circle cx="'+cx+'" cy="64" r="11" fill="rgba(255,255,255,.16)"/>';
       }
-      var st=[[790,385,7],[955,300,5],[700,468,5],[560,472,4],[640,140,4]].map(function(q){return '<path d="'+star(q[0],q[1],q[2])+'"/>';}).join("");
       return '<div class="art-top"><svg viewBox="0 0 1000 90" preserveAspectRatio="xMidYMin meet" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-width="3.2">'+
-             '<path stroke="#0b3527" d="'+P[0]+'"/><path stroke="#1d6b4f" d="'+P[1]+'"/><path stroke="#46a37c" d="'+P[2]+'"/></g>'+bb+'</svg></div>'+
-             '<div class="art-fill"><svg viewBox="0 0 1000 492" preserveAspectRatio="none" aria-hidden="true"><g fill="#f2c94c" opacity=".85">'+st+'</g></svg></div>';
+             '<path stroke="rgba(0,0,0,.24)" d="'+P[0]+'"/><path stroke="rgba(0,0,0,.12)" d="'+P[1]+'"/><path stroke="rgba(255,255,255,.14)" d="'+P[2]+'"/></g>'+bb+'</svg></div>';
     },
     // Gaver og pepperkakehjerte, til julemessa
     gaver:function(){
-      var h='M150 110C120 90 106 74 106 58a22 22 0 0 1 44-6a22 22 0 0 1 44 6c0 16-14 32-44 52z';
-      return '<svg viewBox="0 0 200 170" aria-hidden="true"><g transform="rotate(-12 150 78)"><path d="'+h+'" fill="#b8692e"/>'+
-        '<path d="'+h+'" transform="translate(150 78) scale(.8) translate(-150 -78)" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray=".5 6" stroke-linecap="round"/></g>'+
-        '<rect x="18" y="80" width="96" height="84" rx="3" fill="#d6223c"/><rect x="12" y="68" width="108" height="18" rx="3" fill="#b5162f"/><rect x="58" y="68" width="16" height="96" fill="#e9b949"/>'+
-        '<path d="M66 68c-18-24-40-12-28-2s28 2 28 2zm0 0c18-24 40-12 28-2s-28 2-28 2z" fill="#e9b949"/>'+
-        '<rect x="104" y="114" width="74" height="50" rx="3" fill="#e9b949"/><rect x="100" y="106" width="82" height="13" rx="3" fill="#d4a12f"/><rect x="134" y="106" width="12" height="58" fill="#d6223c"/>'+
-        '<path d="M140 106c-12-16-28-8-20-1s20 1 20 1zm0 0c12-16 28-8 20-1s-20 1-20 1z" fill="#d6223c"/></svg>';
+      var h='M150 108C122 90 108 75 108 60a21 21 0 0 1 42-6a21 21 0 0 1 42 6c0 15-14 30-42 48z';
+      return '<svg viewBox="0 0 200 170" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">'+
+        '<g transform="rotate(-12 150 78)"><path d="'+h+'"/><path d="'+h+'" transform="translate(150 78) scale(.78) translate(-150 -78)" stroke-dasharray=".5 7"/></g>'+
+        '<path d="M20 86h92v76H20zM14 70h104v16H14zM66 70v92M66 70c-16-22-36-12-26-2s26 2 26 2zm0 0c16-22 36-12 26-2s-26 2-26 2z"/>'+
+        '<path d="M106 118h70v44h-70zM102 106h78v12h-78zM141 106v56M141 106c-11-15-26-8-18-1s18 1 18 1zm0 0c11-15 26-8 18-1s-18 1-18 1z"/></svg>';
     },
-    // Julebjeller med sløyfe, til julekonsertene
     bjeller:function(){
-      var bell='<path d="M0 0c-15 0-23 13-23 31v17l-9 11h64l-9-11V31C23 13 15 0 0 0z" fill="#e9b949"/><path d="M-12 12c-4 6-5 14-5 22v14" stroke="#f8dc8a" stroke-width="4" fill="none" stroke-linecap="round"/><circle cy="64" r="7" fill="#c98f1c"/>';
-      return '<svg viewBox="0 0 200 170" aria-hidden="true">'+
-        '<g stroke="#d6223c" stroke-width="3" stroke-linecap="round"><path d="M100 52L66 74M100 52l34 22"/></g>'+
-        '<g transform="translate(64 74) rotate(-20)">'+bell+'</g><g transform="translate(136 74) rotate(20)">'+bell+'</g>'+
-        '<g fill="#2f8a68"><path d="M100 44c-12-12-28-14-40-8 8 3 9 9 17 10 7 1 13-1 23-2z"/><path d="M100 44c12-12 28-14 40-8-8 3-9 9-17 10-7 1-13-1-23-2z"/></g>'+
-        '<path d="M100 46c-10-16-30-18-30-6s20 8 30 6zm0 0c10-16 30-18 30-6s-20 8-30 6z" fill="#d6223c"/><circle cx="100" cy="46" r="6" fill="#b5162f"/></svg>';
+      var bell='<path d="M0 0c-15 0-23 13-23 31v17l-9 11h64l-9-11V31C23 13 15 0 0 0z"/><circle cy="66" r="6"/>';
+      return '<svg viewBox="0 0 200 170" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">'+
+        '<path d="M100 50L66 74M100 50l34 24"/><g transform="translate(64 74) rotate(-20)">'+bell+'</g><g transform="translate(136 74) rotate(20)">'+bell+'</g>'+
+        '<path d="M100 46c-10-16-30-18-30-6s20 8 30 6zm0 0c10-16 30-18 30-6s-20 8-30 6z"/></svg>';
     },
     // Granskog i silhuett langs bunnen, til gudstjenesten ute på Lian
     skog:function(){
@@ -180,39 +171,21 @@ window.Skjerm=(function(){
       var sn="";for(var i=0;i<26;i++) sn+='<circle cx="'+(r()*1000).toFixed(0)+'" cy="'+(r()*95).toFixed(0)+'" r="'+(1.5+r()*2.5).toFixed(1)+'"/>';
       return '<div class="art-bot"><svg viewBox="0 0 1000 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><g fill="#fff" opacity=".13">'+h+'</g><g fill="#fff" opacity=".35">'+sn+'</g></svg></div>';
     },
-    // Kaffekopp, kanelbolle og strikketøy
+    // Kaffekopp med damp, og en liten kanelbolle ved siden av. Strek, som relieff.
     mote:function(){
-      return '<svg viewBox="0 0 240 124" aria-hidden="true">'+
-        '<g stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"><path d="M50 40c-6-7 6-11 0-18s4-11 0-17"/><path d="M66 42c-6-7 6-11 0-18s4-11 0-17"/><path d="M82 40c-6-7 6-11 0-18"/></g>'+
-        '<ellipse cx="66" cy="113" rx="52" ry="8" fill="#fff" opacity=".9"/>'+
-        '<path d="M100 59h7a13 13 0 0 1 0 26h-11" fill="none" stroke="#fff" stroke-width="6"/>'+
-        '<path d="M30 50h72v18c0 23-16 39-36 39S30 91 30 68z" fill="#fff"/>'+
-        '<ellipse cx="66" cy="50" rx="36" ry="6" fill="#7a4a2a"/>'+
-        '<ellipse cx="160" cy="104" rx="30" ry="13" fill="#a8652a"/>'+
-        '<ellipse cx="160" cy="97" rx="30" ry="20" fill="#e2a75e"/>'+
-        '<path d="M160 97m-3 0a3 2.5 0 1 1 6 0a8 6 0 1 1-15 1a14 10 0 1 1 27-1a20 14 0 1 1-37 3" fill="none" stroke="#a35a1d" stroke-width="3.2" stroke-linecap="round"/>'+
-        '<g fill="#fff"><circle cx="148" cy="88" r="1.8"/><circle cx="171" cy="86" r="1.8"/><circle cx="176" cy="101" r="1.8"/><circle cx="151" cy="106" r="1.8"/><circle cx="163" cy="109" r="1.6"/></g>'+
-        '<g stroke="#f6e7c8" stroke-width="4" stroke-linecap="round"><path d="M197 62l32 54"/><path d="M233 64l-30 52"/></g>'+
-        '<g fill="#f6e7c8"><circle cx="196" cy="60" r="4.5"/><circle cx="234" cy="62" r="4.5"/></g>'+
-        '<circle cx="214" cy="100" r="19" fill="#ffb3bd"/>'+
-        '<g fill="none" stroke="#d9677c" stroke-width="2" stroke-linecap="round"><path d="M198 92c10 4 22 4 32-2"/><path d="M196 102c12 4 26 4 36-2"/><path d="M201 112c8 2 17 2 25-2"/><path d="M207 83c-5 10-5 24 1 34"/></g>'+
-        '<path d="M196 106c-6 7-13 10-19 12" fill="none" stroke="#ffb3bd" stroke-width="2.4" stroke-linecap="round"/>'+
+      return '<svg viewBox="0 0 120 80" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+
+        '<path d="M24 22c-3-4 3-6 0-10s3-6 0-9M34 22c-3-4 3-6 0-10s3-6 0-9M44 22c-3-4 3-6 0-10s3-6 0-9"/>'+
+        '<path d="M12 30h44v14a22 22 0 0 1-44 0z"/><path d="M56 34h5a8 8 0 0 1 0 16h-6"/><path d="M4 72h60"/>'+
+        '<ellipse cx="94" cy="64" rx="18" ry="9"/><path d="M94 64m-2 0a2 1.6 0 1 1 4 0a5 4 0 1 1-9 .5a9 6.5 0 1 1 17-.5a13 9 0 1 1-24 1.5"/>'+
         '</svg>';
     },
-    // Liten giraff med ballong
+    // Ballong og en liten giraff, i strek
     barn:function(){
-      var o='stroke="#16151a" stroke-width="3" stroke-linejoin="round"', sp='#d98a1c';
-      return '<svg viewBox="0 0 200 200" aria-hidden="true">'+
-        '<path d="M58 68C50 92 66 112 42 140" fill="none" stroke="#16151a" stroke-width="2" stroke-linecap="round"/>'+
-        '<ellipse cx="60" cy="38" rx="25" ry="30" fill="#c8102e"/><path d="M55 67h7l-3.5 5z" fill="#c8102e"/><ellipse cx="51" cy="28" rx="6" ry="10" fill="#fff" opacity=".45"/>'+
-        '<path d="M44 140c-6 6-8 12-7 18" fill="none" '+o+' stroke-linecap="round"/><circle cx="37" cy="160" r="4" fill="#16151a"/>'+
-        '<g fill="#fff6e0" '+o+'><rect x="56" y="150" width="9" height="42" rx="4"/><rect x="72" y="152" width="9" height="40" rx="4"/><rect x="100" y="152" width="9" height="40" rx="4"/><rect x="115" y="150" width="9" height="42" rx="4"/>'+
-        '<ellipse cx="90" cy="148" rx="44" ry="22"/><path d="M110 138L124 64h16l-8 80z"/></g>'+
-        '<g fill="'+sp+'"><circle cx="72" cy="142" r="7"/><circle cx="92" cy="154" r="6"/><circle cx="98" cy="137" r="5"/><circle cx="116" cy="152" r="5"/><circle cx="128" cy="118" r="4.5"/><circle cx="130" cy="95" r="4"/><circle cx="121" cy="133" r="3.5"/></g>'+
-        '<g '+o+'><path d="M129 44l-2-14M141 43l1-14" fill="none" stroke-linecap="round"/></g><g fill="'+sp+'" '+o+'><circle cx="127" cy="28" r="4"/><circle cx="142" cy="27" r="4"/></g>'+
-        '<ellipse cx="121" cy="50" rx="8" ry="4.5" transform="rotate(-25 121 50)" fill="#fff6e0" '+o+'/>'+
-        '<ellipse cx="143" cy="58" rx="21" ry="14" fill="#fff6e0" '+o+'/>'+
-        '<circle cx="146" cy="53" r="2.6" fill="#16151a"/><path d="M152 64c3 2 6 2 8 0" fill="none" stroke="#16151a" stroke-width="2" stroke-linecap="round"/><circle cx="160" cy="57" r="1.6" fill="#16151a"/>'+
+      return '<svg viewBox="0 0 120 100" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+
+        '<ellipse cx="22" cy="20" rx="12" ry="15"/><path d="M22 35l-2 3h4zM22 38c0 10-8 14-4 26s12 14 16 18"/>'+
+        '<path d="M40 70C40 62 50 60 64 60H76L84 27C85 21 92 19 99 22C105 25 104 31 98 31H92L87 63C89 68 89 72 86 76V96H81V80H76V96H71V80H56V96H51V80H46V96H41V78C38 76 38 72 40 70Z"/>'+
+        '<path d="M40 70c-4 2-6 6-6 12M88 22l-1-7M95 21l1-7M86 26c-4-1-6 1-6 3"/><circle cx="87" cy="13" r="1.8"/><circle cx="96" cy="12" r="1.8"/><circle cx="96" cy="25" r=".7"/>'+
+        '<circle cx="57" cy="68" r="2.4"/><circle cx="68" cy="71" r="2"/><circle cx="84" cy="44" r="1.8"/>'+
         '</svg>';
     },
     // Juletre i relieff: samme farge som bakgrunnen, med lys kant oppe og skygge nede
@@ -221,10 +194,10 @@ window.Skjerm=(function(){
       T.forEach(function(q){f+='M'+cx+' '+q[0]+'L'+(cx+q[2])+' '+q[1]+'Q'+cx+' '+(q[1]+30)+' '+(cx-q[2])+' '+q[1]+'Z';});
       f+='M'+(cx-22)+' 452h44v40h-44z';
       var kuler=[[228,206,10],[302,292,12],[206,384,13],[334,414,10],[272,128,8],[250,316,9]].map(function(k){return 'M'+(k[0]-k[2])+' '+k[1]+'a'+k[2]+' '+k[2]+' 0 1 0 '+(2*k[2])+' 0a'+k[2]+' '+k[2]+' 0 1 0 '+(-2*k[2])+' 0z';}).join("");
-      var lag=function(d){return '<path d="'+d+'" transform="translate(5 6)" fill="#7e0c21"/><path d="'+d+'" transform="translate(-3 -3)" fill="#bd3049"/><path d="'+d+'" fill="#9e1129"/>';};
+      var lag=function(d){return '<path d="'+d+'" transform="translate(5 6)" fill="#e3ddd0"/><path d="'+d+'" transform="translate(-3 -3)" fill="#fcfaf6"/><path d="'+d+'" fill="#efebe2"/>';};
       var st=[],r;for(var i=0;i<10;i++){r=i%2?9:22;st.push((cx+r*Math.sin(i*Math.PI/5)).toFixed(1)+' '+(30-r*Math.cos(i*Math.PI/5)).toFixed(1));}
       return '<div class="art-tre"><svg viewBox="0 0 520 492" preserveAspectRatio="xMidYMax meet" aria-hidden="true">'+lag(f)+lag(kuler)+
-        '<path d="M'+st.join("L")+'Z" fill="#f2c94c"/></svg></div>';
+        lag('M'+st.join("L")+'Z')+'</svg></div>';
     },
     // Varm middagstallerken i strek
     middag:function(){
@@ -263,7 +236,7 @@ window.Skjerm=(function(){
   function noteSlide(N,now){
     var left=dayDiff(ymd(N.until),now);
     var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div>';
-    return '<section class="slide note'+(N.art?' medart':'')+(N.tema==="jul"?' jul':'')+'">'+(N.tema==="jul"?ART.tre():'')+'<div class="main"><div class="kicker">Påmelding</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
+    return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker">Påmelding</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
       '</p><p class="act">'+esc(N.act)+'</p></div>'+(N.art&&ART[N.art]?'<div class="nside"><div class="nart">'+ART[N.art]()+'</div>'+badge+'</div>':badge)+'</section>';
   }
   function newsSlide(){
