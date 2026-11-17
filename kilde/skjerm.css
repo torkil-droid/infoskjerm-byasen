@@ -117,11 +117,13 @@
 
 /* Oppslag med illustrasjon */
 .note.medart{gap:calc(3*var(--u))}
-.nside{position:relative;flex:0 0 calc(34*var(--u))}
+.nside{position:relative;flex:0 0 calc(36*var(--u));color:var(--gud)}
 .nart svg{display:block;width:100%}
-.nside .badge{position:absolute;right:calc(-1.5*var(--u));bottom:calc(-2.5*var(--u));width:calc(13*var(--u));height:calc(13*var(--u));box-shadow:0 0 0 calc(0.6*var(--u)) #f4f1ea}
-.nside .badge b{font-size:calc(5.6*var(--u))}
-.nside .badge span{font-size:calc(1.1*var(--u));margin-top:calc(0.3*var(--u))}
+.nside .badge{position:absolute;left:50%;top:63.3%;transform:translate(-50%,-50%);width:calc(12*var(--u));height:calc(12*var(--u))}
+.nside .badge b{font-size:calc(5.2*var(--u))}
+.badge b.txt{font-size:calc(5.4*var(--u))}
+.nside .badge b.txt{font-size:calc(3.2*var(--u))}
+.nside .badge span{font-size:calc(0.95*var(--u));letter-spacing:.06em;margin-top:calc(0.2*var(--u))}
 
 /* Fast innhold med bilde */
 .fast.medbilde .photo.img{width:calc(27*var(--u));height:calc(21.6*var(--u))}
