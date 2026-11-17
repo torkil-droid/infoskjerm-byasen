@@ -217,7 +217,7 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
       '</div></div>'+
       '<div class="g-act">'+decisionButtons(it)+
       '<label class="g-lbl" for="notat">'+esc(notelabel)+'</label><textarea class="g-notat" id="notat" placeholder="Skriv her, det lagres av seg selv">'+esc(it.notat||"")+'</textarea><div class="g-save" id="save" aria-live="polite"></div></div></article>'+
-      '<div class="g-nav"><button type="button" class="g-btn" id="prev"'+(cur===0?' disabled':'')+'>← Forrige</button><span class="g-hint">Piltastene blar · '+(cur+1)+' av '+items.length+'</span>'+
+      '<div class="g-nav"><button type="button" class="g-btn" id="prev"'+(cur===0?' disabled':'')+'>← Forrige</button><span class="g-hint">Går videre av seg selv etter hver beslutning · '+(cur+1)+' av '+items.length+'</span>'+
       '<button type="button" class="g-btn" id="next">'+(cur===items.length-1?'Til oppsummering →':'Neste →')+'</button></div>';
     workEl.innerHTML=h;
     var ta=document.getElementById("notat"), t=null;
@@ -259,6 +259,11 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
     if(st==="venter") p.svar="";
     it.status=st; if(p.svar!==undefined) it.svar=p.svar;
     render(); write(it.id,p);
+    // Rask gjennomgang: gå videre av seg selv etter en beslutning (ikke ved Angre eller Endre, der skal det skrives en kommentar)
+    if(st!=="venter"&&st!=="endre"){
+      var at=cur;
+      setTimeout(function(){if(view==="item"&&cur===at){if(cur===items.length-1){view="sum";render();}else go(1);}},450);
+    }
   }
 
   document.addEventListener("click",function(e){

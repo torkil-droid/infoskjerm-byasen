@@ -205,6 +205,10 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
   font-size:calc(1.3*var(--u));color:#a9a6b0;text-align:center;padding:calc(2*var(--u));
   background:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 calc(1.2*var(--u)),transparent calc(1.2*var(--u)) calc(2.4*var(--u)))}
 
+.photo.img{position:relative;width:calc(30*var(--u));height:calc(24*var(--u));padding:0;border:0;overflow:hidden;background:#000}
+.photo.img img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.photo .cred{position:absolute;left:0;right:0;bottom:0;padding:calc(0.5*var(--u)) calc(0.8*var(--u));font-size:calc(1*var(--u));color:#e6e3dc;background:rgba(0,0,0,.55);text-align:left}
+
 /* Fast bunnlinje */
 .foot{position:absolute;left:0;right:0;bottom:0;height:calc(7*var(--u));background:var(--ink);color:#fff;display:flex;align-items:center;
   gap:calc(2*var(--u));padding:0 calc(3.4*var(--u));font-size:calc(1.7*var(--u))}
@@ -2601,7 +2605,7 @@ window.Skjerm=(function(){
     title:"Tretti deltakere kartla talentene sine i Yangon",
     text:"NMS holdt et tredagers kurs for fire lutherske kirker i Myanmar. Boka «Use Your Talents Asia» ble lansert på burmesisk, og kirkene fikk 500 eksemplarer.",
     src:"nms.no · 5. oktober 2026",url:"https://nms.no/nyhet/entusiasme-for-use-your-talents-i-myanmar",
-    photo:"Toppbildet fra nyhetssaken hentes inn her. Foto: Marieke Rode-Christoffersen"};
+    img:"nms-bilde.jpg",credit:"Foto: Marieke Rode-Christoffersen / NMS"};
   var ADVENT=[new Date(2026,10,29),new Date(2026,11,6),new Date(2026,11,13),new Date(2026,11,20)];
   var SEASON=[new Date(2026,10,23),new Date(2026,11,27)];
 
@@ -2668,7 +2672,8 @@ window.Skjerm=(function(){
       '</p><p class="act">'+esc(N.act)+'</p></div><div class="badge"><b>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div></section>';
   }
   function newsSlide(){
-    return '<section class="slide fast nytt"><div class="photo">'+esc(NEWS.photo)+'</div><div class="main"><div class="kicker">'+esc(NEWS.kicker)+
+    var ph=NEWS.img?'<div class="photo img"><img src="'+esc(NEWS.img)+'" alt=""><span class="cred">'+esc(NEWS.credit||"")+'</span></div>':'<div class="photo">'+esc(NEWS.photo||"")+'</div>';
+    return '<section class="slide fast nytt">'+ph+'<div class="main"><div class="kicker">'+esc(NEWS.kicker)+
       '</div><h2>'+esc(NEWS.title)+'</h2><p>'+esc(NEWS.text)+'</p><div class="src">'+esc(NEWS.src)+'</div></div><div class="side">'+
       (qr(NEWS.url)||'<div class="ico">'+icon("globe")+'</div>')+'<div class="qrtxt">Les hele saken</div></div></section>';
   }
@@ -2821,7 +2826,7 @@ window.Skjerm=(function(){
       '</div></div>'+
       '<div class="g-act">'+decisionButtons(it)+
       '<label class="g-lbl" for="notat">'+esc(notelabel)+'</label><textarea class="g-notat" id="notat" placeholder="Skriv her, det lagres av seg selv">'+esc(it.notat||"")+'</textarea><div class="g-save" id="save" aria-live="polite"></div></div></article>'+
-      '<div class="g-nav"><button type="button" class="g-btn" id="prev"'+(cur===0?' disabled':'')+'>← Forrige</button><span class="g-hint">Piltastene blar · '+(cur+1)+' av '+items.length+'</span>'+
+      '<div class="g-nav"><button type="button" class="g-btn" id="prev"'+(cur===0?' disabled':'')+'>← Forrige</button><span class="g-hint">Går videre av seg selv etter hver beslutning · '+(cur+1)+' av '+items.length+'</span>'+
       '<button type="button" class="g-btn" id="next">'+(cur===items.length-1?'Til oppsummering →':'Neste →')+'</button></div>';
     workEl.innerHTML=h;
     var ta=document.getElementById("notat"), t=null;
@@ -2863,6 +2868,11 @@ window.Skjerm=(function(){
     if(st==="venter") p.svar="";
     it.status=st; if(p.svar!==undefined) it.svar=p.svar;
     render(); write(it.id,p);
+    // Rask gjennomgang: gå videre av seg selv etter en beslutning (ikke ved Angre eller Endre, der skal det skrives en kommentar)
+    if(st!=="venter"&&st!=="endre"){
+      var at=cur;
+      setTimeout(function(){if(view==="item"&&cur===at){if(cur===items.length-1){view="sum";render();}else go(1);}},450);
+    }
   }
 
   document.addEventListener("click",function(e){

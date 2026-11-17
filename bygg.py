@@ -7,6 +7,7 @@ Begge får samme plakatmal (kilde/skjerm.css) og samme plakatkode (kilde/motor.j
 så forhåndsvisningen i stabsmøtet alltid er lik det skjermen viser.
 """
 import os
+import shutil
 
 HER = os.path.dirname(os.path.abspath(__file__))
 
@@ -37,3 +38,7 @@ def bygg(mal, ut):
 
 bygg("skjerm.html", "index.html")
 bygg("gjennomgang.html", "gjennomgang/index.html")
+
+# Bilder som plakatene bruker, må ligge ved siden av begge sidene
+for bilde in ["nms-bilde.jpg"]:
+    shutil.copyfile(os.path.join(HER, bilde), os.path.join(HER, "gjennomgang", bilde))

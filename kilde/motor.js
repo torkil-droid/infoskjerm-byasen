@@ -62,7 +62,7 @@ window.Skjerm=(function(){
     title:"Tretti deltakere kartla talentene sine i Yangon",
     text:"NMS holdt et tredagers kurs for fire lutherske kirker i Myanmar. Boka «Use Your Talents Asia» ble lansert på burmesisk, og kirkene fikk 500 eksemplarer.",
     src:"nms.no · 5. oktober 2026",url:"https://nms.no/nyhet/entusiasme-for-use-your-talents-i-myanmar",
-    photo:"Toppbildet fra nyhetssaken hentes inn her. Foto: Marieke Rode-Christoffersen"};
+    img:"nms-bilde.jpg",credit:"Foto: Marieke Rode-Christoffersen / NMS"};
   var ADVENT=[new Date(2026,10,29),new Date(2026,11,6),new Date(2026,11,13),new Date(2026,11,20)];
   var SEASON=[new Date(2026,10,23),new Date(2026,11,27)];
 
@@ -129,7 +129,8 @@ window.Skjerm=(function(){
       '</p><p class="act">'+esc(N.act)+'</p></div><div class="badge"><b>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div></section>';
   }
   function newsSlide(){
-    return '<section class="slide fast nytt"><div class="photo">'+esc(NEWS.photo)+'</div><div class="main"><div class="kicker">'+esc(NEWS.kicker)+
+    var ph=NEWS.img?'<div class="photo img"><img src="'+esc(NEWS.img)+'" alt=""><span class="cred">'+esc(NEWS.credit||"")+'</span></div>':'<div class="photo">'+esc(NEWS.photo||"")+'</div>';
+    return '<section class="slide fast nytt">'+ph+'<div class="main"><div class="kicker">'+esc(NEWS.kicker)+
       '</div><h2>'+esc(NEWS.title)+'</h2><p>'+esc(NEWS.text)+'</p><div class="src">'+esc(NEWS.src)+'</div></div><div class="side">'+
       (qr(NEWS.url)||'<div class="ico">'+icon("globe")+'</div>')+'<div class="qrtxt">Les hele saken</div></div></section>';
   }
