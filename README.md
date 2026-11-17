@@ -13,11 +13,13 @@ Innholdet er hentet fra den offentlige kalenderen på kirken.no. Dette er en pro
 
 ## Regler for runden
 
-Står i `REGLER` øverst i rundekoden i `kilde/motor.js`:
+Står i `REGLER` øverst i rundekoden i `kilde/motor.js`. De bygger på rapporten «Infoskjerm i våpenhuset i Byåsen kirke: anbefalinger for plakater og karusell» (november 2026). Vi bruker den øvre grensen av anbefalingene.
 
-- Seks faste plasser etter prioritet: gudstjenester (alltid med), nærmeste egne plakat, påmelding, barn, møteplasser, egen plakat nr. 2, konserter.
-- Én plass til som går på omgang mellom resten, med nytt innhold for hver runde. Er det ledig plass, får resten fast plass i stedet.
-- Samlesider vises 10 sekunder, andre plakater 8. En runde tar omtrent ett minutt.
-- Egen plakat fra 14 dager før (konserter 21).
-- Samlesider: gudstjenester 3 uker fram, barn og møteplasser 4 uker, konserter 6 uker. En samleside vises bare når den har noe som ikke allerede har egen plakat.
+- Høyst 8 plakater og 90 sekunder per runde.
+- 10 sekunder for en vanlig plakat, 12 for samlesider, programlister og plakater med QR-kode.
+- Overskrift ≤ 7 ord, hele plakaten ≤ 20 ord (klokkeslett og tall telles ikke). Sjekkes med `node sjekk.js`.
+- Samlesider: høyst 5 linjer, 3 uker fram (konserter 6 uker). Vises bare når de har noe som ikke allerede har egen plakat. «Byåsen kirke» som sted utelates i linjene.
+- Egen plakat fra 3 uker før (konserter 6 uker). Inntil tre får fast plass.
+- Prioritet: gudstjenester (alltid med), egen plakat 1, påmelding, barn, møteplasser, egen plakat 2, konserter, egen plakat 3.
+- Siste plass går alltid på omgang mellom resten, ny for hver runde.
 - Faste, gjentakende ting får fast innhold uten dato (`neste:` henter neste dato fra kalenderen).
