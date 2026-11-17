@@ -1,0 +1,11 @@
+  --paper:#ffffff;       /* skjermflaten */
+  --ink:#16151a;
+  --dim:#5d5b63;
+  --rule:#e4e2dd;
+  --gud:#c8102e;         /* gudstjenester: kirkens rødfarge */
+  --kons:#1b1470;        /* konsert og kultur */
+  --barn:#e9a100;        /* barn og familier */
+  --mote:#1f6f5b;        /* møteplasser */
+  --advent:#5b2a86;      /* kirkeårets farge i advent */
+  --display:"Source Serif 4", Georgia, serif;
+  --body:"Nunito Sans", "Segoe UI", Arial, sans-serif;
