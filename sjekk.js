@@ -2,7 +2,7 @@
 // Kjøres før ukesforslaget: node sjekk.js
 const fs=require('fs'); global.window={}; eval(fs.readFileSync(__dirname+'/kilde/motor.js','utf8'));
 const S=window.Skjerm, now=new Date();
-const ord=t=>(t.replace(/<[^>]+>/g,' ').match(/[\wæøåÆØÅ«»0-9.–-]+/g)||[]).filter(w=>/[A-Za-zæøåÆØÅ]/.test(w)).length;
+const ord=t=>(t.replace(/<[^>]+>/g,' ').match(/[\wæøåÆØÅ«»0-9.–\u2011-]+/g)||[]).filter(w=>/[A-Za-zæøåÆØÅ]/.test(w)).length;
 let feil=0;
 for(const k of S.nokler()){
   const h=S.slide(k,now); if(!h) continue;

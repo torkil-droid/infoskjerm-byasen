@@ -58,8 +58,9 @@ window.Skjerm=(function(){
   // Oppslag: beskjeder med frist. Forsvinner når fristen er ute.
   var NOTES=[
     {id:"julemiddag",from:"2026-11-01",until:"2026-11-27",title:"Meld deg på julemiddagen",
-     text:"Med underholdning, lørdag 5. desember kl. 14 i menighetssalen. 450 kr.",
-     act:"Påmeldingsfrist fredag 27. november",art:"middag",relieff:"tre"}
+     kicker:"Påmelding innen 27. november",
+     text:"Lørdag 5. desember kl. 14 i menighetssalen, 450 kr. Hjertelig velkommen!",
+     act:"Skriv deg på lista der, eller sms Lin‑Silvia: 418 08 744",art:"middag",relieff:"tre"}
   ];
   // Fast innhold: uten dato. Én per runde, og bare når det er plass.
   var FAST=[
@@ -234,7 +235,7 @@ window.Skjerm=(function(){
   function noteSlide(N,now){
     var left=dayDiff(ymd(N.until),now);
     var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div>';
-    return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker">Påmelding</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
+    return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker">'+esc(N.kicker||"Påmelding")+'</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
       '</p><p class="act">'+esc(N.act)+'</p></div>'+(N.art&&ART[N.art]?'<div class="nside"><div class="nart">'+ART[N.art]()+'</div>'+badge+'</div>':badge)+'</section>';
   }
   function newsSlide(){
