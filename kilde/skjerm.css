@@ -79,7 +79,57 @@
 
 .photo.img{position:relative;width:calc(30*var(--u));height:calc(24*var(--u));padding:0;border:0;overflow:hidden;background:#000}
 .photo.img img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
-.photo .cred{position:absolute;left:0;right:0;bottom:0;padding:calc(0.5*var(--u)) calc(0.8*var(--u));font-size:calc(1*var(--u));color:#e6e3dc;background:rgba(0,0,0,.55);text-align:left}
+.cred{position:absolute;left:0;right:0;bottom:0;padding:calc(0.5*var(--u)) calc(0.8*var(--u));font-size:calc(1*var(--u));color:#e6e3dc;background:rgba(0,0,0,.55);text-align:left}
+
+
+/* Illustrasjoner */
+.panel .art{position:absolute;left:calc(2.6*var(--u));bottom:calc(2.2*var(--u))}
+.panel .art svg{display:block;width:100%;height:100%}
+.panel .art.mote{width:calc(25*var(--u));height:calc(12.9*var(--u))}
+.panel .art.barn{width:calc(17*var(--u));height:calc(17*var(--u));left:calc(5*var(--u))}
+.feat>.main,.feat>.side{position:relative;z-index:1}
+.art-top{position:absolute;left:0;right:0;top:0;height:calc(9*var(--u));pointer-events:none}
+.art-fill,.art-bot{position:absolute;left:0;right:0;bottom:0;pointer-events:none}
+.art-fill{top:0}
+.art-bot{height:calc(16*var(--u))}
+.art-hj{position:absolute;right:calc(4.6*var(--u));bottom:calc(3.2*var(--u));width:calc(17*var(--u));height:calc(14.5*var(--u));pointer-events:none}
+.art-hj svg{display:block;width:100%;height:100%}
+.art-top svg,.art-fill svg,.art-bot svg{display:block;width:100%;height:100%}
+.feat.jul{padding-top:calc(9.6*var(--u))}
+.feat .prog{list-style:none;margin:calc(1.4*var(--u)) 0 0;padding:0;font-size:calc(1.7*var(--u));line-height:1.2}
+.feat .prog li{display:flex;gap:calc(1.2*var(--u));padding:calc(0.2*var(--u)) 0}
+.feat .prog b{flex:0 0 calc(6*var(--u));font-variant-numeric:tabular-nums;font-weight:800}
+.feat.jul .lead{margin-top:calc(1.2*var(--u))}
+.feat.jul h2{margin-top:calc(1.6*var(--u))}
+
+/* Fremhevet med bilde */
+.feat.bilde .side{flex:0 0 calc(38*var(--u));align-items:stretch;justify-content:flex-start;text-align:left;gap:calc(2*var(--u))}
+.feat.bilde h2{font-size:calc(6*var(--u))}
+.feat.bilde .lead{font-size:calc(2*var(--u))}
+.feat .pic{position:relative;width:100%;height:calc(25.3*var(--u));border-radius:calc(0.8*var(--u));overflow:hidden;background:#000}
+.feat .pic img{display:block;width:100%;height:100%;object-fit:cover}
+.feat .when{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
+.feat.bilde .big b{font-size:calc(10*var(--u))}
+.feat.bilde .big span{font-size:calc(2.2*var(--u))}
+.feat.bilde .big em{font-size:calc(1.6*var(--u))}
+.feat.bilde .when .qrw{text-align:center}
+.feat.bilde .side .qrbox{width:calc(11*var(--u));height:calc(11*var(--u))}
+
+/* Oppslag med illustrasjon */
+.note.medart{gap:calc(3*var(--u))}
+.nside{position:relative;flex:0 0 calc(34*var(--u))}
+.nart svg{display:block;width:100%}
+.nside .badge{position:absolute;right:calc(-1.5*var(--u));bottom:calc(-2.5*var(--u));width:calc(13*var(--u));height:calc(13*var(--u));box-shadow:0 0 0 calc(0.6*var(--u)) #f4f1ea}
+.nside .badge b{font-size:calc(5.6*var(--u))}
+.nside .badge span{font-size:calc(1.1*var(--u));margin-top:calc(0.3*var(--u))}
+
+/* Fast innhold med bilde */
+.fast.medbilde .photo.img{width:calc(27*var(--u));height:calc(21.6*var(--u))}
+.fast.medbilde .photo.img img{object-position:50% 20%}
+.fast.medbilde h2{font-size:calc(4.3*var(--u))}
+.fast.medbilde p{font-size:calc(2*var(--u))}
+.fast.medbilde .side{flex-basis:calc(15*var(--u))}
+.fast.medbilde .side .qrbox{width:calc(13*var(--u));height:calc(13*var(--u))}
 
 /* Fast bunnlinje */
 .foot{position:absolute;left:0;right:0;bottom:0;height:calc(7*var(--u));background:var(--ink);color:#fff;display:flex;align-items:center;
