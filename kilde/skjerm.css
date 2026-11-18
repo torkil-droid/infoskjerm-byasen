@@ -151,6 +151,8 @@
 .foot .lbl{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:calc(1.2*var(--u));color:#ffb3bd;flex:none}
 .foot .next{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .foot .today{flex:none;opacity:.8}
+.foot .logo{flex:none;display:flex;width:calc(5*var(--u));height:calc(4*var(--u));color:#fff;opacity:.9;margin-right:calc(-0.2*var(--u))}
+.foot .logo svg{width:100%;height:100%}
 .foot.hast{background:var(--gud)}
 .foot.hast .lbl{color:#fff}
 .foot.hast .next{font-weight:800}

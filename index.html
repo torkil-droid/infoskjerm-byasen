@@ -179,6 +179,8 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
 .foot .lbl{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:calc(1.2*var(--u));color:#ffb3bd;flex:none}
 .foot .next{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .foot .today{flex:none;opacity:.8}
+.foot .logo{flex:none;display:flex;width:calc(5*var(--u));height:calc(4*var(--u));color:#fff;opacity:.9;margin-right:calc(-0.2*var(--u))}
+.foot .logo svg{width:100%;height:100%}
 .foot.hast{background:var(--gud)}
 .foot.hast .lbl{color:#fff}
 .foot.hast .next{font-weight:800}
@@ -200,7 +202,7 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
   <div class="stage" id="stage">
     <div id="slides"></div>
     <div class="dots" id="dots"></div>
-    <div class="foot"><span class="lbl" id="lbl">Neste i kirka</span><span class="next" id="next"></span><span class="today" id="today"></span></div>
+    <div class="foot"><span class="logo"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10">  <path d="M268 0V544M138 121H398"/>  <path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/>  <ellipse cx="272" cy="332" rx="122" ry="124"/></svg></span><span class="lbl" id="lbl">Neste i kirka</span><span class="next" id="next"></span><span class="today" id="today"></span></div>
   </div>
 </div>
 <script>/* qrcode-generator 1.4.4 (MIT, Kazuhiko Arase), lagt inn i siden så skjermen ikke trenger nettet for QR-koder */
