@@ -18,11 +18,11 @@ window.Skjerm=(function(){
     {d:"2026-11-24",t:"11.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote"},
     {d:"2026-11-28",t:"11.00",tt:"11.00–13.00",title:"Legokafé",note:"Barnesangstund kl. 12.30",place:"Kirkerommet",cat:"barn",alsoMote:true},
     {d:"2026-11-29",t:"11.00",title:"Gudstjeneste for liten og stor",note:"1. søndag i advent",place:"Byåsen kirke",cat:"gud",alsoBarn:true,jul:true},
-    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert",
+    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert",relieff:"krystall",
       lead:"Trondheimsolistene og Stine Bogsveen. Billetter på Hoopla.",qr:"https://www.hoopla.no"},
     {d:"2026-12-05",t:"14.00",title:"Menighetens julemiddag",note:"Med underholdning",place:"Menighetssalen",cat:"mote"},
     {d:"2026-12-06",t:"15.00",title:"Adventsgudstjeneste ute på Lian",note:"Julemagi Lian gård",place:"Lianvannet, ved gressletta",cat:"gud",feat:true,id:"lian",jul:true,
-      lead:"Utendørs gudstjeneste under Julemagi på Lian gård. Kle deg etter været.",art:"skog"},
+      lead:"Utendørs gudstjeneste under Julemagi på Lian gård. Kle deg etter været.",art:"skog",relieff:"krystall",pynt:"advent"},
     {d:"2026-12-06",t:"19.00",title:"Kveldsgudstjeneste",place:"Byåsen kirke",cat:"gud",jul:true},
     {d:"2026-12-07",t:"17.00",title:"Familiekoret, øvelse",place:"Ungdomssalen",cat:"barn"},
     {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons",id:"adventskonsert-rad"},
@@ -42,10 +42,10 @@ window.Skjerm=(function(){
     // erstatter: id-en til raden eller plakaten forslaget skal erstatte når det godkjennes.
     {d:"2026-11-21",t:"11.00",title:"Julemesse",place:"Byåsen kirke",cat:"mote",feat:true,id:"julemesse-ny",erstatter:"julemesse",utkast:true,art:"jul",pynt:"gaver",
       prog:[["11.00","Salget åpner. Kor Læne synger"],["12.15","Byåsen Soul Kids"],["12.30","Grøt"],["13.45","Byåsen familiekor"],["14.30","Trekning av hovedlotteriet"]]},
-    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert-ny",erstatter:"julekonsert",utkast:true,
+    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert-ny",erstatter:"julekonsert",utkast:true,relieff:"krystall",
       lead:"Solist er Stine Bogsveen. Skann koden for billetter på Hoopla.",qr:"https://trondheimsolistene.hoopla.no/event/1360741619",
       img:"bilder/trondheimsolistene.jpg",credit:"Trondheimsolistene"},
-    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",erstatter:"adventskonsert-rad",utkast:true,art:"jul",pynt:"bjeller",
+    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",erstatter:"adventskonsert-rad",utkast:true,art:"jul",pynt:"advent",
       lead:"Gjester: Byåsen skoleorkester, Harmonien kor og Else Bø. Kafé fra 18.15.",
       hint:"150 kr, barn under 16 gratis."}
   ];
@@ -169,16 +169,32 @@ window.Skjerm=(function(){
         for(var j=0;j<3;j++){var top=y0-ht+j*ht*.28,bot=y0-ht*(.42-j*.21);k+='M'+(x+w/2).toFixed(0)+' '+top.toFixed(0)+'L'+(x+w*(.5+.18+j*.16)).toFixed(0)+' '+bot.toFixed(0)+'H'+(x+w*(.5-.18-j*.16)).toFixed(0)+'Z';}
         h+='<path d="'+k+'"/>';
       }
-      var sn="";for(var i=0;i<26;i++) sn+='<circle cx="'+(r()*1000).toFixed(0)+'" cy="'+(r()*95).toFixed(0)+'" r="'+(1.5+r()*2.5).toFixed(1)+'"/>';
-      return '<div class="art-bot"><svg viewBox="0 0 1000 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><g fill="#fff" opacity=".13">'+h+'</g><g fill="#fff" opacity=".35">'+sn+'</g></svg></div>';
+      return '<div class="art-bot"><svg viewBox="0 0 1000 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><g fill="#fff" opacity=".13">'+h+'</g></svg></div>';
     },
-    // Kaffekopp med damp, og en liten kanelbolle ved siden av. Strek, som relieff.
+    // Kaffekopp med damp, i strek som relieff
     mote:function(){
-      return '<svg viewBox="0 0 120 80" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+
+      return '<svg viewBox="0 0 72 80" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+
         '<path d="M24 22c-3-4 3-6 0-10s3-6 0-9M34 22c-3-4 3-6 0-10s3-6 0-9M44 22c-3-4 3-6 0-10s3-6 0-9"/>'+
         '<path d="M12 30h44v14a22 22 0 0 1-44 0z"/><path d="M56 34h5a8 8 0 0 1 0 16h-6"/><path d="M4 72h60"/>'+
-        '<ellipse cx="94" cy="64" rx="18" ry="9"/><path d="M94 64m-2 0a2 1.6 0 1 1 4 0a5 4 0 1 1-9 .5a9 6.5 0 1 1 17-.5a13 9 0 1 1-24 1.5"/>'+
         '</svg>';
+    },
+    // Én stor snøkrystall, ton i ton
+    krystall:function(){
+      var arm='<path d="M0 0V-92M0-30l-18-16M0-30l18-16M0-58l-14-12M0-58l14-12M0-80l-8-8M0-80l8-8"/>', g="";
+      for(var i=0;i<6;i++) g+='<g transform="rotate('+(i*60)+')">'+arm+'</g>';
+      return '<div class="art-krystall"><svg viewBox="-100 -100 200 200" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".12">'+g+
+        '<circle r="10"/></g></svg></div>';
+    },
+    // Adventsstake med fire lys. Lysene som er tent, følger adventssøndagene fram til arrangementet.
+    advent:function(e){
+      var n=e?ADVENT.filter(function(d){return d<=dt(e);}).length:4, h="";
+      for(var k=0;k<4;k++){
+        var x=30+k*40;
+        h+='<rect x="'+(x-8)+'" y="70" width="16" height="66" rx="2"/>';
+        h+=k<n?'<path d="M'+x+' 62c-7-8-5-16 0-24 5 8 7 16 0 24z" fill="currentColor"/>':'<path d="M'+x+' 70v-6"/>';
+      }
+      return '<svg viewBox="0 0 200 170" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">'+h+
+        '<path d="M8 136h184M22 136c0 14 10 22 24 22h108c14 0 24-8 24-22"/></svg>';
     },
     // Ballong og en liten giraff, i strek
     barn:function(){
@@ -231,7 +247,7 @@ window.Skjerm=(function(){
     var side=e.img?'<div class="side"><div class="pic"><img src="'+esc(e.img)+'" alt="">'+(e.credit?'<span class="cred">'+esc(e.credit)+'</span>':'')+'</div><div class="when">'+date+qrd+'</div></div>'
                   :'<div class="side">'+date+qrd+'</div>';
     var prog=e.prog?'<ul class="prog">'+e.prog.map(function(p){return '<li><b>'+esc(p[0])+'</b><span>'+esc(p[1])+'</span></li>';}).join("")+'</ul>':'';
-    return '<section class="'+cls+'" style="--c:'+k.c+(k.on?';--on:'+k.on:'')+'">'+(e.art&&ART[e.art]?ART[e.art]():'')+(e.pynt&&!e.qr&&!e.img?'<div class="art-hj">'+ART[e.pynt]()+'</div>':'')+'<div class="main"><div class="kicker">'+
+    return '<section class="'+cls+'" style="--c:'+k.c+(k.on?';--on:'+k.on:'')+'">'+(e.relieff&&ART[e.relieff]?ART[e.relieff]():'')+(e.art&&ART[e.art]?ART[e.art]():'')+(e.pynt&&!e.qr&&!e.img?'<div class="art-hj">'+ART[e.pynt](e)+'</div>':'')+'<div class="main"><div class="kicker">'+
       esc(e.cat==="gud"?"Gudstjeneste":e.cat==="kons"?"Konsert":"Byåsen kirke")+'<span class="chip">'+rel(x,now)+'</span></div><h2>'+
       esc(e.title)+'</h2>'+((e.lead||e.note)?'<p class="lead">'+esc(e.lead||e.note)+'</p>':'')+prog+'<div class="place">'+(e.hint?esc(e.place==="Byåsen kirke"?e.hint:e.place+" · "+e.hint):esc(e.place))+'</div></div>'+side+'</section>';
   }

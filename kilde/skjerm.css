@@ -85,12 +85,15 @@
 /* Illustrasjoner: strek i relieff, samme farge som teksten */
 .panel .art{position:absolute;left:calc(2.6*var(--u));bottom:calc(2.4*var(--u));opacity:.3}
 .panel .art svg{display:block;width:100%;height:100%}
-.panel .art.mote{width:calc(20*var(--u));height:calc(13.3*var(--u))}
+.panel .art.mote{width:calc(13*var(--u));height:calc(14.4*var(--u))}
 .panel .art.barn{width:calc(18*var(--u));height:calc(15*var(--u))}
 .feat>.main,.feat>.side{position:relative;z-index:1}
 .art-top{position:absolute;left:0;right:0;top:0;height:calc(9*var(--u));pointer-events:none}
 .art-fill,.art-bot{position:absolute;left:0;right:0;bottom:0;pointer-events:none}
 .art-fill{top:0}
+.art-krystall{position:absolute;right:calc(-13*var(--u));top:calc(-15*var(--u));width:calc(44*var(--u));height:calc(44*var(--u));pointer-events:none}
+.art-krystall svg{display:block;width:100%;height:100%}
+.feat.bilde .art-krystall{right:auto;top:auto;left:calc(-8*var(--u));bottom:calc(-14*var(--u))}
 .art-bot{height:calc(16*var(--u))}
 .art-hj{position:absolute;right:calc(4.6*var(--u));bottom:calc(3.2*var(--u));width:calc(15*var(--u));height:calc(12.8*var(--u));pointer-events:none;opacity:.28}
 .art-hj svg{display:block;width:100%;height:100%}
