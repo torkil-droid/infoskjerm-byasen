@@ -25,7 +25,7 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
   <div class="stage" id="stage">
     <div id="slides"></div>
     <div class="dots" id="dots"></div>
-    <div class="foot"><span class="lbl">Neste i kirka</span><span class="next" id="next"></span><span class="today" id="today"></span></div>
+    <div class="foot"><span class="lbl" id="lbl">Neste i kirka</span><span class="next" id="next"></span><span class="today" id="today"></span></div>
   </div>
 </div>
 {{QR}}
@@ -52,7 +52,9 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
     count=r.slides.length; durs=r.durs;
     box.innerHTML=count?r.slides.join(""):'<div class="empty">Ingen kommende arrangementer er lagt inn</div>';
     dots.innerHTML=new Array(count+1).join("<i></i>");
-    document.getElementById("next").textContent=r.next;
+    document.getElementById("next").textContent=r.hast||r.next;
+    document.getElementById("lbl").textContent=r.hast?"Viktig beskjed":"Neste i kirka";
+    document.querySelector(".foot").classList.toggle("hast",!!r.hast);
     document.getElementById("today").textContent=Skjerm.dLong(now);
     if(count) show(0); else {clearTimeout(timer);timer=setTimeout(render,15*60*1000);}
   }

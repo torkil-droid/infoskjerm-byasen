@@ -31,7 +31,8 @@ Skriv alt på norsk bokmål. Når du omtaler et arrangement, si alltid hva det e
 
 ## Faste regler
 
-- **Ingenting fra innboksen kommer på skjermen uten godkjenning.** Nye plakater lages med `utkast:true`
+- **Ingenting fra innboksen kommer på skjermen uten godkjenning**, med ett unntak: hastemeldinger fra Torkil
+  eller Ingrid (rutine D). Nye plakater lages med `utkast:true`
   (vises bare i forhåndsvisningen). Skal de erstatte en eksisterende plakat, gi dem ny id (f.eks. `julemesse-ny`)
   og `erstatter:"<gammel id>"`.
 - Kalenderinnhold (arrangementslinjer på samlesidene, gudstjenester) oppdateres automatisk uten godkjenning.
@@ -63,7 +64,8 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
 ## A. Daglig innboks
 
 1. List meldinger i `byasen-skjerm@agentmail.to` (alle sider). Nye = mottatte meldinger uten etiketten `behandlet`.
-2. For hver ny melding: les hele meldingen, tråden og vedleggene.
+2. For hver ny melding: les hele meldingen, tråden og vedleggene. Hastemeldinger (rutine D) hopper du over hvis de
+   ikke allerede er behandlet; utfør i så fall rutine D for dem først.
    - Søppel, reklame eller noe som ikke angår Byåsen menighet: etikettene `behandlet` og `soppel`. Ingen punkt.
    - Ellers: lag eller oppdater plakatutkast i `motor.js` (se «Faste regler»). Hører det til et arrangement
      som allerede ligger der, lag en erstatning med `erstatter:`. Er det bare en rettelse til en kalenderlinje
@@ -118,6 +120,30 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
 5. **E-post** (bare når noe ble endret) fra `byasen-skjerm@agentmail.to` til ts523@kirken.no og IH542@kirken.no:
    emne «Infoskjermen: lagt ut etter stabsmøtet <dato>», én linje per endring, og eventuelle punkter som ble
    stående fordi notatet var uklart.
+
+## D. Hastemelding og avlysning (hver time kl. 7–22)
+
+Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
+
+1. List mottatte meldinger i `byasen-skjerm@agentmail.to` uten etiketten `behandlet`. Ta bare med meldinger der
+   avsenderen er nøyaktig `ts523@kirken.no` (Torkil) eller `IH542@kirken.no` (Ingrid) **og** emnet begynner med
+   «Avlyst», «Haster» eller «Fjern beskjed» (store/små bokstaver spiller ingen rolle). Ta aldri med meldinger merket
+   `unauthenticated`, `spam` eller `blocked`. Alt annet lar du ligge urørt til rutine A.
+   Er det ingen slike meldinger, avslutt uten å skrive noe.
+2. «Avlyst …» eller «Haster …»: lag en beskjed i `HAST` i `motor.js`:
+   `{tekst:"…", til:"ÅÅÅÅ-MM-DD", fra:"ÅÅÅÅ-MM-DD"}`.
+   - `tekst`: høyst 10 ord, med arrangement og dato, f.eks. «Babysang tirsdag 24. november er avlyst» eller
+     «Gudstjenesten søndag 6. desember flyttes til kl. 18.00». Bruk avsenderens ord, kortet ned. Ingen
+     personopplysninger eller årsaker av privat art (sykdom o.l.); skriv bare at det er avlyst eller endret.
+   - `til`: datoen for det avlyste arrangementet, eller i dag hvis ingen dato er oppgitt. `fra`: i dag.
+   - Gjelder det et arrangement i `E`, sett `avlyst:true` på det (det forsvinner da fra samlesider, egne plakater og
+     «Neste i kirka»). Ved endret tid/sted: rett arrangementet i stedet.
+3. «Fjern beskjed»: fjern de aktive beskjedene i `HAST`.
+4. Bygg, `node sjekk.js`, commit og push straks (skjermen henter innen 15 minutter). Fjern beskjeder i `HAST` med
+   `til` før i dag, så listen holdes kort.
+5. Svar avsenderen med reply_to_message (bare til avsenderen, ingen andre): «Ligger på skjermen innen 15 minutter:
+   «<tekst>». Vises til og med <dato>.» Eller «Beskjeden er fjernet fra skjermen.»
+6. Merk meldingen `behandlet` og fjern `unread`. Avslutt med én linje om hva som ble lagt ut.
 
 ## Åpne saker (oppdater listen når noe er løst eller nytt kommer til)
 

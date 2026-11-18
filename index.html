@@ -179,6 +179,10 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
 .foot .lbl{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:calc(1.2*var(--u));color:#ffb3bd;flex:none}
 .foot .next{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .foot .today{flex:none;opacity:.8}
+.foot.hast{background:var(--gud)}
+.foot.hast .lbl{color:#fff}
+.foot.hast .next{font-weight:800}
+.foot.hast .today{display:none}
 .dots{position:absolute;left:0;right:0;bottom:calc(7*var(--u));height:calc(0.5*var(--u));display:flex;gap:calc(0.3*var(--u));background:var(--paper)}
 .dots i{flex:1;background:var(--rule);position:relative;overflow:hidden}
 .dots i.done{background:var(--ink)}
@@ -196,7 +200,7 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
   <div class="stage" id="stage">
     <div id="slides"></div>
     <div class="dots" id="dots"></div>
-    <div class="foot"><span class="lbl">Neste i kirka</span><span class="next" id="next"></span><span class="today" id="today"></span></div>
+    <div class="foot"><span class="lbl" id="lbl">Neste i kirka</span><span class="next" id="next"></span><span class="today" id="today"></span></div>
   </div>
 </div>
 <script>/* qrcode-generator 1.4.4 (MIT, Kazuhiko Arase), lagt inn i siden så skjermen ikke trenger nettet for QR-koder */
@@ -2552,6 +2556,18 @@ window.Skjerm=(function(){
       lead:"Elever fra kulturskolens Lørdagsskolen spiller klassisk musikk. Konsert nummer 1192 i en serie fra 1986.",
       hint:"Gratis. Hjertelig velkommen!",qr:"https://trondheimkulturskole.no/arrangementer/",qrtxt:"Les mer"}
   ];
+  // Avlyste arrangementer (avlyst:true) vises ikke noe sted.
+  E=E.filter(function(e){return !e.avlyst;});
+
+  // ---- Hastemelding: erstatter «Neste i kirka»-linja nederst til og med datoen «til». ----
+  // Kun etter e-post fra Torkil eller Ingrid, se RUTINER.md («D. Hastemelding»). Nyeste aktive vises.
+  var HAST=[
+  ];
+  function hast(now){
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    var a=HAST.filter(function(h){return ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
+    return a.length?a[a.length-1].tekst:"";
+  }
   var CAT = {
     gud:{name:"Gudstjenester",sub:"Velkommen til gudstjeneste i Byåsen kirke",c:"var(--gud)"},
     kons:{name:"Konserter",sub:"Musikk i kirka de neste ukene",c:"var(--kons)"},
@@ -2895,7 +2911,7 @@ window.Skjerm=(function(){
     var vis=["feat1","gud","note1","barn","feat2","mote","feat3","kons"];
     var rekke=vis.filter(function(k){return valgt.indexOf(k)>=0;}).concat(valgt.filter(function(k){return vis.indexOf(k)<0;}).sort(function(a,b){return (/^uka/.test(a)?0:1)-(/^uka/.test(b)?0:1);}));
     var slides=rekke.map(function(k){return K[k].h;}).concat(fyll);
-    return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now)};
+    return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now),hast:hast(now)};
   }
   function nextText(now){
     var n=E.filter(function(e){return !e.utkast&&!e.erstatter&&dt(e,e.last).getTime()+2*3600e3>now.getTime();}).sort(function(a,b){return dt(a)-dt(b);})[0];
@@ -2920,7 +2936,7 @@ window.Skjerm=(function(){
       .concat(NOTES.map(function(n){return "note:"+n.id;})).concat(FAST.map(function(f){return "fast:"+f.id;})).concat(["nytt"]);
   }
 
-  return {build:build,slide:slide,nextText:nextText,dLong:dLong,nokler:nokler};
+  return {build:build,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler};
 })();
 
 </script>
@@ -2944,7 +2960,9 @@ window.Skjerm=(function(){
     count=r.slides.length; durs=r.durs;
     box.innerHTML=count?r.slides.join(""):'<div class="empty">Ingen kommende arrangementer er lagt inn</div>';
     dots.innerHTML=new Array(count+1).join("<i></i>");
-    document.getElementById("next").textContent=r.next;
+    document.getElementById("next").textContent=r.hast||r.next;
+    document.getElementById("lbl").textContent=r.hast?"Viktig beskjed":"Neste i kirka";
+    document.querySelector(".foot").classList.toggle("hast",!!r.hast);
     document.getElementById("today").textContent=Skjerm.dLong(now);
     if(count) show(0); else {clearTimeout(timer);timer=setTimeout(render,15*60*1000);}
   }

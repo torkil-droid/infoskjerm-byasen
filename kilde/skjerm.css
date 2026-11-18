@@ -151,6 +151,10 @@
 .foot .lbl{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:calc(1.2*var(--u));color:#ffb3bd;flex:none}
 .foot .next{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .foot .today{flex:none;opacity:.8}
+.foot.hast{background:var(--gud)}
+.foot.hast .lbl{color:#fff}
+.foot.hast .next{font-weight:800}
+.foot.hast .today{display:none}
 .dots{position:absolute;left:0;right:0;bottom:calc(7*var(--u));height:calc(0.5*var(--u));display:flex;gap:calc(0.3*var(--u));background:var(--paper)}
 .dots i{flex:1;background:var(--rule);position:relative;overflow:hidden}
 .dots i.done{background:var(--ink)}

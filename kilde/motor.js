@@ -49,6 +49,18 @@ window.Skjerm=(function(){
       lead:"Elever fra kulturskolens Lørdagsskolen spiller klassisk musikk. Konsert nummer 1192 i en serie fra 1986.",
       hint:"Gratis. Hjertelig velkommen!",qr:"https://trondheimkulturskole.no/arrangementer/",qrtxt:"Les mer"}
   ];
+  // Avlyste arrangementer (avlyst:true) vises ikke noe sted.
+  E=E.filter(function(e){return !e.avlyst;});
+
+  // ---- Hastemelding: erstatter «Neste i kirka»-linja nederst til og med datoen «til». ----
+  // Kun etter e-post fra Torkil eller Ingrid, se RUTINER.md («D. Hastemelding»). Nyeste aktive vises.
+  var HAST=[
+  ];
+  function hast(now){
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    var a=HAST.filter(function(h){return ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
+    return a.length?a[a.length-1].tekst:"";
+  }
   var CAT = {
     gud:{name:"Gudstjenester",sub:"Velkommen til gudstjeneste i Byåsen kirke",c:"var(--gud)"},
     kons:{name:"Konserter",sub:"Musikk i kirka de neste ukene",c:"var(--kons)"},
@@ -392,7 +404,7 @@ window.Skjerm=(function(){
     var vis=["feat1","gud","note1","barn","feat2","mote","feat3","kons"];
     var rekke=vis.filter(function(k){return valgt.indexOf(k)>=0;}).concat(valgt.filter(function(k){return vis.indexOf(k)<0;}).sort(function(a,b){return (/^uka/.test(a)?0:1)-(/^uka/.test(b)?0:1);}));
     var slides=rekke.map(function(k){return K[k].h;}).concat(fyll);
-    return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now)};
+    return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now),hast:hast(now)};
   }
   function nextText(now){
     var n=E.filter(function(e){return !e.utkast&&!e.erstatter&&dt(e,e.last).getTime()+2*3600e3>now.getTime();}).sort(function(a,b){return dt(a)-dt(b);})[0];
@@ -417,5 +429,5 @@ window.Skjerm=(function(){
       .concat(NOTES.map(function(n){return "note:"+n.id;})).concat(FAST.map(function(f){return "fast:"+f.id;})).concat(["nytt"]);
   }
 
-  return {build:build,slide:slide,nextText:nextText,dLong:dLong,nokler:nokler};
+  return {build:build,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler};
 })();
