@@ -68,11 +68,14 @@ window.Skjerm=(function(){
   ];
   function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}
   function stilleAktiv(now){return STILLE.some(function(x){return tid(x.fra)<=now&&now<tid(x.til);});}
+  // Stedet sløyfes når tittelen allerede nevner det («… på Lian» / «Julemagi på Lian gård»)
+  function delerOrd(a,b){var o=a.toLowerCase().split(/[^a-zæøå]+/).filter(function(w){return w.length>=4;});
+    return b.toLowerCase().split(/[^a-zæøå]+/).some(function(w){return w.length>=4&&o.indexOf(w)>=0;});}
   function stilleSide(now){
     var g=E.filter(function(e){return e.cat==="gud"&&!e.utkast&&!e.erstatter&&dt(e)>now;}).sort(function(a,b){return dt(a)-dt(b);}).slice(0,3);
     return '<section class="stille"><div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>'+
       '<div class="tekst"><div class="avs">'+'<svg class="fisk" aria-hidden="true" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10"><path d="M268 0V544M138 121H398"/><path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/><ellipse cx="272" cy="332" rx="122" ry="124"/></svg>'+'<span>Byåsen kirke</span></div><h2>Velkommen til gudstjeneste</h2><ol>'+
-      g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(e.place&&e.place!=="Byåsen kirke"?' · '+esc(e.place):'')+'</span></li>';}).join("")+
+      g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(e.place&&e.place!=="Byåsen kirke"&&!delerOrd(e.title,e.place)?' · '+esc(e.place):'')+'</span></li>';}).join("")+
       '</ol></div></section>';
   }
   function aktivHast(now){

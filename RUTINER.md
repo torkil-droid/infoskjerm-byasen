@@ -31,8 +31,8 @@ Skriv alt på norsk bokmål. Når du omtaler et arrangement, si alltid hva det e
 
 ## Faste regler
 
-- **Ingenting fra innboksen kommer på skjermen uten godkjenning**, med ett unntak: hastemeldinger fra Torkil
-  eller Ingrid (rutine D). Nye plakater lages med `utkast:true`
+- **Ingenting fra innboksen kommer på skjermen uten godkjenning**, med to unntak fra Torkil eller Ingrid:
+  hastemeldinger (rutine D) og stillemodus ved gravferd (rutine E). Nye plakater lages med `utkast:true`
   (vises bare i forhåndsvisningen). Skal de erstatte en eksisterende plakat, gi dem ny id (f.eks. `julemesse-ny`)
   og `erstatter:"<gammel id>"`.
 - Kalenderinnhold (arrangementslinjer på samlesidene, gudstjenester) oppdateres automatisk uten godkjenning.
@@ -150,13 +150,26 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
      (f.eks. `["Babysang","Babymassasje","Legokafé"]`); ellers vises de fire neste arrangementene for målgruppen.
      Plakaten står først i runden fra `fra` til og med `til`. Se på den med
      `python3 verktoy/plakat.py <dato> hast=/tmp/hast.png` før du pusher; den høyre lista må ha minst ett arrangement.
-3. «Fjern beskjed»: fjern de aktive beskjedene i `HAST` (både linja og plakaten).
+3. «Fjern beskjed»: fjern de aktive beskjedene i `HAST` (både linja og plakaten) og aktive eller kommende tider i `STILLE`.
 4. Bygg, `node sjekk.js`, commit og push straks (skjermen henter innen 15 minutter). Fjern beskjeder i `HAST` med
    `til` før i dag, så listen holdes kort.
 5. Svar avsenderen med reply_to_message (bare til avsenderen, ingen andre): «Ligger på skjermen innen 15 minutter:
    «<tekst>». Vises til og med <dato>.», og med plakat: også teksten på plakaten (legg ved bildet av den hvis verktøyet støtter vedlegg).
    Eller «Beskjeden er fjernet fra skjermen.»
 6. Merk meldingen `behandlet` og fjern `unread`. Avslutt med én linje om hva som ble lagt ut.
+
+## E. Stillemodus ved gravferd (samme timevise sjekk som D)
+
+1. Gjelder meldinger fra nøyaktig `ts523@kirken.no` eller `IH542@kirken.no` der emnet begynner med «Stille»
+   (samme krav til avsender og etiketter som i D), f.eks. «Stille: fredag 20. november kl. 11–14».
+2. Legg inn `{fra:"ÅÅÅÅ-MM-DDTTT:MM", til:"ÅÅÅÅ-MM-DDTTT:MM"}` i `STILLE` i `motor.js`. Er bare én tid oppgitt, er
+   det starttiden: sett `fra` 1 time før og `til` 2 timer etter. Er bare dato oppgitt, svar avsenderen og be om
+   klokkeslett i stedet for å gjette. Skriv aldri navn eller annet om gravferden i koden eller commit-meldingen;
+   commit-melding: «Stillemodus <dato>».
+3. Stillemodus viser bare lyset, kirkefisken og de tre neste gudstjenestene, og går over til vanlig runde av seg
+   selv når `til` er passert. «Fjern beskjed» fjerner også aktive og kommende stillemodus-tider.
+4. Fjern tider i `STILLE` som er passert. Bygg, `node sjekk.js`, commit og push.
+5. Svar avsenderen (bare avsenderen): «Stillemodus er satt <dag dato> kl. <fra>–<til>.» Merk meldingen `behandlet`.
 
 ## Åpne saker (oppdater listen når noe er løst eller nytt kommer til)
 
