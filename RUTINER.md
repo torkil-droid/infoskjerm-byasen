@@ -138,11 +138,20 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
    - `til`: datoen for det avlyste arrangementet, eller i dag hvis ingen dato er oppgitt. `fra`: i dag.
    - Gjelder det et arrangement i `E`, sett `avlyst:true` på det (det forsvinner da fra samlesider, egne plakater og
      «Neste i kirka»). Ved endret tid/sted: rett arrangementet i stedet.
-3. «Fjern beskjed»: fjern de aktive beskjedene i `HAST`.
+   - **Egen plakat** når e-posten har mer tekst enn emnet (f.eks. hva som skjer i stedet): legg til
+     `plakat:{kicker:"Avlyst"|"Endret"|"Beskjed", tittel:"…", tekst:"…", cat:"barn"|"mote"|"gud"|"kons", titler:[…]}`.
+     `tittel` høyst 5 ord («Babysangen er avlyst»). `tekst` høyst 20 ord, avsenderens beskjed kortet ned
+     («Kaffe, te og kjeks står fremme, og mattene ligger på gulvet. Bli gjerne så lenge dere vil!»).
+     `cat` er målgruppen til det avlyste. `titler` bare når avsenderen nevner hva som skal vises til høyre
+     (f.eks. `["Babysang","Babymassasje","Legokafé"]`); ellers vises de fire neste arrangementene for målgruppen.
+     Plakaten står først i runden fra `fra` til og med `til`. Se på den med
+     `python3 verktoy/plakat.py <dato> hast=/tmp/hast.png` før du pusher; den høyre lista må ha minst ett arrangement.
+3. «Fjern beskjed»: fjern de aktive beskjedene i `HAST` (både linja og plakaten).
 4. Bygg, `node sjekk.js`, commit og push straks (skjermen henter innen 15 minutter). Fjern beskjeder i `HAST` med
    `til` før i dag, så listen holdes kort.
 5. Svar avsenderen med reply_to_message (bare til avsenderen, ingen andre): «Ligger på skjermen innen 15 minutter:
-   «<tekst>». Vises til og med <dato>.» Eller «Beskjeden er fjernet fra skjermen.»
+   «<tekst>». Vises til og med <dato>.», og med plakat: legg ved bildet av plakaten og teksten på den.
+   Eller «Beskjeden er fjernet fra skjermen.»
 6. Merk meldingen `behandlet` og fjern `unread`. Avslutt med én linje om hva som ble lagt ut.
 
 ## Åpne saker (oppdater listen når noe er løst eller nytt kommer til)

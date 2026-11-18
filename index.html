@@ -2561,12 +2561,19 @@ window.Skjerm=(function(){
 
   // ---- Hastemelding: erstatter «Neste i kirka»-linja nederst til og med datoen «til». ----
   // Kun etter e-post fra Torkil eller Ingrid, se RUTINER.md («D. Hastemelding»). Nyeste aktive vises.
+  // Valgfritt plakat:{kicker ("Avlyst"/"Endret"/"Beskjed"; dagen legges til selv),tittel,tekst,cat,titler} gir i tillegg en egen plakat først i runden: teksten til venstre
+  // og de neste arrangementene for samme målgruppe til høyre (titler: liste med deler av titler som skal tas med).
   var HAST=[
   ];
   function hast(now){
     var d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     var a=HAST.filter(function(h){return ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
     return a.length?a[a.length-1].tekst:"";
+  }
+  function aktivHast(now){
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    var a=HAST.filter(function(h){return h.plakat&&ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
+    return a.length?a[a.length-1]:null;
   }
   var CAT = {
     gud:{name:"Gudstjenester",sub:"Velkommen til gudstjeneste i Byåsen kirke",c:"var(--gud)"},
@@ -2751,11 +2758,24 @@ window.Skjerm=(function(){
     return '<li'+(k?' style="--c:'+(k.cat==="barn"||e.cat==="barn"?"#b37a00":k.c)+'"':'')+'><span class="num">'+x.getDate()+'</span><span class="wd">'+DAYS[x.getDay()]+'<span>'+MON[x.getMonth()]+'</span></span><div class="what"><h3>'+
       esc(e.title)+tag+'</h3><p><b>kl. '+esc(e.tt||e.t)+'</b>'+esc([e.note,e.place==="Byåsen kirke"?"":e.place].filter(Boolean).map(function(x){return " · "+x;}).join(""))+'</p></div></li>';
   }
-  function listSlide(name,sub,c,on,items,extra,now,farge){
-    if(!items.length) return "";
+  function listSlide(name,sub,c,on,items,extra,now,farge,tom){
+    if(!items.length&&!tom) return "";
     return '<section class="slide" style="--c:'+c+(on?';--on:'+on:'')+'"><aside class="panel"><div class="kicker">Byåsen kirke</div><h2>'+
       esc(name)+'</h2><p class="sub">'+esc(sub)+'</p>'+(extra||'')+'</aside><ol class="rows" style="--c:'+(on?'var(--ink)':c)+'">'+
       items.map(function(e){return row(e,now,farge);}).join("")+'</ol></section>';
+  }
+  // Hasteplakat: beskjed til venstre, de neste relevante arrangementene til høyre
+  function hastSlide(h,now){
+    var P=h.plakat, k=CAT[P.cat]||CAT.mote;
+    var items=E.filter(function(e){
+      if(e.utkast||e.erstatter||dt(e,e.last).getTime()+2*3600e3<=now.getTime()||(dt(e)-now)/864e5>42) return false;
+      if(P.titler&&P.titler.length) return P.titler.some(function(t){return e.title.toLowerCase().indexOf(t.toLowerCase())>=0;});
+      return e.cat===P.cat||(P.cat==="barn"&&e.alsoBarn)||(P.cat==="mote"&&e.alsoMote);
+    }).sort(function(a,b){return dt(a)-dt(b);}).slice(0,4);
+    var art=ART[P.cat]?'<div class="art '+P.cat+'">'+ART[P.cat]()+'</div>':'';
+    return listSlide(P.tittel,P.tekst,k.c,k.on,items,art,now,false,true)
+      .replace('<div class="kicker">Byåsen kirke</div>','<div class="kicker">'+esc((P.kicker||"Beskjed")+" · "+(dayDiff(ymd(h.til),now)<=0?"i dag":dShort(ymd(h.til)).toLowerCase()))+'</div>')
+      .replace('<section class="slide"','<section class="slide hastplakat"');
   }
   function featSlide(e,now){
     var k=CAT[e.cat],x=dt(e),code=e.qr?qr(e.qr):"",cls="slide feat"+(e.art?" "+e.art:"")+(e.img?" bilde":"");
@@ -2862,6 +2882,7 @@ window.Skjerm=(function(){
     // Alle kandidater med nøkkel, innhold og om de er tidskritiske
     var K={}, ekstra=[];
     K.gud={h:S.gud,krit:true};
+    var AH=aktivHast(now); if(AH) K.hast={h:hastSlide(AH,now),krit:true};
     FE.forEach(function(e,i){K["feat"+(i+1)]={h:featSlide(e,now),krit:snart(dt(e)),e:e}; if(i>=3) ekstra.push("feat"+(i+1));});
     NA.forEach(function(n,i){K["note"+(i+1)]={h:noteSlide(n,now),krit:snart(ymd(n.until))}; if(i>=1) ekstra.push("note"+(i+1));});
     // Samlesider tas bare med når de har noe som ikke allerede har egen plakat
@@ -2870,7 +2891,7 @@ window.Skjerm=(function(){
       rester[k]=L.I[k].filter(function(e){return FE.indexOf(e)<0;});
       if(rester[k].length) K[k]={h:S[k],krit:rester[k].some(function(e){return snart(dt(e));})};
     });
-    var orden=REGLER.prioritet.concat(ekstra).filter(function(k){return K[k];});
+    var orden=["hast"].concat(REGLER.prioritet).concat(ekstra).filter(function(k){return K[k];});
     var lengde=function(ks){return ks.reduce(function(a,k){return a+varighet(K[k].h);},0);};
     var krit=orden.filter(function(k){return K[k].krit;});
     var maks=REGLER.maks, maksSek=REGLER.maksSek;
@@ -2884,7 +2905,7 @@ window.Skjerm=(function(){
       uka.sort(function(a,b){return dt(a)-dt(b);});
       ut.forEach(function(k){delete K[k];});
       for(var u=0;u*5<uka.length;u++) K["uka"+(u+1)]={h:listSlide("Denne uka i kirka","Det som skjer de neste åtte dagene","#2b2a30",null,uka.slice(u*5,u*5+5),"",now,true),krit:true};
-      orden=REGLER.prioritet.concat(ekstra).concat(Object.keys(K).filter(function(k){return /^uka/.test(k);})).filter(function(k){return K[k];});
+      orden=["hast"].concat(REGLER.prioritet).concat(ekstra).concat(Object.keys(K).filter(function(k){return /^uka/.test(k);})).filter(function(k){return K[k];});
       krit=orden.filter(function(k){return K[k].krit;});
     }
     // Fast innhold: en ny misjonssak er alene om plassen i 14 dager
@@ -2908,7 +2929,7 @@ window.Skjerm=(function(){
     if(rest.length<=fri) fyll=rest;
     else if(fri>0){fyll=rest.slice(0,fri-1);omgang=rest.slice(fri-1);fyll.push(omgang[runde%omgang.length]);}
     // Fast rekkefølge på skjermen
-    var vis=["feat1","gud","note1","barn","feat2","mote","feat3","kons"];
+    var vis=["hast","feat1","gud","note1","barn","feat2","mote","feat3","kons"];
     var rekke=vis.filter(function(k){return valgt.indexOf(k)>=0;}).concat(valgt.filter(function(k){return vis.indexOf(k)<0;}).sort(function(a,b){return (/^uka/.test(a)?0:1)-(/^uka/.test(b)?0:1);}));
     var slides=rekke.map(function(k){return K[k].h;}).concat(fyll);
     return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now),hast:hast(now)};
@@ -2926,6 +2947,7 @@ window.Skjerm=(function(){
     if(p[0]==="note"){e=NOTES.filter(function(x){return x.id===p[1];})[0];return e?noteSlide(e,now):"";}
     if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e?fastSlide(e,now):"";}
     if(p[0]==="nytt") return newsSlide();
+    if(p[0]==="hast"){e=aktivHast(now);return e?hastSlide(e,now):"";}
     if(p[0]==="liste") return lists(now,true).S[p[1]]||"";
     return "";
   }
@@ -2933,7 +2955,7 @@ window.Skjerm=(function(){
   // Alle plakatnøkler, for sjekk.js
   function nokler(){
     return E.filter(function(e){return e.feat;}).map(function(e){return "feat:"+e.id;})
-      .concat(NOTES.map(function(n){return "note:"+n.id;})).concat(FAST.map(function(f){return "fast:"+f.id;})).concat(["nytt"]);
+      .concat(NOTES.map(function(n){return "note:"+n.id;})).concat(FAST.map(function(f){return "fast:"+f.id;})).concat(["nytt"]).concat(aktivHast(new Date())?["hast"]:[]);
   }
 
   return {build:build,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler};
