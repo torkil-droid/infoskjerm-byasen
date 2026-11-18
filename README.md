@@ -22,4 +22,6 @@ Står i `REGLER` øverst i rundekoden i `kilde/motor.js`. De bygger på rapporte
 - Egen plakat fra 3 uker før (konserter 6 uker). Inntil tre får fast plass.
 - Prioritet: gudstjenester (alltid med), egen plakat 1, påmelding, barn, møteplasser, egen plakat 2, konserter, egen plakat 3.
 - Siste plass går alltid på omgang mellom resten, ny for hver runde.
+- Tidskritisk (arrangementer og påmeldingsfrister de neste 8 dagene) står i hver runde. Trengs det, går runden opp til 10 plakater og 120 sekunder. Holder ikke det, samles arrangementene de neste 8 dagene uten egen plakat på «Denne uka i kirka».
+- Flere påmeldinger kan vises samtidig.
 - Faste, gjentakende ting får fast innhold uten dato (`neste:` henter neste dato fra kalenderen).

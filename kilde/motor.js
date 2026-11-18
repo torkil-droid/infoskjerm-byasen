@@ -212,16 +212,17 @@ window.Skjerm=(function(){
   };
 
   // ---- Plakattypene ----
-  function row(e,now){
+  function row(e,now,farge){
     var x=dt(e),n=dayDiff(x,now),tag=n<=0?'<span class="tag">I dag</span>':n===1?'<span class="tag">I morgen</span>':'';
-    return '<li><span class="num">'+x.getDate()+'</span><span class="wd">'+DAYS[x.getDay()]+'<span>'+MON[x.getMonth()]+'</span></span><div class="what"><h3>'+
+    var k=farge&&CAT[e.cat]?CAT[e.cat]:null;
+    return '<li'+(k?' style="--c:'+(k.cat==="barn"||e.cat==="barn"?"#b37a00":k.c)+'"':'')+'><span class="num">'+x.getDate()+'</span><span class="wd">'+DAYS[x.getDay()]+'<span>'+MON[x.getMonth()]+'</span></span><div class="what"><h3>'+
       esc(e.title)+tag+'</h3><p><b>kl. '+esc(e.tt||e.t)+'</b>'+esc([e.note,e.place==="Byåsen kirke"?"":e.place].filter(Boolean).map(function(x){return " · "+x;}).join(""))+'</p></div></li>';
   }
-  function listSlide(name,sub,c,on,items,extra,now){
+  function listSlide(name,sub,c,on,items,extra,now,farge){
     if(!items.length) return "";
     return '<section class="slide" style="--c:'+c+(on?';--on:'+on:'')+'"><aside class="panel"><div class="kicker">Byåsen kirke</div><h2>'+
       esc(name)+'</h2><p class="sub">'+esc(sub)+'</p>'+(extra||'')+'</aside><ol class="rows" style="--c:'+(on?'var(--ink)':c)+'">'+
-      items.map(function(e){return row(e,now);}).join("")+'</ol></section>';
+      items.map(function(e){return row(e,now,farge);}).join("")+'</ol></section>';
   }
   function featSlide(e,now){
     var k=CAT[e.cat],x=dt(e),code=e.qr?qr(e.qr):"",cls="slide feat"+(e.art?" "+e.art:"")+(e.img?" bilde":"");
@@ -271,8 +272,12 @@ window.Skjerm=(function(){
     liste:{                 // samlesider: høyst 5 linjer, 3 uker fram (konserter 6 uker)
       gud:{antall:5,dager:21}, barn:{antall:5,dager:21}, mote:{antall:5,dager:21}, kons:{antall:5,dager:42}
     },
+    // Tidskritisk: alt som skjer de neste 8 dagene, og påmeldingsfrister de neste 8 dagene, skal stå i hver runde.
+    // Trengs det, kan runden da gå opp til 10 plakater og 120 sekunder. Holder ikke det heller, samles
+    // arrangementene de neste 8 dagene som ikke har egen plakat, på siden «Denne uka i kirka».
+    kritisk:{dager:8, maks:10, maksSek:120},
     // Rekkefølgen plassene fordeles i. Gudstjenester er alltid med.
-    prioritet:["gud","feat1","note","barn","mote","feat2","kons","feat3"]
+    prioritet:["gud","feat1","note1","barn","mote","feat2","kons","feat3"]
   };
   function varighet(h){return /^<section class="slide" |qrbox|class="prog"/.test(h)?REGLER.sek.lang:REGLER.sek.vanlig;}
 
@@ -309,37 +314,59 @@ window.Skjerm=(function(){
   // runde: tellende rundenummer fra skjermsiden. Bestemmer hvem som har plassen som går på omgang.
   function build(now,runde){
     runde=runde||0;
-    var L=lists(now,false), S=L.S, RF=REGLER.fremhevet;
+    var L=lists(now,false), S=L.S, RF=REGLER.fremhevet, RK=REGLER.kritisk;
+    var snart=function(d){return (d-now)/864e5<=RK.dager;};
     // Fremhevet: alle som er innenfor horisonten, nærmeste først
     var FE=E.filter(function(e){return e.feat&&!e.utkast&&dt(e,e.last).getTime()+2*3600e3>now.getTime()&&L.days(e)<=(e.cat==="kons"?RF.konsertDager:RF.dager);})
             .sort(function(a,b){return dt(a)-dt(b);});
-    var C={};
-    for(var f=0;f<3;f++) C["feat"+(f+1)]=FE[f]?featSlide(FE[f],now):"";
-    // Samlesider tas bare med når de har noe som ikke allerede har egen plakat. Gudstjenester er alltid med.
-    ["gud","barn","mote","kons"].forEach(function(k){
-      var rest=L.I[k].filter(function(e){return FE.indexOf(e)<0;});
-      C[k]=(k==="gud"||rest.length)?S[k]:"";
+    // Påmeldinger med frist, nærmeste frist først
+    var NA=NOTES.filter(function(n){return !n.utkast&&now>=ymd(n.from)&&now<new Date(ymd(n.until).getTime()+86399e3);})
+            .sort(function(a,b){return ymd(a.until)-ymd(b.until);});
+    // Alle kandidater med nøkkel, innhold og om de er tidskritiske
+    var K={}, ekstra=[];
+    K.gud={h:S.gud,krit:true};
+    FE.forEach(function(e,i){K["feat"+(i+1)]={h:featSlide(e,now),krit:snart(dt(e)),e:e}; if(i>=3) ekstra.push("feat"+(i+1));});
+    NA.forEach(function(n,i){K["note"+(i+1)]={h:noteSlide(n,now),krit:snart(ymd(n.until))}; if(i>=1) ekstra.push("note"+(i+1));});
+    // Samlesider tas bare med når de har noe som ikke allerede har egen plakat
+    var rester={};
+    ["barn","mote","kons"].forEach(function(k){
+      rester[k]=L.I[k].filter(function(e){return FE.indexOf(e)<0;});
+      if(rester[k].length) K[k]={h:S[k],krit:rester[k].some(function(e){return snart(dt(e));})};
     });
-    var N=NOTES.filter(function(n){return !n.utkast&&now>=ymd(n.from)&&now<new Date(ymd(n.until).getTime()+86399e3);})[0];
-    C.note=N?noteSlide(N,now):"";
+    var orden=REGLER.prioritet.concat(ekstra).filter(function(k){return K[k];});
+    var lengde=function(ks){return ks.reduce(function(a,k){return a+varighet(K[k].h);},0);};
+    var krit=orden.filter(function(k){return K[k].krit;});
+    var maks=REGLER.maks, maksSek=REGLER.maksSek;
+    // For mye tidskritisk for 8 plakater: løft taket til 10 plakater og 120 sekunder
+    if(krit.length>maks-1||lengde(krit)>maksSek-REGLER.sek.lang){maks=RK.maks;maksSek=RK.maksSek;}
+    // Fortsatt for mye: samle det som skjer de neste 8 dagene, uten egen plakat, på «Denne uka i kirka»
+    if(krit.length>maks||lengde(krit)>maksSek){
+      var uka=[], ut=[];
+      ["barn","mote","kons"].forEach(function(k){ if(K[k]&&K[k].krit){ rester[k].forEach(function(e){if(snart(dt(e))&&uka.indexOf(e)<0) uka.push(e);}); ut.push(k);} });
+      ekstra.forEach(function(k){ if(/^feat/.test(k)&&K[k].krit){uka.push(K[k].e);ut.push(k);} });
+      uka.sort(function(a,b){return dt(a)-dt(b);});
+      ut.forEach(function(k){delete K[k];});
+      for(var u=0;u*5<uka.length;u++) K["uka"+(u+1)]={h:listSlide("Denne uka i kirka","Det som skjer de neste åtte dagene","#2b2a30",null,uka.slice(u*5,u*5+5),"",now,true),krit:true};
+      orden=REGLER.prioritet.concat(ekstra).concat(Object.keys(K).filter(function(k){return /^uka/.test(k);})).filter(function(k){return K[k];});
+      krit=orden.filter(function(k){return K[k].krit;});
+    }
     // Fast innhold: en ny misjonssak er alene om plassen i 14 dager
     var fast=FAST.filter(function(f){return !f.utkast&&(!f.until||now<new Date(ymd(f.until).getTime()+864e5));});
     var fresh=!NEWS.utkast&&dayDiff(now,NEWS.published)<=14;
     var fastPool=fresh?[newsSlide()]:[NEWS.utkast?"":newsSlide()].concat(fast.map(function(f){return fastSlide(f,now);})).filter(Boolean);
-    // Plassene fordeles etter prioritet. Den siste plassen holdes av til det som ikke får fast plass,
-    // så ingenting godkjent faller helt ut av runden.
-    var valgt=[], sek=0, faste=REGLER.maks-1, fasteSek=REGLER.maksSek-REGLER.sek.lang;
-    REGLER.prioritet.forEach(function(k){
-      if(C[k]&&valgt.length<faste&&sek+varighet(C[k])<=fasteSek){valgt.push(k);sek+=varighet(C[k]);}
+    // Tidskritisk først, så resten etter prioritet. Den siste plassen holdes av til omgang.
+    var valgt=krit.slice(), sek=lengde(valgt), faste=maks-1, fasteSek=maksSek-REGLER.sek.lang;
+    orden.forEach(function(k){
+      if(valgt.indexOf(k)<0&&valgt.length<faste&&sek+varighet(K[k].h)<=fasteSek){valgt.push(k);sek+=varighet(K[k].h);}
     });
-    // Resten fyller ledige plasser. Er det flere igjen enn plass, går den siste plassen på omgang, ny for hver runde.
-    var rest=REGLER.prioritet.filter(function(k){return C[k]&&valgt.indexOf(k)<0;}).map(function(k){return C[k];})
-      .concat(FE.slice(3).map(function(e){return featSlide(e,now);})).concat(fastPool);
-    var fri=Math.min(REGLER.maks-valgt.length, Math.floor((REGLER.maksSek-sek)/REGLER.sek.lang)), fyll=[], omgang=[];
+    var rest=orden.filter(function(k){return valgt.indexOf(k)<0;}).map(function(k){return K[k].h;}).concat(fastPool);
+    var fri=Math.max(0,Math.min(maks-valgt.length, Math.floor((maksSek-sek)/REGLER.sek.lang))), fyll=[], omgang=[];
     if(rest.length<=fri) fyll=rest;
     else if(fri>0){fyll=rest.slice(0,fri-1);omgang=rest.slice(fri-1);fyll.push(omgang[runde%omgang.length]);}
-    var vis=["feat1","gud","note","barn","feat2","mote","feat3","kons"].filter(function(k){return valgt.indexOf(k)>=0;});
-    var slides=vis.map(function(k){return C[k];}).concat(fyll);
+    // Fast rekkefølge på skjermen
+    var vis=["feat1","gud","note1","barn","feat2","mote","feat3","kons"];
+    var rekke=vis.filter(function(k){return valgt.indexOf(k)>=0;}).concat(valgt.filter(function(k){return vis.indexOf(k)<0;}).sort(function(a,b){return (/^uka/.test(a)?0:1)-(/^uka/.test(b)?0:1);}));
+    var slides=rekke.map(function(k){return K[k].h;}).concat(fyll);
     return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now)};
   }
   function nextText(now){
