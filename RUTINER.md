@@ -19,6 +19,18 @@ Skriv alt på norsk bokmål. Når du omtaler et arrangement, si alltid hva det e
 - **Kalenderen:** Byåsen menighets kalender på kirken.no (finn den med WebSearch, f.eks. «Byåsen kirke kalender kirken.no»).
 - **NMS:** https://www.nms.no/land/thailand (nyheter fra misjonsprosjektet).
 
+## Når kjøres hva
+
+Alt kjøres av én planlagt oppgave, «Infoskjermen», hver hele time kl. 7–22 (Europe/Oslo). Hver kjøring
+finner klokkeslettet med `TZ=Europe/Oslo date` og gjør, i denne rekkefølgen:
+
+1. **Alltid:** D og E (hastemeldinger og stillemodus). Det haster mest, så det kommer først.
+2. **Tirsdag i kjøringen kl. 18:** B (ukesforslag med A, og e-posten til Torkil og Ingrid).
+3. **Onsdag i kjøringene kl. 11 og kl. 17:** C (vedtak fra stabsmøtet).
+4. **Hver dag i kjøringen kl. 12** (ikke tirsdag, der B tar det): A (daglig innboks).
+
+Er det ingenting å gjøre, avsluttes kjøringen uten å klone repoet og uten å skrive noe.
+
 ## Bygge og sjekke
 
 1. Endre `kilde/motor.js` (data og plakater) eller `kilde/skjerm.css` (malen).
