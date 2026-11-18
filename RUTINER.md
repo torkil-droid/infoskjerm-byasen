@@ -150,7 +150,7 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
 4. Bygg, `node sjekk.js`, commit og push straks (skjermen henter innen 15 minutter). Fjern beskjeder i `HAST` med
    `til` før i dag, så listen holdes kort.
 5. Svar avsenderen med reply_to_message (bare til avsenderen, ingen andre): «Ligger på skjermen innen 15 minutter:
-   «<tekst>». Vises til og med <dato>.», og med plakat: legg ved bildet av plakaten og teksten på den.
+   «<tekst>». Vises til og med <dato>.», og med plakat: også teksten på plakaten (legg ved bildet av den hvis verktøyet støtter vedlegg).
    Eller «Beskjeden er fjernet fra skjermen.»
 6. Merk meldingen `behandlet` og fjern `unread`. Avslutt med én linje om hva som ble lagt ut.
 
