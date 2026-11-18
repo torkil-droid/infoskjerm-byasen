@@ -58,7 +58,8 @@ Samling `punkter`, ett dokument per punkt. Felter: `seksjon` (`oppstart`, `plaka
 `plakat: {nokkel, dato}` for plakatpunkter (nøkkel som i `Skjerm.slide`, f.eks. `feat:lian`, `note:julemiddag`,
 `fast:kafe`, `liste:gud`, `nytt`), `valg` (liste) for spørsmål, valgfritt `forslag`.
 Status settes på siden: `venter` (ny), `godkjent`, `endre` (med `notat`), `avvist`, `sett` (info), `besvart`
-(spørsmål, med `svar`). Rutinene setter `gjennomfort: "ÅÅÅÅ-MM-DD"` når et vedtak er utført.
+(spørsmål, med `svar`). Etter stabsmøtet arkiveres avgjorte punkter i samlingen `arkiv` (ett dokument per møte,
+id = møtedatoen) og slettes fra `punkter`, så siden alltid viser bare det som skal tas på neste møte.
 Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsdag <dato>») og `dato`.
 
 ## A. Daglig innboks
@@ -81,9 +82,8 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
 ## B. Ukesforslag (tirsdag ettermiddag) og oppsummering
 
 1. Kjør A først.
-2. **Rydd forrige ukes punkter:** slett punkter som har `gjennomfort`, og info-punkter med status `sett`
-   som gjelder forrige stabsmøte. Behold punkter med status `venter` eller `endre` uten `gjennomfort`, og de faste
-   oppstartspunktene `o0` og `o1`.
+2. **Sikkerhetsrydding:** punkter som har `gjennomfort`, eller info-punkter med status `sett`, skal ikke ligge der
+   (rutine C rydder dem). Finner du noen, arkiver og slett dem som i rutine C, steg 4.
 3. **Kalenderen:** les kalenderen på kirken.no for de neste 6 ukene og sammenlign med `E` i `motor.js`.
    Legg inn nye arrangementer, rett endrede og fjern avlyste/slettede. Nytt arrangement som bør ha egen plakat
    (konsert med billettsalg, stort arrangement, sesongsak) → utkast + punkt i `seksjon:"plakat"`.
@@ -111,12 +111,16 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
    - `godkjent` plakat: fjern `utkast`, fjern plakaten den erstatter (og `erstatter:`). For `liste:`/`fast:`/`nytt`
      som allerede vises: ingen endring.
    - `endre`: gjør det notatet sier, og legg den ut (fjern `utkast`). Er notatet uklart, gjør det du sikkert kan,
-     og la punktet stå som `venter` med en kort forklaring i `forslag` i stedet for å sette `gjennomfort`.
+     og la punktet stå som `venter` med en kort forklaring i `forslag`, og ikke arkiver det.
    - `avvist`: fjern utkastet, eller fjern plakaten fra runden hvis den allerede vises.
    - `besvart` spørsmål: gjør det svaret (og eventuelt notatet) sier.
 3. Bygg, sjekk, se på de endrede plakatene, commit og push.
-4. Sett `gjennomfort` på punktene. Oppdater eller lag info-punktet «Gjennomført etter stabsmøtet <dato>»
-   (`seksjon:"oppstart"`) med én linje per endring på skjermen, med arrangement og dato. Publiser siden på nytt.
+4. **Rydd siden, så den er klar for neste uke.** Lagre møtet i arkivet: dokument `arkiv/<møtedato>` med `dato`,
+   `tittel` («Stabsmøtet onsdag <dato>»), `punkter` (liste med `tittel`, `status`, og `notat`/`svar` når de finnes)
+   og `gjennomfort` (tekst: én setning per endring på skjermen, med arrangement og dato). Finnes dokumentet fra
+   kjøringen kl. 11, legg til i det. Slett så alle utførte punkter og alle info-punkter med status `sett` fra
+   `punkter`. Igjen står bare det som fortsatt venter (`venter`, og `endre`-punkter med uklart notat).
+   Sett `moter/aktiv` til neste onsdag (`dato` og `undertittel`). Publiser siden på nytt hvis koden er endret.
 5. **E-post** (bare når noe ble endret) fra `byasen-skjerm@agentmail.to` til ts523@kirken.no og IH542@kirken.no:
    emne «Infoskjermen: lagt ut etter stabsmøtet <dato>», én linje per endring, og eventuelle punkter som ble
    stående fordi notatet var uklart.
