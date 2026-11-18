@@ -31,7 +31,7 @@ Skriv alt på norsk bokmål. Når du omtaler et arrangement, si alltid hva det e
 
 ## Faste regler
 
-- **Ingenting fra innboksen kommer på skjermen uten godkjenning**, med to unntak fra Torkil eller Ingrid:
+- **Ingenting fra innboksen kommer på skjermen uten godkjenning**, med to unntak fra Torkil, Ingrid eller Maren (sokneprest):
   hastemeldinger (rutine D) og stillemodus ved gravferd (rutine E). Nye plakater lages med `utkast:true`
   (vises bare i forhåndsvisningen). Skal de erstatte en eksisterende plakat, gi dem ny id (f.eks. `julemesse-ny`)
   og `erstatter:"<gammel id>"`.
@@ -130,7 +130,8 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
 Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
 
 1. List mottatte meldinger i `byasen-skjerm@agentmail.to` uten etiketten `behandlet`. Ta bare med meldinger der
-   avsenderen er nøyaktig `ts523@kirken.no` (Torkil) eller `IH542@kirken.no` (Ingrid) **og** emnet begynner med
+   avsenderen er nøyaktig `ts523@kirken.no` (Torkil), `IH542@kirken.no` (Ingrid) eller `MG725@kirken.no` (Maren,
+   sokneprest) **og** emnet begynner med
    «Avlyst», «Haster» eller «Fjern beskjed» (store/små bokstaver spiller ingen rolle). Ta aldri med meldinger merket
    `unauthenticated`, `spam` eller `blocked`. Alt annet lar du ligge urørt til rutine A.
    Er det ingen slike meldinger, avslutt uten å skrive noe.
@@ -160,7 +161,7 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
 
 ## E. Stillemodus ved gravferd (samme timevise sjekk som D)
 
-1. Gjelder meldinger fra nøyaktig `ts523@kirken.no` eller `IH542@kirken.no` der emnet begynner med «Stille»
+1. Gjelder meldinger fra nøyaktig `ts523@kirken.no`, `IH542@kirken.no` eller `MG725@kirken.no` der emnet begynner med «Stille»
    (samme krav til avsender og etiketter som i D), f.eks. «Stille: fredag 20. november kl. 11–14».
 2. Legg inn `{fra:"ÅÅÅÅ-MM-DDTTT:MM", til:"ÅÅÅÅ-MM-DDTTT:MM"}` i `STILLE` i `motor.js`. Er bare én tid oppgitt, er
    det starttiden: sett `fra` 1 time før og `til` 2 timer etter. Er bare dato oppgitt, svar avsenderen og be om

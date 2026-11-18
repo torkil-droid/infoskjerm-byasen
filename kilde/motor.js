@@ -52,7 +52,7 @@ window.Skjerm=(function(){
   E=E.filter(function(e){return !e.avlyst;});
 
   // ---- Hastemelding: erstatter «Neste i kirka»-linja nederst til og med datoen «til». ----
-  // Kun etter e-post fra Torkil eller Ingrid, se RUTINER.md («D. Hastemelding»). Nyeste aktive vises.
+  // Kun etter e-post fra Torkil, Ingrid eller Maren, se RUTINER.md («D. Hastemelding»). Nyeste aktive vises.
   // Valgfritt plakat:{kicker ("Avlyst"/"Endret"/"Beskjed"; dagen legges til selv),tittel,tekst,cat,titler} gir i tillegg en egen plakat først i runden: teksten til venstre
   // og de neste arrangementene for samme målgruppe til høyre (titler: liste med deler av titler som skal tas med).
   var HAST=[
@@ -63,7 +63,7 @@ window.Skjerm=(function(){
     return a.length?a[a.length-1].tekst:"";
   }
   // ---- Stillemodus ved gravferd: svart side med levende lys og de neste tre gudstjenestene. ----
-  // Slås på med e-post fra Torkil eller Ingrid (RUTINER.md, «E. Stillemodus»). fra/til: "ÅÅÅÅ-MM-DDTTT:MM".
+  // Slås på med e-post fra Torkil, Ingrid eller Maren (RUTINER.md, «E. Stillemodus»). fra/til: "ÅÅÅÅ-MM-DDTTT:MM".
   var STILLE=[
   ];
   function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}
