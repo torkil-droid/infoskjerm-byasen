@@ -154,7 +154,7 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
 .nside .badge b{font-size:calc(6.4*var(--u))}
 .badge b.txt{font-size:calc(5.4*var(--u))}
 .nside .badge b.txt{font-size:calc(3.2*var(--u))}
-.nside .badge span{font-size:calc(0.95*var(--u));letter-spacing:.06em;margin-top:calc(0.2*var(--u))}
+.nside .badge span{font-size:calc(0.95*var(--u));letter-spacing:.06em;line-height:1.3;margin-top:calc(0.3*var(--u))}
 
 /* Oppslag med relieff i bakgrunnen */
 .note .kicker.frist{font-size:calc(2*var(--u));letter-spacing:.02em;text-transform:none;color:var(--gud);font-weight:800}
@@ -2754,11 +2754,11 @@ window.Skjerm=(function(){
   }
   function fristTekst(N,left){
     var u=ymd(N.until), d=u.getDate()+". "+["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"][u.getMonth()];
-    return left<=0?"Siste frist for påmelding er i dag":left===1?"1 dag igjen til fristen "+d:left+" dager igjen til fristen "+d;
+    return left<=0?"Siste frist for påmelding er i dag":"Påmelding innen "+d;
   }
   function noteSlide(N,now){
     var left=dayDiff(ymd(N.until),now);
-    var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div>';
+    var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist<br>for påmelding":(left===1?"dag igjen":"dager igjen")+"<br>å melde seg på")+'</span></div>';
     return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker'+(N.nedtelling?' frist':'')+'">'+esc(N.nedtelling?fristTekst(N,left):(N.kicker||"Påmelding"))+'</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
       '</p><p class="act">'+esc(N.act)+'</p></div>'+(N.art&&ART[N.art]?'<div class="nside"><div class="nart">'+ART[N.art]()+'</div>'+badge+'</div>':badge)+'</section>';
   }

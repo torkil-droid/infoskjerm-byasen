@@ -251,11 +251,11 @@ window.Skjerm=(function(){
   }
   function fristTekst(N,left){
     var u=ymd(N.until), d=u.getDate()+". "+["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"][u.getMonth()];
-    return left<=0?"Siste frist for påmelding er i dag":left===1?"1 dag igjen til fristen "+d:left+" dager igjen til fristen "+d;
+    return left<=0?"Siste frist for påmelding er i dag":"Påmelding innen "+d;
   }
   function noteSlide(N,now){
     var left=dayDiff(ymd(N.until),now);
-    var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div>';
+    var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist<br>for påmelding":(left===1?"dag igjen":"dager igjen")+"<br>å melde seg på")+'</span></div>';
     return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker'+(N.nedtelling?' frist':'')+'">'+esc(N.nedtelling?fristTekst(N,left):(N.kicker||"Påmelding"))+'</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
       '</p><p class="act">'+esc(N.act)+'</p></div>'+(N.art&&ART[N.art]?'<div class="nside"><div class="nart">'+ART[N.art]()+'</div>'+badge+'</div>':badge)+'</section>';
   }
