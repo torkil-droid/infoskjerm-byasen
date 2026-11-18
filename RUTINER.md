@@ -168,5 +168,3 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
   `motor.js` fordi kalenderen ikke lar seg rette. Ikke flagg det igjen.
 - Lian 6. desember kl. 15.00: kalenderen sier fortsatt utendørs ved Lianvannet. Skjermen bruker det som ble
   avklart (inne, juletregang ute etterpå). Ikke flagg det igjen.
-- «Lørdagsskolen 40 år: jubileumskonsert» 12. desember (punkt `n7`): utkast med `erstatter:"lordagsskolen-rad"`,
-  venter på godkjenning.
