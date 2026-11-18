@@ -193,6 +193,36 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
 @keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .empty{position:absolute;inset:0 0 calc(7*var(--u)) 0;display:flex;align-items:center;justify-content:center;font-size:calc(2.4*var(--u));color:var(--dim)}
 
+/* ---- Stillemodus: svart, levende lys, de neste gudstjenestene ---- */
+.stage.stillemodus{background:#0b0a0d}
+.stage.stillemodus .dots,.stage.stillemodus .foot{display:none}
+.stille{position:absolute;inset:0;background:#0b0a0d;color:#e9e4da;display:flex;align-items:center;padding:0 calc(9*var(--u)) 0 calc(14*var(--u));gap:calc(12*var(--u))}
+.stille .lys{position:relative;flex:none;width:calc(22*var(--u));height:calc(46*var(--u))}
+.stille .glod{position:absolute;left:50%;top:calc(3*var(--u));width:calc(44*var(--u));height:calc(44*var(--u));margin-left:calc(-22*var(--u));border-radius:50%;
+  background:radial-gradient(circle,rgba(255,200,120,.38) 0,rgba(255,160,70,.14) 28%,rgba(255,140,50,0) 62%);animation:glod 3.1s ease-in-out infinite}
+.stille .flamme{position:absolute;left:50%;top:calc(13*var(--u));width:calc(3.4*var(--u));height:calc(9*var(--u));margin-left:calc(-1.7*var(--u));
+  border-radius:50% 50% 45% 45% / 70% 70% 30% 30%;transform-origin:50% 92%;
+  background:radial-gradient(ellipse at 50% 80%,#fffdf4 0,#fff2c4 22%,#ffcf6a 42%,#ff9a2e 68%,rgba(255,110,20,.0) 100%);
+  animation:flamme 2.3s ease-in-out infinite,vipp 3.7s ease-in-out infinite}
+.stille .flamme i{position:absolute;left:30%;right:30%;bottom:8%;height:28%;border-radius:50%;background:radial-gradient(ellipse at 50% 70%,rgba(120,160,255,.55),rgba(120,160,255,0) 70%)}
+.stille .veke{position:absolute;left:50%;top:calc(21.2*var(--u));width:calc(0.35*var(--u));height:calc(1.6*var(--u));margin-left:calc(-0.175*var(--u));background:#2a2018;border-radius:2px}
+.stille .stamme{position:absolute;left:50%;top:calc(22.4*var(--u));width:calc(7.5*var(--u));bottom:0;margin-left:calc(-3.75*var(--u));border-radius:calc(0.8*var(--u)) calc(0.8*var(--u)) 0 0;
+  background:linear-gradient(180deg,rgba(11,10,13,0) 0,rgba(11,10,13,.25) 45%,rgba(11,10,13,.92) 100%),
+    radial-gradient(ellipse at 50% 0,rgba(255,214,150,.6),rgba(255,214,150,0) 40%),
+    linear-gradient(90deg,#8f8574 0,#d8cfbe 30%,#efe7d8 52%,#a99e8a 100%)}
+.stille .tekst{flex:1}
+.stille .avs{display:flex;align-items:center;gap:calc(1.6*var(--u));color:#a39d92;font-size:calc(1.6*var(--u));font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.stille .avs .fisk{width:calc(5*var(--u));height:calc(4*var(--u))}
+.stille h2{font-family:var(--display);font-weight:600;font-size:calc(4.6*var(--u));line-height:1.1;margin:calc(2.2*var(--u)) 0 calc(3*var(--u))}
+.stille ol{list-style:none;margin:0;padding:0}
+.stille li{padding:calc(1.6*var(--u)) 0;border-top:1px solid rgba(233,228,218,.14)}
+.stille li b{display:block;font-family:var(--display);font-weight:600;font-size:calc(2.8*var(--u))}
+.stille li span{display:block;color:#a39d92;font-size:calc(2*var(--u));margin-top:calc(.3*var(--u))}
+@keyframes flamme{0%,100%{transform:scale(1,1)}20%{transform:scale(.97,1.05)}45%{transform:scale(1.03,.96)}70%{transform:scale(.98,1.08)}85%{transform:scale(1.02,.99)}}
+@keyframes vipp{0%,100%{margin-left:calc(-1.7*var(--u))}30%{margin-left:calc(-1.55*var(--u))}60%{margin-left:calc(-1.85*var(--u))}}
+@keyframes glod{0%,100%{opacity:1;transform:scale(1)}35%{opacity:.82;transform:scale(.97)}55%{opacity:.95;transform:scale(1.02)}80%{opacity:.86;transform:scale(.99)}}
+@media (prefers-reduced-motion:reduce){.stille .flamme,.stille .glod{animation:none}}
+
 .stage{width:min(100vw,177.78vh);border-radius:0;box-shadow:none}
 @media (prefers-reduced-motion:reduce){.slide{transition:none}.slide.on .rows li{animation:none}}
 </style>
@@ -2571,6 +2601,19 @@ window.Skjerm=(function(){
     var a=HAST.filter(function(h){return ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
     return a.length?a[a.length-1].tekst:"";
   }
+  // ---- Stillemodus ved gravferd: svart side med levende lys og de neste tre gudstjenestene. ----
+  // Slås på med e-post fra Torkil eller Ingrid (RUTINER.md, «E. Stillemodus»). fra/til: "ÅÅÅÅ-MM-DDTTT:MM".
+  var STILLE=[
+  ];
+  function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}
+  function stilleAktiv(now){return STILLE.some(function(x){return tid(x.fra)<=now&&now<tid(x.til);});}
+  function stilleSide(now){
+    var g=E.filter(function(e){return e.cat==="gud"&&!e.utkast&&!e.erstatter&&dt(e)>now;}).sort(function(a,b){return dt(a)-dt(b);}).slice(0,3);
+    return '<section class="stille"><div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>'+
+      '<div class="tekst"><div class="avs">'+'<svg class="fisk" aria-hidden="true" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10"><path d="M268 0V544M138 121H398"/><path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/><ellipse cx="272" cy="332" rx="122" ry="124"/></svg>'+'<span>Byåsen kirke</span></div><h2>Velkommen til gudstjeneste</h2><ol>'+
+      g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(e.place&&e.place!=="Byåsen kirke"?' · '+esc(e.place):'')+'</span></li>';}).join("")+
+      '</ol></div></section>';
+  }
   function aktivHast(now){
     var d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     var a=HAST.filter(function(h){return h.plakat&&ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
@@ -2872,6 +2915,7 @@ window.Skjerm=(function(){
   // runde: tellende rundenummer fra skjermsiden. Bestemmer hvem som har plassen som går på omgang.
   function build(now,runde){
     runde=runde||0;
+    if(stilleAktiv(now)) return {slides:[],durs:[],omgang:0,next:"",hast:"",stille:stilleSide(now)};
     var L=lists(now,false), S=L.S, RF=REGLER.fremhevet, RK=REGLER.kritisk;
     var snart=function(d){return (d-now)/864e5<=RK.dager;};
     // Fremhevet: alle som er innenfor horisonten, nærmeste først
@@ -2968,7 +3012,7 @@ window.Skjerm=(function(){
       .concat(NOTES.map(function(n){return "note:"+n.id;})).concat(FAST.map(function(f){return "fast:"+f.id;})).concat(["nytt"]).concat(aktivHast(new Date())?["hast"]:[]);
   }
 
-  return {build:build,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler};
+  return {build:build,stilleSide:stilleSide,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler};
 })();
 
 </script>
@@ -2989,6 +3033,13 @@ window.Skjerm=(function(){
   // Tegnes på nytt ved starten av hver runde: utløpte plakater forsvinner, og den vekslende plassen går videre
   function render(){
     var now=new Date(), r=Skjerm.build(now,runde);
+    // Stillemodus (eller forhåndsvisning med ?stille i adressen): bare lyset og gudstjenestene, ingen runde
+    if(r.stille||/[?&]stille/.test(location.search)){
+      clearTimeout(timer); stage.classList.add("stillemodus");
+      box.innerHTML=r.stille||Skjerm.stilleSide(now);
+      timer=setTimeout(render,60*1000); return;
+    }
+    stage.classList.remove("stillemodus");
     count=r.slides.length; durs=r.durs;
     box.innerHTML=count?r.slides.join(""):'<div class="empty">Ingen kommende arrangementer er lagt inn</div>';
     dots.innerHTML=new Array(count+1).join("<i></i>");

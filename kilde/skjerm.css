@@ -164,3 +164,33 @@
 .paused .dots i.now::after{animation-play-state:paused}
 @keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .empty{position:absolute;inset:0 0 calc(7*var(--u)) 0;display:flex;align-items:center;justify-content:center;font-size:calc(2.4*var(--u));color:var(--dim)}
+
+/* ---- Stillemodus: svart, levende lys, de neste gudstjenestene ---- */
+.stage.stillemodus{background:#0b0a0d}
+.stage.stillemodus .dots,.stage.stillemodus .foot{display:none}
+.stille{position:absolute;inset:0;background:#0b0a0d;color:#e9e4da;display:flex;align-items:center;padding:0 calc(9*var(--u)) 0 calc(14*var(--u));gap:calc(12*var(--u))}
+.stille .lys{position:relative;flex:none;width:calc(22*var(--u));height:calc(46*var(--u))}
+.stille .glod{position:absolute;left:50%;top:calc(3*var(--u));width:calc(44*var(--u));height:calc(44*var(--u));margin-left:calc(-22*var(--u));border-radius:50%;
+  background:radial-gradient(circle,rgba(255,200,120,.38) 0,rgba(255,160,70,.14) 28%,rgba(255,140,50,0) 62%);animation:glod 3.1s ease-in-out infinite}
+.stille .flamme{position:absolute;left:50%;top:calc(13*var(--u));width:calc(3.4*var(--u));height:calc(9*var(--u));margin-left:calc(-1.7*var(--u));
+  border-radius:50% 50% 45% 45% / 70% 70% 30% 30%;transform-origin:50% 92%;
+  background:radial-gradient(ellipse at 50% 80%,#fffdf4 0,#fff2c4 22%,#ffcf6a 42%,#ff9a2e 68%,rgba(255,110,20,.0) 100%);
+  animation:flamme 2.3s ease-in-out infinite,vipp 3.7s ease-in-out infinite}
+.stille .flamme i{position:absolute;left:30%;right:30%;bottom:8%;height:28%;border-radius:50%;background:radial-gradient(ellipse at 50% 70%,rgba(120,160,255,.55),rgba(120,160,255,0) 70%)}
+.stille .veke{position:absolute;left:50%;top:calc(21.2*var(--u));width:calc(0.35*var(--u));height:calc(1.6*var(--u));margin-left:calc(-0.175*var(--u));background:#2a2018;border-radius:2px}
+.stille .stamme{position:absolute;left:50%;top:calc(22.4*var(--u));width:calc(7.5*var(--u));bottom:0;margin-left:calc(-3.75*var(--u));border-radius:calc(0.8*var(--u)) calc(0.8*var(--u)) 0 0;
+  background:linear-gradient(180deg,rgba(11,10,13,0) 0,rgba(11,10,13,.25) 45%,rgba(11,10,13,.92) 100%),
+    radial-gradient(ellipse at 50% 0,rgba(255,214,150,.6),rgba(255,214,150,0) 40%),
+    linear-gradient(90deg,#8f8574 0,#d8cfbe 30%,#efe7d8 52%,#a99e8a 100%)}
+.stille .tekst{flex:1}
+.stille .avs{display:flex;align-items:center;gap:calc(1.6*var(--u));color:#a39d92;font-size:calc(1.6*var(--u));font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.stille .avs .fisk{width:calc(5*var(--u));height:calc(4*var(--u))}
+.stille h2{font-family:var(--display);font-weight:600;font-size:calc(4.6*var(--u));line-height:1.1;margin:calc(2.2*var(--u)) 0 calc(3*var(--u))}
+.stille ol{list-style:none;margin:0;padding:0}
+.stille li{padding:calc(1.6*var(--u)) 0;border-top:1px solid rgba(233,228,218,.14)}
+.stille li b{display:block;font-family:var(--display);font-weight:600;font-size:calc(2.8*var(--u))}
+.stille li span{display:block;color:#a39d92;font-size:calc(2*var(--u));margin-top:calc(.3*var(--u))}
+@keyframes flamme{0%,100%{transform:scale(1,1)}20%{transform:scale(.97,1.05)}45%{transform:scale(1.03,.96)}70%{transform:scale(.98,1.08)}85%{transform:scale(1.02,.99)}}
+@keyframes vipp{0%,100%{margin-left:calc(-1.7*var(--u))}30%{margin-left:calc(-1.55*var(--u))}60%{margin-left:calc(-1.85*var(--u))}}
+@keyframes glod{0%,100%{opacity:1;transform:scale(1)}35%{opacity:.82;transform:scale(.97)}55%{opacity:.95;transform:scale(1.02)}80%{opacity:.86;transform:scale(.99)}}
+@media (prefers-reduced-motion:reduce){.stille .flamme,.stille .glod{animation:none}}

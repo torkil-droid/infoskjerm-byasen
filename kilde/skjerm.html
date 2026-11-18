@@ -49,6 +49,13 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
   // Tegnes på nytt ved starten av hver runde: utløpte plakater forsvinner, og den vekslende plassen går videre
   function render(){
     var now=new Date(), r=Skjerm.build(now,runde);
+    // Stillemodus (eller forhåndsvisning med ?stille i adressen): bare lyset og gudstjenestene, ingen runde
+    if(r.stille||/[?&]stille/.test(location.search)){
+      clearTimeout(timer); stage.classList.add("stillemodus");
+      box.innerHTML=r.stille||Skjerm.stilleSide(now);
+      timer=setTimeout(render,60*1000); return;
+    }
+    stage.classList.remove("stillemodus");
     count=r.slides.length; durs=r.durs;
     box.innerHTML=count?r.slides.join(""):'<div class="empty">Ingen kommende arrangementer er lagt inn</div>';
     dots.innerHTML=new Array(count+1).join("<i></i>");

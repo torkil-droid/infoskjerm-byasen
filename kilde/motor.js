@@ -62,6 +62,19 @@ window.Skjerm=(function(){
     var a=HAST.filter(function(h){return ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
     return a.length?a[a.length-1].tekst:"";
   }
+  // ---- Stillemodus ved gravferd: svart side med levende lys og de neste tre gudstjenestene. ----
+  // Slås på med e-post fra Torkil eller Ingrid (RUTINER.md, «E. Stillemodus»). fra/til: "ÅÅÅÅ-MM-DDTTT:MM".
+  var STILLE=[
+  ];
+  function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}
+  function stilleAktiv(now){return STILLE.some(function(x){return tid(x.fra)<=now&&now<tid(x.til);});}
+  function stilleSide(now){
+    var g=E.filter(function(e){return e.cat==="gud"&&!e.utkast&&!e.erstatter&&dt(e)>now;}).sort(function(a,b){return dt(a)-dt(b);}).slice(0,3);
+    return '<section class="stille"><div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>'+
+      '<div class="tekst"><div class="avs">'+'<svg class="fisk" aria-hidden="true" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10"><path d="M268 0V544M138 121H398"/><path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/><ellipse cx="272" cy="332" rx="122" ry="124"/></svg>'+'<span>Byåsen kirke</span></div><h2>Velkommen til gudstjeneste</h2><ol>'+
+      g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(e.place&&e.place!=="Byåsen kirke"?' · '+esc(e.place):'')+'</span></li>';}).join("")+
+      '</ol></div></section>';
+  }
   function aktivHast(now){
     var d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
     var a=HAST.filter(function(h){return h.plakat&&ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
@@ -363,6 +376,7 @@ window.Skjerm=(function(){
   // runde: tellende rundenummer fra skjermsiden. Bestemmer hvem som har plassen som går på omgang.
   function build(now,runde){
     runde=runde||0;
+    if(stilleAktiv(now)) return {slides:[],durs:[],omgang:0,next:"",hast:"",stille:stilleSide(now)};
     var L=lists(now,false), S=L.S, RF=REGLER.fremhevet, RK=REGLER.kritisk;
     var snart=function(d){return (d-now)/864e5<=RK.dager;};
     // Fremhevet: alle som er innenfor horisonten, nærmeste først
@@ -459,5 +473,5 @@ window.Skjerm=(function(){
       .concat(NOTES.map(function(n){return "note:"+n.id;})).concat(FAST.map(function(f){return "fast:"+f.id;})).concat(["nytt"]).concat(aktivHast(new Date())?["hast"]:[]);
   }
 
-  return {build:build,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler};
+  return {build:build,stilleSide:stilleSide,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler};
 })();
