@@ -134,6 +134,8 @@
 /* Fast innhold med bilde */
 .fast.medbilde .photo.img{width:calc(27*var(--u));height:calc(21.6*var(--u))}
 .fast.medbilde .photo.img img{object-position:50% 20%}
+.fast.stort .photo.img{width:calc(42*var(--u));height:calc(33.6*var(--u))}
+.fast.stort h2{font-size:calc(4.6*var(--u))}
 .fast.medbilde h2{font-size:calc(4.3*var(--u))}
 .fast.medbilde p{font-size:calc(2.4*var(--u))}
 .fast.medbilde .side{flex-basis:calc(15*var(--u))}

@@ -68,6 +68,8 @@ window.Skjerm=(function(){
      kicker:"Støttelaget",qr:"https://www.kirken.no",qrtxt:"Skann for å bli giver"},
     {id:"ramallah",title:"Vår vennskapsmenighet i Ramallah",text:"Vi har vennskapsavtale med Church of Hope i Ramallah, og ber for hverandre.",
      kicker:"Church of Hope",photo:"Bilde fra Church of Hope legges inn her"},
+    {id:"ramallah-ny",erstatter:"ramallah",utkast:true,title:"Vår vennskapsmenighet i Ramallah",text:"Vi har vennskapsavtale med Church of Hope i Ramallah, og ber for hverandre.",
+     kicker:"Church of Hope",img:"bilder/ramallah.jpg",credit:"Foto: Byåsen menighet"},
     {id:"kafe",utkast:true,neste:"Åpen kafé",title:"Åpen kafé",
      text:"God mat og drikke, og du forsyner deg selv. Anbefalt kaffegave 75 kr.",
      img:"bilder/kafe.jpg",credit:"Foto: Byåsen kirke",qrtxt:""},
@@ -253,7 +255,7 @@ window.Skjerm=(function(){
     var ph=fa.img?'<div class="photo img"><img src="'+esc(fa.img)+'" alt=""><span class="cred">'+esc(fa.credit||"")+'</span></div>':'';
     var side=(fa.img&&!fa.qr)?'':(fa.photo&&!fa.img)?'<div class="photo">'+esc(fa.photo)+'</div>':
       '<div class="side">'+(qr(fa.qr)||'<div class="ico">'+icon("heart")+'</div>')+'<div class="qrtxt">'+esc(fa.qrtxt)+'</div></div>';
-    return '<section class="slide fast'+(fa.img?' medbilde':'')+'">'+ph+'<div class="main"><div class="kicker">'+esc(kicker)+'</div><h2>'+esc(fa.title)+'</h2><p>'+esc(fa.text)+
+    return '<section class="slide fast'+(fa.img?' medbilde':'')+(fa.img&&!fa.qr?' stort':'')+'">'+ph+'<div class="main"><div class="kicker">'+esc(kicker)+'</div><h2>'+esc(fa.title)+'</h2><p>'+esc(fa.text)+
       '</p></div>'+side+'</section>';
   }
 
