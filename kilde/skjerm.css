@@ -122,13 +122,14 @@
 .note.medart{gap:calc(3*var(--u))}
 .nside{position:relative;flex:0 0 calc(36*var(--u));color:var(--gud)}
 .nart svg{display:block;width:100%}
-.nside .badge{position:absolute;left:50%;top:63.3%;transform:translate(-50%,-50%);width:calc(12*var(--u));height:calc(12*var(--u))}
-.nside .badge b{font-size:calc(5.2*var(--u))}
+.nside .badge{position:absolute;left:50%;top:63.3%;transform:translate(-50%,-50%);width:calc(14*var(--u));height:calc(14*var(--u))}
+.nside .badge b{font-size:calc(6.4*var(--u))}
 .badge b.txt{font-size:calc(5.4*var(--u))}
 .nside .badge b.txt{font-size:calc(3.2*var(--u))}
 .nside .badge span{font-size:calc(0.95*var(--u));letter-spacing:.06em;margin-top:calc(0.2*var(--u))}
 
 /* Oppslag med relieff i bakgrunnen */
+.note .kicker.frist{font-size:calc(2*var(--u));letter-spacing:.02em;text-transform:none;color:var(--gud);font-weight:800}
 .note>.main,.note>.nside{position:relative;z-index:1}
 .art-tre{position:absolute;top:0;bottom:0;right:calc(1*var(--u));width:calc(52*var(--u));pointer-events:none}
 .art-tre svg{display:block;width:100%;height:100%}

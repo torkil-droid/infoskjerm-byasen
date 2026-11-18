@@ -10,28 +10,24 @@ window.Skjerm=(function(){
     {d:"2026-11-15",t:"11.00",title:"Gudstjeneste med søndagsskole",place:"Byåsen kirke",cat:"gud"},
     {d:"2026-11-17",t:"10.30",title:"Babymassasje og babysang",note:"Babymassasje 10.30, babysang 11.00",place:"Ungdomssalen",cat:"barn"},
     {d:"2026-11-17",t:"11.30",title:"Menighetens hyggestund",note:"Ønskesnutter fra YouTube. Siste før jul",place:"Menighetssalen",cat:"mote"},
-    {d:"2026-11-21",t:"11.00",title:"Julemesse",place:"Byåsen kirke",cat:"mote",feat:true,id:"julemesse",
-      lead:"Hjemmelagde varer, julebakst, gaver og loddsalg. Barnekorene synger, og det serveres grøt fra 12.30.",art:"jul",pynt:"gaver"},
     {d:"2026-11-22",t:"11.00",title:"Gudstjeneste og KRIK 10+",note:"Avskjed for kapellan Sara Krog",place:"Byåsen kirke",cat:"gud"},
     {d:"2026-11-23",t:"17.00",title:"Familiekoret, første øvelse",place:"Ungdomssalen",cat:"barn"},
     {d:"2026-11-24",t:"10.30",title:"Babykonsert",note:"Avslutning på høstens babysang",place:"Ungdomssalen",cat:"barn"},
-    {d:"2026-11-24",t:"11.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote"},
+    {d:"2026-11-24",t:"11.30",tt:"11.30–13.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote"},
     {d:"2026-11-28",t:"11.00",tt:"11.00–13.00",title:"Legokafé",note:"Barnesangstund kl. 12.30",place:"Kirkerommet",cat:"barn",alsoMote:true},
     {d:"2026-11-29",t:"11.00",title:"Gudstjeneste for liten og stor",note:"1. søndag i advent",place:"Byåsen kirke",cat:"gud",alsoBarn:true,jul:true},
-    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert",relieff:"krystall",
-      lead:"Trondheimsolistene og Stine Bogsveen. Billetter på Hoopla.",qr:"https://www.hoopla.no"},
     {d:"2026-12-05",t:"14.00",title:"Menighetens julemiddag",note:"Med underholdning",place:"Menighetssalen",cat:"mote"},
-    {d:"2026-12-06",t:"15.00",title:"Adventsgudstjeneste ute på Lian",note:"Julemagi Lian gård",place:"Lianvannet, ved gressletta",cat:"gud",feat:true,id:"lian",jul:true,
-      lead:"Utendørs gudstjeneste under Julemagi på Lian gård. Kle deg etter været.",art:"skog",relieff:"krystall",pynt:"advent"},
+    {d:"2026-12-06",t:"15.00",title:"Adventsgudstjeneste på Lian",note:"Julemagi på Lian gård",place:"Julemagi på Lian gård",cat:"gud",feat:true,id:"lian",jul:true,
+      lead:"Gudstjeneste inne, og juletregang ute etterpå. Prest er Maren Græsli Evensen.",art:"skog",relieff:"krystall",pynt:"advent"},
+    {d:"2026-12-06",t:"17.00",title:"Adventssamling med julegrantenning",place:"Selsbakk menighetshus",cat:"mote",alsoBarn:true},
     {d:"2026-12-06",t:"19.00",title:"Kveldsgudstjeneste",place:"Byåsen kirke",cat:"gud",jul:true},
     {d:"2026-12-07",t:"17.00",title:"Familiekoret, øvelse",place:"Ungdomssalen",cat:"barn"},
-    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons",id:"adventskonsert-rad"},
     {d:"2026-12-12",t:"13.00",title:"Lørdagsskolen 40 år, jubileumskonsert",place:"Byåsen kirke",cat:"kons"},
     {d:"2026-12-13",t:"11.00",title:"Vi synger julen inn",note:"Gudstjeneste",place:"Byåsen kirke",cat:"gud",jul:true},
     {d:"2026-12-24",t:"13.00",tt:"13.00 · 14.30 · 16.00",last:"16.00",title:"Julaftensgudstjenester",note:"Byåsen skolemusikkorps spiller kl. 13.00",place:"Byåsen kirke",cat:"gud",jul:true},
     {d:"2026-12-25",t:"13.00",title:"Høytidsgudstjeneste",note:"1. juledag",place:"Byåsen kirke",cat:"gud",jul:true},
     {d:"2027-01-10",t:"11.00",title:"Juletrefest for liten og stor",note:"Gudstjeneste",place:"Byåsen kirke",cat:"gud",alsoBarn:true},
-    {d:"2027-01-12",t:"11.30",title:"Åpen kafé",note:"Oppstart etter nyttår",place:"Ungdomssalen",cat:"mote"},
+    {d:"2027-01-12",t:"11.30",tt:"11.30–13.30",title:"Åpen kafé",note:"Oppstart etter nyttår",place:"Ungdomssalen",cat:"mote"},
     {d:"2027-01-17",t:"11.00",title:"Gudstjeneste",place:"Byåsen kirke",cat:"gud"},
     {d:"2027-01-19",t:"11.30",title:"Hyggestund: nyttårsfest",note:"Trekkspillmusikk ved Dagfinn Gården",place:"Menighetssalen",cat:"mote"},
     {d:"2027-01-24",t:"11.00",title:"Gudstjeneste",place:"Byåsen kirke",cat:"gud"},
@@ -40,12 +36,12 @@ window.Skjerm=(function(){
 
     // ---- Forslag fra skjerminnboksen. utkast:true til stabsmøtet har godkjent dem. ----
     // erstatter: id-en til raden eller plakaten forslaget skal erstatte når det godkjennes.
-    {d:"2026-11-21",t:"11.00",title:"Julemesse",place:"Byåsen kirke",cat:"mote",feat:true,id:"julemesse-ny",erstatter:"julemesse",utkast:true,art:"jul",pynt:"gaver",
+    {d:"2026-11-21",t:"11.00",tt:"11.00–15.00",title:"Julemesse",place:"Byåsen kirke",cat:"mote",feat:true,id:"julemesse",art:"jul",pynt:"gaver",
       prog:[["11.00","Salget åpner. Kor Læne synger"],["12.15","Byåsen Soul Kids"],["12.30","Grøt"],["13.45","Byåsen familiekor"],["14.30","Trekning av hovedlotteriet"]]},
-    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert-ny",erstatter:"julekonsert",utkast:true,relieff:"krystall",
+    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert",relieff:"krystall",
       lead:"Solist er Stine Bogsveen. Skann koden for billetter på Hoopla.",qr:"https://trondheimsolistene.hoopla.no/event/1360741619",
       img:"bilder/trondheimsolistene.jpg",credit:"Trondheimsolistene"},
-    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",erstatter:"adventskonsert-rad",utkast:true,art:"jul",pynt:"advent",
+    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",art:"jul",pynt:"advent",
       lead:"Gjester: Byåsen skoleorkester, Harmonien kor og Else Bø. Kafé fra 18.15.",
       hint:"150 kr, barn under 16 gratis."}
   ];
@@ -58,22 +54,20 @@ window.Skjerm=(function(){
   // Oppslag: beskjeder med frist. Forsvinner når fristen er ute.
   var NOTES=[
     {id:"julemiddag",from:"2026-11-01",until:"2026-11-27",title:"Meld deg på julemiddagen",
-     kicker:"Påmelding innen 27. november",
+     nedtelling:true,
      text:"Lørdag 5. desember kl. 14 i menighetssalen, 450 kr. Hjertelig velkommen!",
      act:"Skriv deg på lista der, eller sms Lin‑Silvia: 418 08 744",art:"middag",relieff:"tre"}
   ];
   // Fast innhold: uten dato. Én per runde, og bare når det er plass.
   var FAST=[
     {id:"giver",title:"Bli fast giver",text:"Arbeidet i menigheten er avhengig av gaver. Faste givere gir oss stabile og forutsigbare rammer.",
-     kicker:"Støttelaget",qr:"https://www.kirken.no",qrtxt:"Skann for å bli giver"},
+     kicker:"Støttelaget",qr:"https://minpamelding.agrando.no/?skjemaId=2e12e62a-9180-409c-a5a8-700412289220",qrtxt:"Skann for å bli giver"},
     {id:"ramallah",title:"Vår vennskapsmenighet i Ramallah",text:"Vi har vennskapsavtale med Church of Hope i Ramallah, og ber for hverandre.",
-     kicker:"Church of Hope",photo:"Bilde fra Church of Hope legges inn her"},
-    {id:"ramallah-ny",erstatter:"ramallah",utkast:true,title:"Vår vennskapsmenighet i Ramallah",text:"Vi har vennskapsavtale med Church of Hope i Ramallah, og ber for hverandre.",
      kicker:"Church of Hope",img:"bilder/ramallah.jpg",credit:"Foto: Byåsen menighet"},
-    {id:"kafe",utkast:true,neste:"Åpen kafé",title:"Åpen kafé",
+    {id:"kafe",neste:"Åpen kafé",title:"Åpen kafé",
      text:"God mat og drikke, og du forsyner deg selv. Anbefalt kaffegave 75 kr.",
      img:"bilder/kafe.jpg",credit:"Foto: Byåsen kirke",qrtxt:""},
-    {id:"samisk",utkast:true,until:"2027-01-31",kicker:"Samisk kirkeråd",title:"Samisk konfirmantleir 2027",
+    {id:"samisk",lav:true,until:"2027-01-31",kicker:"Samisk kirkeråd",title:"Samisk konfirmantleir 2027",
      text:"For samiske konfirmanter fra hele landet. 11.–14. februar i Skogn, gratis reise og opphold.",
      img:"bilder/samisk.jpg",credit:"Bilde: Samisk kirkeråd",qr:"https://event.checkin.no/227741/samisk-konfirmantleir-2027",qrtxt:"Meld deg på"}
   ];
@@ -251,10 +245,14 @@ window.Skjerm=(function(){
       esc(e.cat==="gud"?"Gudstjeneste":e.cat==="kons"?"Konsert":"Byåsen kirke")+'<span class="chip">'+rel(x,now)+'</span></div><h2>'+
       esc(e.title)+'</h2>'+((e.lead||e.note)?'<p class="lead">'+esc(e.lead||e.note)+'</p>':'')+prog+'<div class="place">'+(e.hint?esc(e.place==="Byåsen kirke"?e.hint:e.place+" · "+e.hint):esc(e.place))+'</div></div>'+side+'</section>';
   }
+  function fristTekst(N,left){
+    var u=ymd(N.until), d=u.getDate()+". "+["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"][u.getMonth()];
+    return left<=0?"Siste frist for påmelding er i dag":left===1?"1 dag igjen til fristen "+d:left+" dager igjen til fristen "+d;
+  }
   function noteSlide(N,now){
     var left=dayDiff(ymd(N.until),now);
     var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist":left===1?"dag igjen":"dager igjen")+'</span></div>';
-    return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker">'+esc(N.kicker||"Påmelding")+'</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
+    return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker'+(N.nedtelling?' frist':'')+'">'+esc(N.nedtelling?fristTekst(N,left):(N.kicker||"Påmelding"))+'</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
       '</p><p class="act">'+esc(N.act)+'</p></div>'+(N.art&&ART[N.art]?'<div class="nside"><div class="nart">'+ART[N.art]()+'</div>'+badge+'</div>':badge)+'</section>';
   }
   function newsSlide(){
@@ -299,7 +297,7 @@ window.Skjerm=(function(){
 
   // ---- Samlesidene for en gitt dato ----
   function lists(now,withDrafts){
-    var up=E.filter(function(e){return !e.erstatter&&(withDrafts||!e.utkast)&&dt(e,e.last).getTime()+2*3600e3>now.getTime();});
+    var up=E.filter(function(e){return !e.erstatter&&(withDrafts||!e.utkast)&&dt(e,e.last).getTime()+2*3600e3>now.getTime();}).sort(function(a,b){return dt(a)-dt(b);});
     var days=function(e){return (dt(e)-now)/864e5;};
     var R=REGLER.liste, within=function(k){return function(e){return days(e)<=R[k].dager;};};
     var season=now>=SEASON[0]&&now<SEASON[1], S={}, I={};
@@ -369,13 +367,20 @@ window.Skjerm=(function(){
     // Fast innhold: en ny misjonssak er alene om plassen i 14 dager
     var fast=FAST.filter(function(f){return !f.utkast&&(!f.until||now<new Date(ymd(f.until).getTime()+864e5));});
     var fresh=!NEWS.utkast&&dayDiff(now,NEWS.published)<=14;
-    var fastPool=fresh?[newsSlide()]:[NEWS.utkast?"":newsSlide()].concat(fast.map(function(f){return fastSlide(f,now);})).filter(Boolean);
+    // Fast innhold med lav prioritet kommer halvparten så ofte som resten
+    var vanlig=[NEWS.utkast?"":newsSlide()].concat(fast.filter(function(f){return !f.lav;}).map(function(f){return fastSlide(f,now);})).filter(Boolean);
+    var lav=fast.filter(function(f){return f.lav;}).map(function(f){return fastSlide(f,now);}).filter(Boolean);
+    var fastPool=fresh?[newsSlide()]:vanlig;
     // Tidskritisk først, så resten etter prioritet. Den siste plassen holdes av til omgang.
     var valgt=krit.slice(), sek=lengde(valgt), faste=maks-1, fasteSek=maksSek-REGLER.sek.lang;
     orden.forEach(function(k){
       if(valgt.indexOf(k)<0&&valgt.length<faste&&sek+varighet(K[k].h)<=fasteSek){valgt.push(k);sek+=varighet(K[k].h);}
     });
-    var rest=orden.filter(function(k){return valgt.indexOf(k)<0;}).map(function(k){return K[k].h;}).concat(fastPool);
+    // Det som ikke fikk fast plass, går på omgang. Alt kommer like ofte, unntatt fast innhold med lav prioritet,
+    // som kommer halvparten så ofte.
+    var datert=orden.filter(function(k){return valgt.indexOf(k)<0;}).map(function(k){return K[k].h;});
+    var rest=datert.concat(fastPool);
+    if(lav.length&&!fresh) rest=rest.concat(rest,lav);
     var fri=Math.max(0,Math.min(maks-valgt.length, Math.floor((maksSek-sek)/REGLER.sek.lang))), fyll=[], omgang=[];
     if(rest.length<=fri) fyll=rest;
     else if(fri>0){fyll=rest.slice(0,fri-1);omgang=rest.slice(fri-1);fyll.push(omgang[runde%omgang.length]);}
@@ -386,7 +391,7 @@ window.Skjerm=(function(){
     return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now)};
   }
   function nextText(now){
-    var n=E.filter(function(e){return !e.utkast&&dt(e,e.last).getTime()+2*3600e3>now.getTime();})[0];
+    var n=E.filter(function(e){return !e.utkast&&!e.erstatter&&dt(e,e.last).getTime()+2*3600e3>now.getTime();}).sort(function(a,b){return dt(a)-dt(b);})[0];
     return n?dShort(dt(n)).toLowerCase()+" kl. "+n.t+"  "+n.title:"Se kirken.no for program";
   }
 
