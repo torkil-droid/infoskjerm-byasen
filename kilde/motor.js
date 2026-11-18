@@ -41,7 +41,7 @@ window.Skjerm=(function(){
     {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert",relieff:"krystall",
       lead:"Solist er Stine Bogsveen. Skann koden for billetter på Hoopla.",qr:"https://trondheimsolistene.hoopla.no/event/1360741619",
       img:"bilder/trondheimsolistene.jpg",credit:"Trondheimsolistene"},
-    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",art:"jul",pynt:"advent",
+    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",note:"150 kr, barn under 16 gratis",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",art:"jul",pynt:"advent",
       lead:"Gjester: Byåsen skoleorkester, Harmonien kor og Else Bø. Kafé fra 18.15.",
       hint:"150 kr, barn under 16 gratis."},
     {d:"2026-12-12",t:"13.00",title:"Lørdagsskolen 40 år: jubileumskonsert",note:"Gratis",place:"Byåsen kirke",cat:"kons",feat:true,id:"lordagsskolen",relieff:"krystall",
@@ -373,6 +373,15 @@ window.Skjerm=(function(){
             .sort(function(a,b){return ymd(a.until)-ymd(b.until);});
     // Alle kandidater med nøkkel, innhold og om de er tidskritiske
     var K={}, ekstra=[];
+    // Travel uke: flere kandidater enn faste plasser. Da samles konserter som ikke er tidskritiske på
+    // konsertsiden i stedet for å få egne plakater, og konsertsiden får plass før egen plakat 2.
+    var kandidater=1+FE.length+NA.length+["barn","mote","kons"].filter(function(k){return L.I[k].some(function(e){return FE.indexOf(e)<0;});}).length;
+    var konsSamlet=false;
+    if(kandidater>REGLER.maks-1){
+      var ut=FE.filter(function(e){return e.cat==="kons"&&!snart(dt(e))&&L.I.kons.indexOf(e)>=0;});
+      if(ut.length){FE=FE.filter(function(e){return ut.indexOf(e)<0;});konsSamlet=true;}
+    }
+    var prioritet=konsSamlet?["gud","feat1","note1","barn","mote","kons","feat2","feat3"]:REGLER.prioritet;
     K.gud={h:S.gud,krit:true};
     var AH=aktivHast(now); if(AH) K.hast={h:hastSlide(AH,now),krit:true};
     FE.forEach(function(e,i){K["feat"+(i+1)]={h:featSlide(e,now),krit:snart(dt(e)),e:e}; if(i>=3) ekstra.push("feat"+(i+1));});
@@ -383,7 +392,7 @@ window.Skjerm=(function(){
       rester[k]=L.I[k].filter(function(e){return FE.indexOf(e)<0;});
       if(rester[k].length) K[k]={h:S[k],krit:rester[k].some(function(e){return snart(dt(e));})};
     });
-    var orden=["hast"].concat(REGLER.prioritet).concat(ekstra).filter(function(k){return K[k];});
+    var orden=["hast"].concat(prioritet).concat(ekstra).filter(function(k){return K[k];});
     var lengde=function(ks){return ks.reduce(function(a,k){return a+varighet(K[k].h);},0);};
     var krit=orden.filter(function(k){return K[k].krit;});
     var maks=REGLER.maks, maksSek=REGLER.maksSek;
@@ -397,7 +406,7 @@ window.Skjerm=(function(){
       uka.sort(function(a,b){return dt(a)-dt(b);});
       ut.forEach(function(k){delete K[k];});
       for(var u=0;u*5<uka.length;u++) K["uka"+(u+1)]={h:listSlide("Denne uka i kirka","Det som skjer de neste åtte dagene","#2b2a30",null,uka.slice(u*5,u*5+5),"",now,true),krit:true};
-      orden=["hast"].concat(REGLER.prioritet).concat(ekstra).concat(Object.keys(K).filter(function(k){return /^uka/.test(k);})).filter(function(k){return K[k];});
+      orden=["hast"].concat(prioritet).concat(ekstra).concat(Object.keys(K).filter(function(k){return /^uka/.test(k);})).filter(function(k){return K[k];});
       krit=orden.filter(function(k){return K[k].krit;});
     }
     // Fast innhold: en ny misjonssak er alene om plassen i 14 dager
@@ -408,7 +417,7 @@ window.Skjerm=(function(){
     var lav=fast.filter(function(f){return f.lav;}).map(function(f){return fastSlide(f,now);}).filter(Boolean);
     var fastPool=fresh?[newsSlide()]:vanlig;
     // Tidskritisk først, så resten etter prioritet. Den siste plassen holdes av til omgang.
-    var valgt=krit.slice(), sek=lengde(valgt), faste=maks-1, fasteSek=maksSek-REGLER.sek.lang;
+    var valgt=krit.slice(), sek=lengde(valgt), faste=maks-1, fasteSek=maksSek-REGLER.sek.vanlig;
     orden.forEach(function(k){
       if(valgt.indexOf(k)<0&&valgt.length<faste&&sek+varighet(K[k].h)<=fasteSek){valgt.push(k);sek+=varighet(K[k].h);}
     });
@@ -417,7 +426,7 @@ window.Skjerm=(function(){
     var datert=orden.filter(function(k){return valgt.indexOf(k)<0;}).map(function(k){return K[k].h;});
     var rest=datert.concat(fastPool);
     if(lav.length&&!fresh) rest=rest.concat(rest,lav);
-    var fri=Math.max(0,Math.min(maks-valgt.length, Math.floor((maksSek-sek)/REGLER.sek.lang))), fyll=[], omgang=[];
+    var fri=Math.max(0,Math.min(maks-valgt.length, Math.floor((maksSek-sek)/REGLER.sek.vanlig))), fyll=[], omgang=[];
     if(rest.length<=fri) fyll=rest;
     else if(fri>0){fyll=rest.slice(0,fri-1);omgang=rest.slice(fri-1);fyll.push(omgang[runde%omgang.length]);}
     // Fast rekkefølge på skjermen
