@@ -16,7 +16,8 @@ Skriv alt på norsk bokmål. Når du omtaler et arrangement, si alltid hva det e
   `mcp__claude-artifacts__db_query / db_get / db_write`. Siden publiseres på nytt med `publish_files`
   (kall `list_files` først, så `as: index.html` = `gjennomgang/index.html`, pluss nye bilder som `bilder/<fil>`).
 - **Mottakere av rutine-e-post:** ts523@kirken.no (Torkil) og IH542@kirken.no (Ingrid). Ingen andre.
-- **Kalenderen:** Byåsen menighets kalender på kirken.no (finn den med WebSearch, f.eks. «Byåsen kirke kalender kirken.no»).
+- **Kalenderen:** https://www.kirken.no/nb-NO/fellesrad/trondheim-kirkelige-fellesrad/menigheter/byasen-menighet/kalender/
+  (les den med WebFetch; lista viser ca. 5 uker fram, «Last flere elementer» henter mer).
 - **NMS:** https://www.nms.no/land/thailand (nyheter fra misjonsprosjektet).
 
 ## Når kjøres hva
@@ -74,7 +75,14 @@ Status settes på siden: `venter` (ny), `godkjent`, `endre` (med `notat`), `avvi
 id = møtedatoen) og slettes fra `punkter`, så siden alltid viser bare det som skal tas på neste møte.
 Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsdag <dato>») og `dato`.
 
-## A. Daglig innboks
+## A. Daglig: kalender og innboks
+
+0. **Kalenderen** (hver dag, så endringer er på skjermen dagen etter): les kalenderen og sammenlign med `E` i
+   `motor.js`. Rett titler, klokkeslett og notater som er endret, legg inn nye arrangementer på samlesidene og fjern
+   avlyste og slettede. Dette skjer uten godkjenning. Rom i kirka (kirkerommet, menighetssalen, ungdomssalen) trengs
+   ikke i `place`; skjermen skjuler dem uansett. Steder utenfor kirka (Selsbakk, Lian, Shelter, Marken …) skal stå.
+   Overstyringer som står som kommentar i `motor.js` (f.eks. adventssamlingen 6. desember) beholdes. Nye egne
+   plakater og uklarheter tas bare i rutine B (tirsdag), ikke her. Bygg, sjekk, commit og push hvis noe er endret.
 
 1. List meldinger i `byasen-skjerm@agentmail.to` (alle sider). Nye = mottatte meldinger uten etiketten `behandlet`.
 2. For hver ny melding: les hele meldingen, tråden og vedleggene. Hastemeldinger (rutine D) hopper du over hvis de

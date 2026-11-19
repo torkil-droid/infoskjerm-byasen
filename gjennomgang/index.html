@@ -2654,7 +2654,7 @@ window.Skjerm=(function(){
     {d:"2026-11-17",t:"10.30",title:"Babymassasje og babysang",note:"Babymassasje 10.30, babysang 11.00",place:"Ungdomssalen",cat:"barn"},
     {d:"2026-11-17",t:"11.30",title:"Menighetens hyggestund",note:"Ønskesnutter fra YouTube. Siste før jul",place:"Menighetssalen",cat:"mote"},
     {d:"2026-11-22",t:"11.00",title:"Gudstjeneste og KRIK 10+",note:"Avskjed for kapellan Sara Krog",place:"Byåsen kirke",cat:"gud"},
-    {d:"2026-11-23",t:"17.00",title:"Familiekoret, første øvelse",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-11-23",t:"17.00",title:"Familiekoret, øvelse",place:"Ungdomssalen",cat:"barn"},
     {d:"2026-11-24",t:"10.30",title:"Babykonsert",note:"Avslutning på høstens babysang",place:"Ungdomssalen",cat:"barn"},
     {d:"2026-11-24",t:"11.30",tt:"11.30–13.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote"},
     {d:"2026-11-28",t:"11.00",tt:"11.00–13.00",title:"Legokafé",note:"Barnesangstund kl. 12.30",place:"Kirkerommet",cat:"barn",alsoMote:true},
@@ -2714,11 +2714,14 @@ window.Skjerm=(function(){
   // Stedet sløyfes når tittelen allerede nevner det («… på Lian» / «Julemagi på Lian gård»)
   function delerOrd(a,b){var o=a.toLowerCase().split(/[^a-zæøå]+/).filter(function(w){return w.length>=4;});
     return b.toLowerCase().split(/[^a-zæøå]+/).some(function(w){return w.length>=4&&o.indexOf(w)>=0;});}
+  // Rom i Byåsen kirke (kirkerommet, menighetssalen, ungdomssalen …) vises ikke: det er samme inngang.
+  // Bare steder utenfor kirka (Selsbakk, Lian, Shelter, Marken …) skrives ut.
+  function hjemme(p){return !p||/^\s*(byåsen kirke|byåsen\s*[-–,]|menighetssal|ungdomssal|kirkerom|møterom|kjeller|foaje|våpenhus)/i.test(p);}
   function stilleSide(now){
     var g=E.filter(function(e){return e.cat==="gud"&&!e.utkast&&!e.erstatter&&dt(e)>now;}).sort(function(a,b){return dt(a)-dt(b);}).slice(0,3);
     return '<section class="stille"><div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>'+
       '<div class="tekst"><div class="avs">'+'<svg class="fisk" aria-hidden="true" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10"><path d="M268 0V544M138 121H398"/><path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/><ellipse cx="272" cy="332" rx="122" ry="124"/></svg>'+'<span>Byåsen kirke</span></div><h2>Velkommen til gudstjeneste</h2><ol>'+
-      g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(e.place&&e.place!=="Byåsen kirke"&&!delerOrd(e.title,e.place)?' · '+esc(e.place):'')+'</span></li>';}).join("")+
+      g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(!hjemme(e.place)&&!delerOrd(e.title,e.place)?' · '+esc(e.place):'')+'</span></li>';}).join("")+
       '</ol></div></section>';
   }
   function aktivHast(now){
@@ -2736,8 +2739,8 @@ window.Skjerm=(function(){
   var NOTES=[
     {id:"julemiddag",from:"2026-11-01",until:"2026-11-27",title:"Meld deg på julemiddagen",
      nedtelling:true,
-     text:"Lørdag 5. desember kl. 14 i menighetssalen, 450 kr. Hjertelig velkommen!",
-     act:"Skriv deg på lista der, eller sms Lin‑Silvia: 418 08 744",art:"middag",relieff:"tre"}
+     text:"Lørdag 5. desember kl. 14, 450 kr. Hjertelig velkommen!",
+     act:"Påmeldingsliste i menighetssalen, eller sms eller ring Lin‑Silvia: 418 08 744",art:"middag",relieff:"tre"}
   ];
   // Fast innhold: uten dato. Én per runde, og bare når det er plass.
   var FAST=[
@@ -2907,7 +2910,7 @@ window.Skjerm=(function(){
     var x=dt(e),n=dayDiff(x,now),tag=n<=0?'<span class="tag">I dag</span>':n===1?'<span class="tag">I morgen</span>':'';
     var k=farge&&CAT[e.cat]?CAT[e.cat]:null;
     return '<li'+(k?' style="--c:'+(k.cat==="barn"||e.cat==="barn"?"#b37a00":k.c)+'"':'')+'><span class="num">'+x.getDate()+'</span><span class="wd">'+DAYS[x.getDay()]+'<span>'+MON[x.getMonth()]+'</span></span><div class="what"><h3>'+
-      esc(e.title)+tag+'</h3><p><b>kl. '+esc(e.tt||e.t)+'</b>'+esc([e.note,e.place==="Byåsen kirke"?"":e.place].filter(Boolean).map(function(x){return " · "+x;}).join(""))+'</p></div></li>';
+      esc(e.title)+tag+'</h3><p><b>kl. '+esc(e.tt||e.t)+'</b>'+esc([e.note,hjemme(e.place)?"":e.place].filter(Boolean).map(function(x){return " · "+x;}).join(""))+'</p></div></li>';
   }
   function listSlide(name,sub,c,on,items,extra,now,farge,tom){
     if(!items.length&&!tom) return "";
@@ -2937,7 +2940,7 @@ window.Skjerm=(function(){
     var prog=e.prog?'<ul class="prog">'+e.prog.map(function(p){return '<li><b>'+esc(p[0])+'</b><span>'+esc(p[1])+'</span></li>';}).join("")+'</ul>':'';
     return '<section class="'+cls+'" style="--c:'+k.c+(k.on?';--on:'+k.on:'')+'">'+(e.relieff&&ART[e.relieff]?ART[e.relieff]():'')+(e.art&&ART[e.art]?ART[e.art]():'')+(e.pynt&&!e.qr&&!e.img?'<div class="art-hj">'+ART[e.pynt](e)+'</div>':'')+'<div class="main"><div class="kicker">'+
       esc(e.cat==="gud"?"Gudstjeneste":e.cat==="kons"?"Konsert":"Byåsen kirke")+'<span class="chip">'+rel(x,now)+'</span></div><h2>'+
-      esc(e.title)+'</h2>'+((e.lead||e.note)?'<p class="lead">'+esc(e.lead||e.note)+'</p>':'')+prog+'<div class="place">'+(e.hint?esc(e.place==="Byåsen kirke"?e.hint:e.place+" · "+e.hint):esc(e.place))+'</div></div>'+side+'</section>';
+      esc(e.title)+'</h2>'+((e.lead||e.note)?'<p class="lead">'+esc(e.lead||e.note)+'</p>':'')+prog+'<div class="place">'+(hjemme(e.place)?esc(e.hint||"Byåsen kirke"):esc(e.place+(e.hint?" · "+e.hint:"")))+'</div></div>'+side+'</section>';
   }
   function fristTekst(N,left){
     var u=ymd(N.until), d=u.getDate()+". "+["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"][u.getMonth()];
@@ -2960,7 +2963,7 @@ window.Skjerm=(function(){
   }
   function fastSlide(fa,now){
     var kicker=fa.kicker;
-    if(fa.neste){var n=nesteGang(fa.neste,now||new Date());if(!n) return "";kicker="Neste gang "+dLong(dt(n)).toLowerCase()+" kl. "+(n.tt||n.t)+" · "+n.place;}
+    if(fa.neste){var n=nesteGang(fa.neste,now||new Date());if(!n) return "";kicker="Neste gang "+dLong(dt(n)).toLowerCase()+" kl. "+(n.tt||n.t)+(hjemme(n.place)?"":" · "+n.place);}
     var ph=fa.img?'<div class="photo img"><img src="'+esc(fa.img)+'" alt=""><span class="cred">'+esc(fa.credit||"")+'</span></div>':'';
     var side=(fa.img&&!fa.qr)?'':(fa.photo&&!fa.img)?'<div class="photo">'+esc(fa.photo)+'</div>':
       '<div class="side">'+(qr(fa.qr)||'<div class="ico">'+icon("heart")+'</div>')+'<div class="qrtxt">'+esc(fa.qrtxt)+'</div></div>';
