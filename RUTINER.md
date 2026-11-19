@@ -238,9 +238,12 @@ eller feiler `add_repo`, hopper du over F uten å skrive noe. F4 (nødbryteren) 
   starter når posten publiseres og slutter senest når arrangementet begynner eller fristen går ut.
 - **Kode:** hvert utkast får en løpende kode `FB-<nn>`. Finn høyeste brukte kode i `punkter`, `arkiv` og `ko/` i
   byasen-facebook, og bruk neste.
-- **Faste avsendere** som kan endre utkast på e-post: ts523@kirken.no (Torkil), IH542@kirken.no (Ingrid),
-  MG725@kirken.no (Maren). Torkil legger til flere her (f.eks. Lin-Silvia når adressen er kjent). Fra alle andre
-  blir innholdet et forslag som tas på stabsmøtet, ikke en endring.
+- **Faste avsendere** som kan endre utkast på e-post (staben i Byåsen; store og små bokstaver spiller ingen rolle):
+  ts523@kirken.no (Torkil Skille), IH542@kirken.no (Ingrid Eikli Heggset), MG725@kirken.no (Maren Græsli Evensen),
+  LL993@kirken.no (Lin-Silvia Løkken), SE754@kirken.no (Sigrid Egtvedt), am678@kirken.no (Anna Nicoline Segtnan
+  Mentzoni), EK764@kirken.no (Elise Kimo), HM493@kirken.no (Hege Merakerås), AP544@kirken.no (Anneliese Parow).
+  Fra alle andre blir innholdet et forslag som tas på stabsmøtet, ikke en endring. Nødbryteren (F4) kan bare
+  Torkil, Ingrid og Maren bruke.
 
 ### Punkter på gjennomgangssiden
 
