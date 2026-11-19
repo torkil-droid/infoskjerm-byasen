@@ -223,7 +223,8 @@ eller feiler `add_repo`, hopper du over F uten å skrive noe. F4 (nødbryteren) 
   får aldri fremheving. De kan få et forslag om å dele arrangørens eget innlegg, uten penger.
 - **Penger i en vanlig uke:** høyst 200 kr samlet. 30–50 kr per post til `folgere` i 1–2 dager fra publisering.
   80–100 kr til nærmiljøet (`naer-familie`, `naer-55`, `naer-alle`, `byen-10`) bare for store egne arrangementer.
-  Større beløp bare når staben har vedtatt en egen plan for arrangementet (se «Planer med større budsjett»).
+  Budsjett diskuteres ikke i stabsmøtet: der vises bare hvilke poster som får vanlig fremheving innenfor 200 kr.
+  Større beløp bare når Torkil og Ingrid har bestemt det og det står under «Planer med større budsjett».
 - **Innholdsmiks:** 3–5 poster i uka. Minst én som ikke er et arrangement: mennesker, bak kulissene eller kunnskap.
 - **Tekst:** første linje sier hva og når. Én tydelig handling (kom, meld deg på, kjøp billett, del). Navngi alltid
   arrangementet med dato. Kort. Høyst ett eller to emoji, gjerne ingen. Skriv aldri «begrenset antall plasser» eller
@@ -323,12 +324,14 @@ Høyst 4 linjer. Les også `ko/` og nevn poster med status `feil` eller `for_sen
 
 ### Planer med større budsjett
 
-Når staben har vedtatt mer penger til et eget arrangement, lages postene etter tre faser: **bli kjent** (video eller
+Torkil og Ingrid avgjør budsjett utenom stabsmøtet og lager retningslinjer for det (ikke klare ennå, nov. 2026).
+Foreslå aldri større beløp på gjennomgangssiden eller i tirsdagsmailen. Når en plan er bestemt og skrevet inn her,
+lages postene etter tre faser: **bli kjent** (video eller
 mennesker, 3–4 uker før, bred målgruppe), **invitasjon** (billettlenke, 1–2 uker før) og **påminnelse** (siste
 4–5 dager, til følgere og dem som har engasjert seg). Vedtatte planer:
 - Flygelkonsert: «Vingt Regards sur l'enfant Jésus» av Messiaen 9. februar 2027 (NTNU, NMH og Byåsen menighet).
   Foreslått 1800 kr: 400 kr 12.–25. jan, 700 kr 26. jan–4. feb, 500 kr 5.–9. feb kl. 17, 200 kr i reserve.
-  **Ikke vedtatt ennå.** Billettlenke mangler i kalenderen.
+  **Bare et forslag, ikke bestemt.** Torkil og Ingrid avgjør. Billettlenke mangler i kalenderen.
 
 ## Åpne saker (oppdater listen når noe er løst eller nytt kommer til)
 
