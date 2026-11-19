@@ -67,6 +67,9 @@ window.Skjerm=(function(){
   // Slås på med e-post fra Torkil, Ingrid eller Maren (RUTINER.md, «E. Stillemodus»). fra/til: "ÅÅÅÅ-MM-DDTTT:MM".
   var STILLE=[
   ];
+  // Utforming av stillemodus: "" = levende lys (dagens), "rolig" = lite, stille lys og dempet tekst, "uten" = uten lys.
+  // Forslag etter innspill 18. november; endres bare etter vedtak på stabsmøtet.
+  var STILLEVARIANT="";
   function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}
   function stilleAktiv(now){return STILLE.some(function(x){return tid(x.fra)<=now&&now<tid(x.til);});}
   // Stedet sløyfes når tittelen allerede nevner det («… på Lian» / «Julemagi på Lian gård»)
@@ -75,9 +78,10 @@ window.Skjerm=(function(){
   // Rom i Byåsen kirke (kirkerommet, menighetssalen, ungdomssalen …) vises ikke: det er samme inngang.
   // Bare steder utenfor kirka (Selsbakk, Lian, Shelter, Marken …) skrives ut.
   function hjemme(p){return !p||/^\s*(byåsen kirke|byåsen\s*[-–,]|menighetssal|ungdomssal|kirkerom|møterom|kjeller|foaje|våpenhus)/i.test(p);}
-  function stilleSide(now){
+  function stilleSide(now,variant){
+    variant=variant===undefined?STILLEVARIANT:variant;
     var g=E.filter(function(e){return e.cat==="gud"&&!e.utkast&&!e.erstatter&&dt(e)>now;}).sort(function(a,b){return dt(a)-dt(b);}).slice(0,3);
-    return '<section class="stille"><div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>'+
+    return '<section class="stille'+(variant?' '+variant:'')+'">'+(variant==="uten"?'':'<div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>')+
       '<div class="tekst"><div class="avs">'+'<svg class="fisk" aria-hidden="true" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10"><path d="M268 0V544M138 121H398"/><path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/><ellipse cx="272" cy="332" rx="122" ry="124"/></svg>'+'<span>Byåsen kirke</span></div><h2>Velkommen til gudstjeneste</h2><ol>'+
       g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(!hjemme(e.place)&&!delerOrd(e.title,e.place)?' · '+esc(e.place):'')+'</span></li>';}).join("")+
       '</ol></div></section>';
@@ -469,6 +473,7 @@ window.Skjerm=(function(){
     if(p[0]==="note"){e=NOTES.filter(function(x){return x.id===p[1];})[0];return e?noteSlide(e,now):"";}
     if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e?fastSlide(e,now):"";}
     if(p[0]==="nytt") return newsSlide();
+    if(p[0]==="stille") return stilleSide(now,p[1]||"");
     if(p[0]==="hast"){e=aktivHast(now);return e?hastSlide(e,now):"";}
     if(p[0]==="liste") return lists(now,true).S[p[1]]||"";
     return "";

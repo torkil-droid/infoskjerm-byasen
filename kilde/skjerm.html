@@ -52,7 +52,8 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
     // Stillemodus (eller forhåndsvisning med ?stille i adressen): bare lyset og gudstjenestene, ingen runde
     if(r.stille||/[?&]stille/.test(location.search)){
       clearTimeout(timer); stage.classList.add("stillemodus");
-      box.innerHTML=r.stille||Skjerm.stilleSide(now);
+      var v=(location.search.match(/[?&]stille=(\w+)/)||[])[1];
+      box.innerHTML=r.stille||Skjerm.stilleSide(now,v);
       timer=setTimeout(render,60*1000); return;
     }
     stage.classList.remove("stillemodus");

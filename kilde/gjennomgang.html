@@ -220,7 +220,7 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
     var now=ymd(p.dato||meta.dato), html=Skjerm.slide(p.nokkel,now);
     if(!html) return '<div class="g-pv"><div class="g-pvmiss">Fant ikke plakaten «'+esc(p.nokkel)+'» i skjermens kode.</div></div>';
     html=html.replace('<section class="slide','<section class="slide on');
-    return '<div class="g-pv"><div class="stage">'+html+'<div class="dots"><i class="done"></i><i class="done"></i><i class="done"></i><i></i><i></i><i></i><i></i></div>'+
+    return '<div class="g-pv"><div class="stage'+(/^stille/.test(p.nokkel)?' stillemodus':'')+'">'+html+'<div class="dots"><i class="done"></i><i class="done"></i><i class="done"></i><i></i><i></i><i></i><i></i></div>'+
       '<div class="foot'+(Skjerm.hast(now)?' hast':'')+'"><span class="lbl">'+(Skjerm.hast(now)?'Viktig beskjed':'Neste i kirka')+'</span><span class="next">'+esc(Skjerm.hast(now)||Skjerm.nextText(now))+'</span><span class="today">'+esc(Skjerm.dLong(now))+'</span></div></div>'+
       '<div class="g-pvcap">Slik ser plakaten ut på skjermen '+esc(Skjerm.dLong(now).toLowerCase())+'.</div></div>';
   }

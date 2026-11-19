@@ -338,6 +338,19 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
 .stille li{padding:calc(1.6*var(--u)) 0;border-top:1px solid rgba(233,228,218,.14)}
 .stille li b{display:block;font-family:var(--display);font-weight:600;font-size:calc(2.8*var(--u))}
 .stille li span{display:block;color:#a39d92;font-size:calc(2*var(--u));margin-top:calc(.3*var(--u))}
+/* Rolig variant: lite lys uten glød og flakking, dempet tekst. «uten»: ingen lys, bare teksten. */
+.stille.rolig,.stille.uten{background:#08080a;color:#bdb7ac}
+.stille.rolig{padding-left:calc(16*var(--u));gap:calc(9*var(--u))}
+.stille.rolig .lys{width:calc(8*var(--u));height:calc(22*var(--u));opacity:.7}
+.stille.rolig .glod{display:none}
+.stille.rolig .flamme{top:calc(2*var(--u));width:calc(1.5*var(--u));height:calc(4*var(--u));margin-left:calc(-.75*var(--u));animation:none;opacity:.8}
+.stille.rolig .veke{top:calc(5.6*var(--u));height:calc(.8*var(--u))}
+.stille.rolig .stamme{top:calc(6.2*var(--u));width:calc(3.2*var(--u));margin-left:calc(-1.6*var(--u));opacity:.6}
+.stille.uten{padding-left:calc(18*var(--u))}
+.stille.rolig h2,.stille.uten h2{font-size:calc(3.6*var(--u));color:#cfc9be}
+.stille.rolig li b,.stille.uten li b{font-size:calc(2.3*var(--u));color:#bdb7ac}
+.stille.rolig li span,.stille.uten li span{color:#7f7a71}
+.stille.rolig .avs,.stille.uten .avs{color:#7f7a71}
 @keyframes flamme{0%,100%{transform:scale(1,1)}20%{transform:scale(.97,1.05)}45%{transform:scale(1.03,.96)}70%{transform:scale(.98,1.08)}85%{transform:scale(1.02,.99)}}
 @keyframes vipp{0%,100%{margin-left:calc(-1.7*var(--u))}30%{margin-left:calc(-1.55*var(--u))}60%{margin-left:calc(-1.85*var(--u))}}
 @keyframes glod{0%,100%{opacity:1;transform:scale(1)}35%{opacity:.82;transform:scale(.97)}55%{opacity:.95;transform:scale(1.02)}80%{opacity:.86;transform:scale(.99)}}
@@ -2730,6 +2743,9 @@ window.Skjerm=(function(){
   // Slås på med e-post fra Torkil, Ingrid eller Maren (RUTINER.md, «E. Stillemodus»). fra/til: "ÅÅÅÅ-MM-DDTTT:MM".
   var STILLE=[
   ];
+  // Utforming av stillemodus: "" = levende lys (dagens), "rolig" = lite, stille lys og dempet tekst, "uten" = uten lys.
+  // Forslag etter innspill 18. november; endres bare etter vedtak på stabsmøtet.
+  var STILLEVARIANT="";
   function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}
   function stilleAktiv(now){return STILLE.some(function(x){return tid(x.fra)<=now&&now<tid(x.til);});}
   // Stedet sløyfes når tittelen allerede nevner det («… på Lian» / «Julemagi på Lian gård»)
@@ -2738,9 +2754,10 @@ window.Skjerm=(function(){
   // Rom i Byåsen kirke (kirkerommet, menighetssalen, ungdomssalen …) vises ikke: det er samme inngang.
   // Bare steder utenfor kirka (Selsbakk, Lian, Shelter, Marken …) skrives ut.
   function hjemme(p){return !p||/^\s*(byåsen kirke|byåsen\s*[-–,]|menighetssal|ungdomssal|kirkerom|møterom|kjeller|foaje|våpenhus)/i.test(p);}
-  function stilleSide(now){
+  function stilleSide(now,variant){
+    variant=variant===undefined?STILLEVARIANT:variant;
     var g=E.filter(function(e){return e.cat==="gud"&&!e.utkast&&!e.erstatter&&dt(e)>now;}).sort(function(a,b){return dt(a)-dt(b);}).slice(0,3);
-    return '<section class="stille"><div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>'+
+    return '<section class="stille'+(variant?' '+variant:'')+'">'+(variant==="uten"?'':'<div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>')+
       '<div class="tekst"><div class="avs">'+'<svg class="fisk" aria-hidden="true" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10"><path d="M268 0V544M138 121H398"/><path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/><ellipse cx="272" cy="332" rx="122" ry="124"/></svg>'+'<span>Byåsen kirke</span></div><h2>Velkommen til gudstjeneste</h2><ol>'+
       g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(!hjemme(e.place)&&!delerOrd(e.title,e.place)?' · '+esc(e.place):'')+'</span></li>';}).join("")+
       '</ol></div></section>';
@@ -3132,6 +3149,7 @@ window.Skjerm=(function(){
     if(p[0]==="note"){e=NOTES.filter(function(x){return x.id===p[1];})[0];return e?noteSlide(e,now):"";}
     if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e?fastSlide(e,now):"";}
     if(p[0]==="nytt") return newsSlide();
+    if(p[0]==="stille") return stilleSide(now,p[1]||"");
     if(p[0]==="hast"){e=aktivHast(now);return e?hastSlide(e,now):"";}
     if(p[0]==="liste") return lists(now,true).S[p[1]]||"";
     return "";
@@ -3211,7 +3229,7 @@ window.Skjerm=(function(){
     var now=ymd(p.dato||meta.dato), html=Skjerm.slide(p.nokkel,now);
     if(!html) return '<div class="g-pv"><div class="g-pvmiss">Fant ikke plakaten «'+esc(p.nokkel)+'» i skjermens kode.</div></div>';
     html=html.replace('<section class="slide','<section class="slide on');
-    return '<div class="g-pv"><div class="stage">'+html+'<div class="dots"><i class="done"></i><i class="done"></i><i class="done"></i><i></i><i></i><i></i><i></i></div>'+
+    return '<div class="g-pv"><div class="stage'+(/^stille/.test(p.nokkel)?' stillemodus':'')+'">'+html+'<div class="dots"><i class="done"></i><i class="done"></i><i class="done"></i><i></i><i></i><i></i><i></i></div>'+
       '<div class="foot'+(Skjerm.hast(now)?' hast':'')+'"><span class="lbl">'+(Skjerm.hast(now)?'Viktig beskjed':'Neste i kirka')+'</span><span class="next">'+esc(Skjerm.hast(now)||Skjerm.nextText(now))+'</span><span class="today">'+esc(Skjerm.dLong(now))+'</span></div></div>'+
       '<div class="g-pvcap">Slik ser plakaten ut på skjermen '+esc(Skjerm.dLong(now).toLowerCase())+'.</div></div>';
   }

@@ -190,6 +190,19 @@
 .stille li{padding:calc(1.6*var(--u)) 0;border-top:1px solid rgba(233,228,218,.14)}
 .stille li b{display:block;font-family:var(--display);font-weight:600;font-size:calc(2.8*var(--u))}
 .stille li span{display:block;color:#a39d92;font-size:calc(2*var(--u));margin-top:calc(.3*var(--u))}
+/* Rolig variant: lite lys uten glød og flakking, dempet tekst. «uten»: ingen lys, bare teksten. */
+.stille.rolig,.stille.uten{background:#08080a;color:#bdb7ac}
+.stille.rolig{padding-left:calc(16*var(--u));gap:calc(9*var(--u))}
+.stille.rolig .lys{width:calc(8*var(--u));height:calc(22*var(--u));opacity:.7}
+.stille.rolig .glod{display:none}
+.stille.rolig .flamme{top:calc(2*var(--u));width:calc(1.5*var(--u));height:calc(4*var(--u));margin-left:calc(-.75*var(--u));animation:none;opacity:.8}
+.stille.rolig .veke{top:calc(5.6*var(--u));height:calc(.8*var(--u))}
+.stille.rolig .stamme{top:calc(6.2*var(--u));width:calc(3.2*var(--u));margin-left:calc(-1.6*var(--u));opacity:.6}
+.stille.uten{padding-left:calc(18*var(--u))}
+.stille.rolig h2,.stille.uten h2{font-size:calc(3.6*var(--u));color:#cfc9be}
+.stille.rolig li b,.stille.uten li b{font-size:calc(2.3*var(--u));color:#bdb7ac}
+.stille.rolig li span,.stille.uten li span{color:#7f7a71}
+.stille.rolig .avs,.stille.uten .avs{color:#7f7a71}
 @keyframes flamme{0%,100%{transform:scale(1,1)}20%{transform:scale(.97,1.05)}45%{transform:scale(1.03,.96)}70%{transform:scale(.98,1.08)}85%{transform:scale(1.02,.99)}}
 @keyframes vipp{0%,100%{margin-left:calc(-1.7*var(--u))}30%{margin-left:calc(-1.55*var(--u))}60%{margin-left:calc(-1.85*var(--u))}}
 @keyframes glod{0%,100%{opacity:1;transform:scale(1)}35%{opacity:.82;transform:scale(.97)}55%{opacity:.95;transform:scale(1.02)}80%{opacity:.86;transform:scale(.99)}}
