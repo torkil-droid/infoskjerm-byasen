@@ -294,6 +294,10 @@ For hvert Facebook-punkt i `seksjon:"facebook"`:
   `godkjent_av` («stabsmøtet <dato>»). Sjekk at teksten ikke har `[mangler`, at bildet ligger i `bilder/`, at
   `publiser` er i framtiden (er det passert, sett neste naturlige tidspunkt minst 1 time fram og nevn det i
   e-posten), og at beløpet følger de faste reglene. Commit og push byasen-facebook. Arkiver punktet som vanlig.
+- **Er Meta ikke koblet til ennå** (`side_id` er tom i `oppsett.json`): legg posten i køen som vanlig, men send i
+  tillegg e-post til Torkil og Ingrid med emne «Facebook: legg ut for hånd <KODE> <arrangement og dato>», med
+  tidspunkt, teksten klar til å kopiere, lenke til gjennomgangssiden (der bildet ligger) og fremhevingen som skal
+  settes opp. Si i e-posten at dette gjelder til Meta-oppsettet er ferdig.
 - `venterpaa`: la punktet stå (ikke arkiver). Skriv i `tekst` hva det venter på, ut fra notatet. Kommer ikke det
   som mangler innen 24 timer før `publiser`, flytter du `publiser` til neste naturlige tidspunkt før arrangementet,
   eller setter punktet til `endre` med forklaring hvis det ikke rekker. Si fra i neste e-post.
