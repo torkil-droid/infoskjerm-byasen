@@ -38,6 +38,12 @@ finner klokkeslettet med `TZ=Europe/Oslo date` og gjør, i denne rekkefølgen:
 3. **Onsdag i kjøringene kl. 11 og kl. 17:** C (vedtak fra stabsmøtet).
 4. **Hver dag i kjøringen kl. 12** (ikke tirsdag, der B tar det): A (daglig innboks).
 
+Facebook (rutine F) går i de samme kjøringene:
+- **Alltid**, etter D og E: F4 (STOPP/START FACEBOOK) og F3b (siste blikk som er godkjent).
+- **Tirsdag kl. 18:** F1 (utkast) som en del av B, og F5 (tall fra forrige uke) i e-posten.
+- **Onsdag kl. 11 og 17:** F3 (vedtak) som en del av C.
+- **Hver dag kl. 12** (og i B): F2 (endringer på e-post med FB-kode) som en del av A.
+
 Er det ingenting å gjøre, avsluttes kjøringen uten å klone repoet og uten å skrive noe.
 
 ## Bygge og sjekke
@@ -199,6 +205,126 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
    selv når `til` er passert. «Fjern beskjed» fjerner også aktive og kommende stillemodus-tider.
 4. Fjern tider i `STILLE` som er passert. Bygg, `node sjekk.js`, commit og push.
 5. Svar avsenderen (bare avsenderen): «Stillemodus er satt <dag dato> kl. <fra>–<til>.» Merk meldingen `behandlet`.
+
+## F. Facebook
+
+Claude lager utkast til Facebook-poster med fremheving, staben godkjenner dem på gjennomgangssiden, og
+GitHub Actions i det private repoet `torkil-droid/byasen-facebook` publiserer dem. Les README.md der før første
+gang du gjør F. Hent det med `add_repo` (owner `torkil-droid`, repo `byasen-facebook`, access `push`).
+
+**Av eller på:** F gjøres bare når `"aktiv": true` står i `oppsett.json` i byasen-facebook. Finnes ikke repoet,
+eller feiler `add_repo`, hopper du over F uten å skrive noe. F4 (nødbryteren) gjøres alltid når repoet finnes.
+
+### Faste regler for Facebook
+
+- **Ingenting publiseres uten godkjenning** på gjennomgangssiden. Det finnes ingen hastevei for Facebook.
+- **Innleide arrangementer** (f.eks. Byåsen sangkor, Trondheimsolistene, Lørdagsskolen og andre eksterne arrangører)
+  får aldri fremheving. De kan få et forslag om å dele arrangørens eget innlegg, uten penger.
+- **Penger i en vanlig uke:** høyst 200 kr samlet. 30–50 kr per post til `folgere` i 1–2 dager fra publisering.
+  80–100 kr til nærmiljøet (`naer-familie`, `naer-55`, `naer-alle`, `byen-10`) bare for store egne arrangementer.
+  Større beløp bare når staben har vedtatt en egen plan for arrangementet (se «Planer med større budsjett»).
+- **Innholdsmiks:** 3–5 poster i uka. Minst én som ikke er et arrangement: mennesker, bak kulissene eller kunnskap.
+- **Tekst:** første linje sier hva og når. Én tydelig handling (kom, meld deg på, kjøp billett, del). Navngi alltid
+  arrangementet med dato. Kort. Høyst ett eller to emoji, gjerne ingen. Skriv aldri «begrenset antall plasser» eller
+  lignende uten at det er sant.
+- **Mangler noe** (billettlenke, pris, sted, bilde): skriv `[mangler: billettlenke]` i teksten og legg det i `mangler`.
+  Gjett aldri lenker, priser eller navn.
+- **Bilder:** bare fra godkjente kilder (e-post fra staben, menighetens Facebook-side, NMS sine Thailand-sider).
+  Ingen barneansikter uten at avsenderen har bekreftet samtykke. Har du ikke bilde, skriv et konkret forslag i
+  `bildeForslag` (hva slags bilde, og hvem som kan ta det).
+- **Aldri:** gravferder, vielser, personsaker, navn på avdøde eller sensitive opplysninger.
+- **Tidspunkt:** innlegg kl. 07.30 på hverdager, 09.00 i helgene, med mindre noe annet passer bedre. Fremhevingen
+  starter når posten publiseres og slutter senest når arrangementet begynner eller fristen går ut.
+- **Kode:** hvert utkast får en løpende kode `FB-<nn>`. Finn høyeste brukte kode i `punkter`, `arkiv` og `ko/` i
+  byasen-facebook, og bruk neste.
+- **Faste avsendere** som kan endre utkast på e-post: ts523@kirken.no (Torkil), IH542@kirken.no (Ingrid),
+  MG725@kirken.no (Maren). Torkil legger til flere her (f.eks. Lin-Silvia når adressen er kjent). Fra alle andre
+  blir innholdet et forslag som tas på stabsmøtet, ikke en endring.
+
+### Punkter på gjennomgangssiden
+
+Facebook-utkast er punkter i `punkter` med `type:"facebook"` og `seksjon:"facebook"` (eller `"sisteblikk"`, se F3b).
+Felter i tillegg til de vanlige (`tittel`, `tekst`, `rekkefolge`, `status`):
+`kode` («FB-12»), `tittel` («FB-12 · Julemiddagen 5. desember»), `tekst` (kort forklaring til staben: hvorfor
+denne posten, hva som er usikkert), `postTekst` (selve teksten), `bilde` (sti på gjennomgangssiden, `fb/FB-12.jpg`),
+`utenBilde` (true for ren tekstpost), `bildeForslag`, `publiser` («2026-11-23T07:30:00», norsk tid),
+`fremheving` (`{belop_kr, dager, malgruppe, malgruppeNavn}` eller utelatt), `mangler` (liste), `arrangement`
+(«Julemiddagen 5. desember»), `egetArrangement` (true/false).
+Statusene staben setter: `godkjent`, `venterpaa` («Godkjent når det kommer», med notat om hva og fra hvem),
+`endre` (med notat) og `avvist` («Ikke nå»). Siden lar ikke staben godkjenne et utkast som fortsatt mangler noe.
+
+### F1. Utkast (tirsdag, i rutine B)
+
+1. Se på kalenderen 2 uker fram (og lenger fram for planer med større budsjett) og på det som har kommet inn.
+2. Lag 3–5 utkast etter de faste reglene. Hvert utkast blir et punkt som over, med `status:"venter"`.
+3. Bilder: legg bildet i byasen-facebook som `bilder/<KODE>.jpg` (maks ca. 2000 px bred) og publiser det på
+   gjennomgangssiden som `fb/<KODE>.jpg` (publish_files, patch). Commit og push byasen-facebook.
+4. Utkast som er godkjent tidligere og fortsatt venter på noe (`venterpaa`), lar du stå.
+5. I tirsdagsmailen: én linje per utkast (kode, arrangement og dato, beløp), og hva som mangler.
+
+### F2. Endringer på e-post (daglig, i rutine A)
+
+1. Meldinger med `FB-<nn>` i emnet fra en av de faste avsenderne gjelder det utkastet. Les hele meldingen.
+   - Bilde i vedlegg: bytt bildet (byasen-facebook `bilder/<KODE>.jpg` og `fb/<KODE>.jpg` på siden).
+   - «ny tekst: …» eller tekst i meldingen: bytt `postTekst` (rett åpenbare skrivefeil, ellers ordrett).
+   - Pris, lenke eller annet som manglet: sett det inn der `[mangler: …]` sto, og fjern det fra `mangler`.
+2. Har utkastet status `venter`, `endre` eller ingen status ennå: oppdater punktet, og skriv i `tekst` hva som er
+   endret og av hvem. Det tas på neste stabsmøte som vanlig.
+3. Har utkastet status `venterpaa`, og det som manglet er kommet: oppdater punktet, sett `seksjon:"sisteblikk"`,
+   `status:"venter"` og forklar i `tekst` («Godkjent i stabsmøtet 18. november når bildet fra Lin-Silvia kom.
+   Bildet er lagt inn. Ett trykk på Godkjenn, så går posten ut mandag kl. 07.30.»). Publiser siden på nytt hvis
+   det er nye bilder, og send e-post til Torkil og Ingrid: emne «Facebook: siste blikk på <KODE> <arrangement og
+   dato>», to linjer og lenken til gjennomgangssiden.
+4. Er utkastet allerede publisert eller ligger i køen (`ko/<KODE>.json` med status `klar`): ikke endre det. Lag et
+   nytt utkast med ny kode i stedet, og nevn det i neste e-post.
+5. Fra andre avsendere, eller uten kode: vanlig innboksbehandling (rutine A). Gjelder det Facebook, lag et
+   info-punkt eller et nytt utkast.
+6. Merk meldingen `behandlet`.
+
+### F3. Vedtak (onsdag kl. 11 og 17, i rutine C)
+
+For hvert Facebook-punkt i `seksjon:"facebook"`:
+- `godkjent`: skriv `ko/<KODE>.json` i byasen-facebook med `status:"klar"`, `kode`, `tittel`, `tekst` (= `postTekst`),
+  `bilde` (`bilder/<KODE>.jpg` eller utelatt), `publiser`, `fremheving` (`{belop_kr, dager, malgruppe}`) og
+  `godkjent_av` («stabsmøtet <dato>»). Sjekk at teksten ikke har `[mangler`, at bildet ligger i `bilder/`, at
+  `publiser` er i framtiden (er det passert, sett neste naturlige tidspunkt minst 1 time fram og nevn det i
+  e-posten), og at beløpet følger de faste reglene. Commit og push byasen-facebook. Arkiver punktet som vanlig.
+- `venterpaa`: la punktet stå (ikke arkiver). Skriv i `tekst` hva det venter på, ut fra notatet. Kommer ikke det
+  som mangler innen 24 timer før `publiser`, flytter du `publiser` til neste naturlige tidspunkt før arrangementet,
+  eller setter punktet til `endre` med forklaring hvis det ikke rekker. Si fra i neste e-post.
+- `endre`: gjør det notatet sier, sett `status:"venter"` og la det stå til neste møte. Går posten ut før neste
+  møte, sett `seksjon:"sisteblikk"` og send e-post om siste blikk som i F2.3.
+- `avvist`: arkiver punktet. Fjern bildet fra byasen-facebook hvis det ikke brukes andre steder.
+
+### F3b. Siste blikk (hver kjøring)
+
+Spør `punkter` etter `type:"facebook"`, `seksjon:"sisteblikk"`, `status:"godkjent"` (db_query, billig). Er det
+noen, legg dem i køen som i F3, med `godkjent_av` «siste blikk <dato>», og arkiver dem. `endre` eller `avvist` i
+siste blikk behandles som i F3. Er det ingen, gjør ingenting.
+
+### F4. Nødbryter (hver kjøring, sammen med D)
+
+- Melding fra en av de tre godkjente avsenderne for hastemeldinger med emne som begynner med «STOPP FACEBOOK»:
+  sett `{"stopp": true}` i `stopp.json` i byasen-facebook, commit og push straks (det starter publiseringen, som
+  setter alle aktive fremhevinger på pause). Svar avsenderen: «Facebook er stoppet. Alle fremhevinger er satt på
+  pause, og ingenting nytt publiseres før noen sender «START FACEBOOK».»
+- «START FACEBOOK»: sett `{"stopp": false}`, push og svar. Fremhevinger som ble satt på pause, startes ikke igjen.
+- Merk meldingen `behandlet`.
+
+### F5. Tall (tirsdag, i e-posten fra B)
+
+Les `logg/fremhevinger.json` i byasen-facebook. For fremhevinger med `resultat` fra siste uke: én linje hver med
+kode, arrangement, beløp, `reach` (personer nådd) og `inline_post_engagement` (reaksjoner, kommentarer og delinger).
+Høyst 4 linjer. Les også `ko/` og nevn poster med status `feil` eller `for_sent`, med meldingen.
+
+### Planer med større budsjett
+
+Når staben har vedtatt mer penger til et eget arrangement, lages postene etter tre faser: **bli kjent** (video eller
+mennesker, 3–4 uker før, bred målgruppe), **invitasjon** (billettlenke, 1–2 uker før) og **påminnelse** (siste
+4–5 dager, til følgere og dem som har engasjert seg). Vedtatte planer:
+- Flygelkonsert: «Vingt Regards sur l'enfant Jésus» av Messiaen 9. februar 2027 (NTNU, NMH og Byåsen menighet).
+  Foreslått 1800 kr: 400 kr 12.–25. jan, 700 kr 26. jan–4. feb, 500 kr 5.–9. feb kl. 17, 200 kr i reserve.
+  **Ikke vedtatt ennå.** Billettlenke mangler i kalenderen.
 
 ## Åpne saker (oppdater listen når noe er løst eller nytt kommer til)
 

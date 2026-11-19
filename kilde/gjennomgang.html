@@ -105,6 +105,26 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
 .g-msg h2{font:700 30px var(--g-display);color:var(--g-ink)}
 .g-warnbox{background:#fff7e6;border:1px solid #f0d9a8;color:#7a5200;border-radius:8px;padding:10px 14px;font-size:15px;margin:0 0 16px;max-width:1500px}
 
+/* Facebook-utkast: slik posten blir seende ut */
+.g-fb{background:#fff;border:1px solid var(--g-rule);border-radius:10px;max-width:520px;box-shadow:0 10px 30px rgba(0,0,0,.12);overflow:hidden}
+.g-fbhead{display:flex;gap:10px;align-items:center;padding:12px 14px}
+.g-fbav{width:42px;height:42px;border-radius:50%;background:var(--g-red);color:#fff;display:flex;align-items:center;justify-content:center;font:700 16px var(--g-display);flex:none}
+.g-fbname{font-weight:800;font-size:15.5px;line-height:1.2}
+.g-fbwhen{font-size:13.5px;color:var(--g-dim)}
+.g-fbtext{padding:0 14px 12px;font-size:15.5px;line-height:1.42;white-space:pre-wrap}
+.g-fbtext mark{background:#ffe08a;border-radius:3px;padding:0 2px}
+.g-fbimg{display:block;width:100%;max-height:520px;object-fit:cover;background:#eee}
+.g-fbnoimg{aspect-ratio:1.91/1;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;background:repeating-linear-gradient(135deg,#f6f4ef 0 14px,#efece6 14px 28px);color:var(--g-dim);font-weight:700}
+.g-fbfoot{display:flex;justify-content:space-around;border-top:1px solid var(--g-rule);margin:0 14px;padding:8px 0;color:var(--g-dim);font-weight:700;font-size:14px}
+.g-fbmeta{margin-top:12px;display:grid;gap:6px;font-size:16px;max-width:520px}
+.g-fbmeta b{display:inline-block;min-width:118px;color:var(--g-dim);font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.g-miss{background:#fff7e6;border:1px solid #f0d9a8;color:#7a5200;border-radius:8px;padding:10px 14px;font-size:16px;margin-top:14px;max-width:62ch}
+.g-btn.g-wait{border-color:var(--g-q);color:var(--g-q)}
+.g-btn.g-wait.g-on{background:var(--g-q);color:#fff}
+.g-dot.s-venterpaa{background:#fff;border-color:var(--g-q);box-shadow:inset 0 0 0 3px var(--g-q)}
+.g-pill.s-venterpaa{background:#e6e5f3;color:var(--g-q)}
+.g-posttekst{width:100%;min-height:160px;font:16px/1.45 var(--g-body);border:2px solid var(--g-rule);border-radius:10px;padding:10px 14px;resize:vertical;color:var(--g-ink);background:#fcfbf9}
+
 @media (max-width:1100px){.g-cols.g-withpv{grid-template-columns:1fr}}
 @media (max-width:820px){
   .g-layout{grid-template-columns:1fr}
@@ -138,8 +158,9 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
 </script>
 <script>
 (function(){
-  var SECTIONS=[["oppstart","Oppstart"],["plakat","Nye plakater til godkjenning"],["innboks","Fra skjerminnboksen"],["flagg","Kalenderflagg og spørsmål"],["info","Til orientering"]];
-  var STATUSTXT={venter:"Venter",godkjent:"Godkjent",endre:"Endres",avvist:"Avvist",besvart:"Besvart",avklart:"Avklart",sett:"Sett"};
+  var SECTIONS=[["oppstart","Oppstart"],["sisteblikk","Siste blikk før publisering"],["plakat","Nye plakater til godkjenning"],["facebook","Facebook-poster"],["innboks","Fra skjerminnboksen"],["flagg","Kalenderflagg og spørsmål"],["info","Til orientering"]];
+  var STATUSTXT={venter:"Venter",godkjent:"Godkjent",endre:"Endres",avvist:"Avvist",besvart:"Besvart",avklart:"Avklart",sett:"Sett",venterpaa:"Godkjent når det kommer"};
+  var MND=["jan.","feb.","mars","apr.","mai","juni","juli","aug.","sep.","okt.","nov.","des."], DG=["søn.","man.","tir.","ons.","tor.","fre.","lør."];
   var items=[], meta={}, cur=0, view="item", db=null, readonly=false, lastErr="";
   var listEl=document.getElementById("list"), workEl=document.getElementById("work");
 
@@ -171,7 +192,30 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
   }
 
   // Selve skjermplakaten, tegnet med samme kode som skjermen
+  function manglerAv(it){
+    var m=(it.mangler||[]).slice(), re=/\[mangler:\s*([^\]]*)\]/gi, x;
+    while((x=re.exec(it.postTekst||""))) if(m.indexOf(x[1].trim())<0) m.push(x[1].trim());
+    if(!it.bilde&&!it.utenBilde&&m.indexOf("bilde")<0) m.push("bilde");
+    return m;
+  }
+  function naar(iso){
+    if(!iso) return "tidspunkt ikke satt";
+    var d=new Date(iso); if(isNaN(d)) return iso;
+    return DG[d.getDay()]+" "+d.getDate()+". "+MND[d.getMonth()]+" kl. "+String(d.getHours()).padStart(2,"0")+"."+String(d.getMinutes()).padStart(2,"0");
+  }
+  function fbPreview(it){
+    var t=esc(it.postTekst||"").replace(/\[mangler:[^\]]*\]/gi,function(m){return "<mark>"+m+"</mark>";});
+    var img=it.bilde?'<img class="g-fbimg" src="'+esc(it.bilde)+'" alt="Bildet til posten">':
+      (it.utenBilde?"":'<div class="g-fbnoimg">Bilde mangler'+(it.bildeForslag?'<br>Forslag: '+esc(it.bildeForslag):"")+'</div>');
+    var fr=it.fremheving;
+    return '<div class="g-pv"><div class="g-fb"><div class="g-fbhead"><div class="g-fbav" aria-hidden="true">BK</div><div><div class="g-fbname">Byåsen kirke</div><div class="g-fbwhen">Planlagt · '+esc(naar(it.publiser))+'</div></div></div>'+
+      '<div class="g-fbtext">'+t+'</div>'+img+'<div class="g-fbfoot" aria-hidden="true"><span>Liker</span><span>Kommenter</span><span>Del</span></div></div>'+
+      '<div class="g-fbmeta"><div><b>Publiseres</b>'+esc(naar(it.publiser))+'</div>'+
+      '<div><b>Fremheving</b>'+(fr&&fr.belop_kr?esc(fr.belop_kr+" kr i "+fr.dager+(fr.dager==1?" dag":" dager")+" · "+(fr.malgruppeNavn||fr.malgruppe||"")):"Ingen, bare vanlig post")+'</div></div></div>';
+  }
+
   function preview(it){
+    if(it.type==="facebook") return fbPreview(it);
     var p=it.plakat; if(!p||!p.nokkel) return "";
     var now=ymd(p.dato||meta.dato), html=Skjerm.slide(p.nokkel,now);
     if(!html) return '<div class="g-pv"><div class="g-pvmiss">Fant ikke plakaten «'+esc(p.nokkel)+'» i skjermens kode.</div></div>';
@@ -189,6 +233,12 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
       });
     } else if(it.type==="beslutning"){
       h+='<button type="button" class="g-btn g-go'+(s==="avklart"?' g-on':'')+'" data-st="avklart">Avklart<kbd>G</kbd></button>';
+    } else if(it.type==="facebook"){
+      var miss=manglerAv(it).length>0;
+      h+='<button type="button" class="g-btn g-go'+(s==="godkjent"?' g-on':'')+'" data-st="godkjent"'+(miss?' disabled title="Noe mangler fortsatt"':'')+'>Godkjenn<kbd>G</kbd></button>'+
+         (it.seksjon!=="sisteblikk"?'<button type="button" class="g-btn g-wait'+(s==="venterpaa"?' g-on':'')+'" data-st="venterpaa">Godkjenn når det kommer<kbd>V</kbd></button>':'')+
+         '<button type="button" class="g-btn g-ed'+(s==="endre"?' g-on':'')+'" data-st="endre">Endre<kbd>E</kbd></button>'+
+         '<button type="button" class="g-btn g-no'+(s==="avvist"?' g-on':'')+'" data-st="avvist">Ikke nå<kbd>A</kbd></button>';
     } else if(it.type==="info"){
       h+='<button type="button" class="g-btn g-go'+(s==="sett"?' g-on':'')+'" data-st="sett">Sett<kbd>G</kbd></button>';
     } else {
@@ -207,13 +257,16 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
     }
     if(cur>=items.length) cur=items.length-1;
     var it=items[cur], s=it.status||"venter", sec=SECTIONS.filter(function(x){return x[0]===it.seksjon;})[0];
-    var notelabel=it.type==="sporsmal"?"Annet svar eller kommentar":it.type==="beslutning"?"Hva ble bestemt?":"Kommentar eller endring";
+    var notelabel=it.type==="sporsmal"?"Annet svar eller kommentar":it.type==="beslutning"?"Hva ble bestemt?":(it.type==="facebook"&&s==="venterpaa")?"Hva venter vi på, og fra hvem? (f.eks. «bilde fra Lin-Silvia»)":"Kommentar eller endring";
+    var fbmiss=it.type==="facebook"?manglerAv(it):[];
     var pv=preview(it);
     var h=(readonly?'<div class="g-warnbox">Du kan se punktene, men ikke lagre. Be Torkil gi deg redigeringstilgang.</div>':'')+
       '<article class="g-card"><div class="g-kick">'+esc(sec?sec[1]:"")+'<span class="g-pill s-'+esc(s)+'">'+esc(STATUSTXT[s]||s)+'</span></div>'+
       '<h2 class="g-title">'+esc(it.tittel)+'</h2><div class="g-cols'+(pv?' g-withpv':'')+'">'+pv+'<div>'+
       '<div class="g-text">'+esc(it.tekst)+'</div>'+
       (it.forslag?'<div class="g-prop"><b>Claudes forslag</b>'+esc(it.forslag)+'</div>':'')+
+      (fbmiss.length?'<div class="g-miss"><b>Mangler:</b> '+esc(fbmiss.join(", "))+'. Fyll inn i teksten under, eller velg «Godkjenn når det kommer».</div>':'')+
+      (it.type==="facebook"?'<label class="g-lbl" for="posttekst">Teksten i posten (kan rettes her)</label><textarea class="g-posttekst" id="posttekst">'+esc(it.postTekst||"")+'</textarea>':'')+
       '</div></div>'+
       '<div class="g-act">'+decisionButtons(it)+
       '<label class="g-lbl" for="notat">'+esc(notelabel)+'</label><textarea class="g-notat" id="notat" placeholder="Skriv her, det lagres av seg selv">'+esc(it.notat||"")+'</textarea><div class="g-save" id="save" aria-live="polite"></div></div></article>'+
@@ -223,11 +276,18 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
     var ta=document.getElementById("notat"), t=null;
     ta.addEventListener("input",function(){clearTimeout(t);setSave("Skriver…");t=setTimeout(function(){write(it.id,{notat:ta.value});},900);});
     ta.addEventListener("blur",function(){clearTimeout(t);if((it.notat||"")!==ta.value) write(it.id,{notat:ta.value});});
+    var pt=document.getElementById("posttekst"), t2=null;
+    if(pt){
+      // En godkjent post som rettes, må godkjennes på nytt
+      var lagre=function(){if((it.postTekst||"")===pt.value) return; it.postTekst=pt.value; var p={postTekst:pt.value}; if(it.status==="godkjent"){p.status="venter";it.status="venter";} write(it.id,p);};
+      pt.addEventListener("input",function(){clearTimeout(t2);setSave("Skriver…");t2=setTimeout(lagre,1200);});
+      pt.addEventListener("blur",function(){clearTimeout(t2);lagre();render();});
+    }
   }
 
   function renderSum(){
     var h='<article class="g-card g-sum"><div class="g-kick">Oppsummering</div><h2 class="g-title">'+items.filter(done).length+' av '+items.length+' punkter er behandlet</h2>'+
-      '<p class="g-text">Etter møtet leser Claude beslutningene herfra, publiserer det som er godkjent og retter det som skal endres. Ingenting nytt kommer på skjermen før det.</p>'+
+      '<p class="g-text">Etter møtet leser Claude beslutningene herfra og retter det som skal endres. Godkjente plakater kommer på skjermen samme dag. Godkjente Facebook-poster legges i køen og publiseres på tidspunktet som står på dem.</p>'+
       '<table><thead><tr><th>Punkt</th><th>Status</th><th>Svar og kommentar</th></tr></thead><tbody>';
     items.forEach(function(it,i){
       var s=it.status||"venter";
@@ -260,7 +320,8 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
     it.status=st; if(p.svar!==undefined) it.svar=p.svar;
     render(); write(it.id,p);
     // Rask gjennomgang: gå videre av seg selv etter en beslutning (ikke ved Angre eller Endre, der skal det skrives en kommentar)
-    if(st!=="venter"&&st!=="endre"){
+    if(st==="venterpaa"){var ta2=document.getElementById("notat");if(ta2)ta2.focus();}
+    if(st!=="venter"&&st!=="endre"&&st!=="venterpaa"){
       var at=cur;
       setTimeout(function(){if(view==="item"&&cur===at){if(cur===items.length-1){view="sum";render();}else go(1);}},450);
     }
@@ -278,6 +339,13 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
   function go(d){cur=Math.max(0,Math.min(items.length-1,cur+d));view="item";render();workEl.scrollTop=0;}
   document.addEventListener("keydown",function(e){
     if(e.target.tagName==="TEXTAREA"){if(e.key==="Escape")e.target.blur();return;}
+    var fbIt=items[cur];
+    if(fbIt&&view==="item"&&fbIt.type==="facebook"){
+      if(e.key==="g"||e.key==="G"){if(!manglerAv(fbIt).length)setStatus("godkjent");return;}
+      if((e.key==="v"||e.key==="V")&&fbIt.seksjon!=="sisteblikk"){setStatus("venterpaa");e.preventDefault();return;}
+      if(e.key==="e"||e.key==="E"){setStatus("endre");var n=document.getElementById("notat");if(n)n.focus();e.preventDefault();return;}
+      if(e.key==="a"||e.key==="A"){setStatus("avvist");return;}
+    }
     var it=items[cur];
     if(e.key==="ArrowRight"||e.key==="ArrowDown"){e.preventDefault();go(1);}
     else if(e.key==="ArrowLeft"||e.key==="ArrowUp"){e.preventDefault();go(-1);}
@@ -297,11 +365,11 @@ button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid va
     if(!db){clearTimeout(timer);lastErr="Lagringen er ikke tilgjengelig. Logg inn på claude.ai og åpne siden på nytt.";renderItem();return;}
     db.doc("moter/aktiv").onSnapshot(function(s){
       meta=s.exists?(s.data()||{}):{};
-      if(document.activeElement&&document.activeElement.id==="notat") renderTop(); else render();
+      if(document.activeElement&&/^(notat|posttekst)$/.test(document.activeElement.id)) renderTop(); else render();
     },function(){});
     db.collection("punkter").orderBy("rekkefolge").onSnapshot(function(snap){
       if(!snap.metadata.fromCache) clearTimeout(timer);
-      var active=document.activeElement&&document.activeElement.id==="notat";
+      var active=document.activeElement&&/^(notat|posttekst)$/.test(document.activeElement.id);
       items=snap.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o;});
       if(active){renderTop();renderList();}else render();
     },function(e){clearTimeout(timer);lastErr="Kunne ikke hente punktene ("+(e&&e.code||"ukjent feil")+").";renderItem();});
