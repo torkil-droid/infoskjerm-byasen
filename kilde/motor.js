@@ -67,7 +67,7 @@ window.Skjerm=(function(){
   // Slås på med e-post fra Torkil, Ingrid eller Maren (RUTINER.md, «E. Stillemodus»). fra/til: "ÅÅÅÅ-MM-DDTTT:MM".
   var STILLE=[
   ];
-  // Utforming av stillemodus: "" = levende lys (dagens), "rolig" = lite, stille lys og dempet tekst, "uten" = uten lys.
+  // Utforming av stillemodus: "" = levende lys (dagens), "rolig" = lite, levende lys nede til venstre og teksten nesten midt på, "uten" = uten lys.
   // Forslag etter innspill 18. november; endres bare etter vedtak på stabsmøtet.
   var STILLEVARIANT="";
   function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}

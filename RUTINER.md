@@ -24,8 +24,9 @@ Skriv alt på norsk bokmål. Når du omtaler et arrangement, si alltid hva det e
   https://www.kirken.no/nb-NO/fellesrad/trondheim-kirkelige-fellesrad/menigheter/byasen-menighet/kalender/
   henger etter og viser bare ca. 5 uker; bruk den ikke som kilde. Detaljer (beskrivelse, billettlenke) står også på
   arrangementssiden `…/kalender/activity?id=<id>`.
-- **Horisont:** hele kalenderen 6 uker fram hver dag (samlesider 3 uker, konserter 6 uker). Tirsdag ser du i tillegg
-  etter store arrangementer lenger fram (konserter med billettsalg, høytider) som bør få egen plakat i tide.
+- **Horisont:** les kalenderen 4 måneder fram hver dag, og hold `E` oppdatert for hele perioden, så konserter
+  og store arrangementer er kjent tidlig (også for Facebook). Det som vises på skjermen, styres fortsatt av
+  rundereglene: samlesider 3 uker, konserter 6 uker, egne plakater fra 3 (konserter 6) uker før.
 - **NMS:** https://www.nms.no/land/thailand (nyheter fra misjonsprosjektet).
 
 ## Når kjøres hva
@@ -118,7 +119,7 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
 1. Kjør A først.
 2. **Sikkerhetsrydding:** punkter som har `gjennomfort`, eller info-punkter med status `sett`, skal ikke ligge der
    (rutine C rydder dem). Finner du noen, arkiver og slett dem som i rutine C, steg 4.
-3. **Kalenderen:** les kalenderen på kirken.no for de neste 6 ukene og sammenlign med `E` i `motor.js`.
+3. **Kalenderen:** les kalenderen 4 måneder fram og sammenlign med `E` i `motor.js`.
    Legg inn nye arrangementer, rett endrede og fjern avlyste/slettede. Nytt arrangement som bør ha egen plakat
    (konsert med billettsalg, stort arrangement, sesongsak) → utkast + punkt i `seksjon:"plakat"`.
    Uklarheter (motstridende tid/sted, manglende billettlenke, stavefeil i kalenderen) → punkt i `seksjon:"flagg"`
