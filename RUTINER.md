@@ -194,10 +194,12 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
 
 ## Åpne saker (oppdater listen når noe er løst eller nytt kommer til)
 
-- Kalenderrettinger fra 18. november som ikke var synlige på kirken.no samme dag: julaften kl. 16.00
-  «Julaftensgudstjeneste» (med s), billettlenke til «Julekonsert med Trondheimsolistene» 4. desember,
-  og Soul Kids-øvelsene. Sjekk ved ukesforslaget. Dukker Soul Kids-øvelsene opp, legg dem inn som `barn`.
-  Mangler de fortsatt, lag ett flagg som ber om dato, klokkeslett og sted.
+- Listevisningen av kalenderen på kirken.no kan henge etter selve arrangementssidene. Er noe uklart, les
+  arrangementssiden (lenken fra lista) før du flagger det. Julaften kl. 16.00 er rettet til «Julaftensgudstjeneste».
+- «Julekonsert med Trondheimsolistene» 4. desember: kalenderen lenker til https://trondheimsolistene.hoopla.no/event/201076653,
+  QR-koden på skjermen peker til …/event/1360741619 (fra innboksen). Torkil er spurt 19. november om hvilken som er riktig.
+- Soul Kids-øvelsene: Torkil sier de ligger i kalenderen, men de vises ikke i den offentlige lista fram til 24. desember.
+  Torkil er spurt 19. november om datoer. Kommer de fram, legg dem inn som `barn`.
 - «Adventssamling med julegrantenning» 6. desember kl. 17.00: stedet overstyres til Selsbakk menighetshus i
   `motor.js` fordi kalenderen ikke lar seg rette. Ikke flagg det igjen.
 - Lian 6. desember kl. 15.00: kalenderen sier fortsatt utendørs ved Lianvannet. Skjermen bruker det som ble
