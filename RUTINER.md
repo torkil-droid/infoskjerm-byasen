@@ -16,8 +16,16 @@ Skriv alt på norsk bokmål. Når du omtaler et arrangement, si alltid hva det e
   `mcp__claude-artifacts__db_query / db_get / db_write`. Siden publiseres på nytt med `publish_files`
   (kall `list_files` først, så `as: index.html` = `gjennomgang/index.html`, pluss nye bilder som `bilder/<fil>`).
 - **Mottakere av rutine-e-post:** ts523@kirken.no (Torkil) og IH542@kirken.no (Ingrid). Ingen andre.
-- **Kalenderen:** https://www.kirken.no/nb-NO/fellesrad/trondheim-kirkelige-fellesrad/menigheter/byasen-menighet/kalender/
-  (les den med WebFetch; lista viser ca. 5 uker fram, «Last flere elementer» henter mer).
+- **Kalenderen:** les den som data, ikke som nettside:
+  `https://www.kirken.no/CalendarPage/MoreResults?pageId=1368386&fromDate=<ÅÅÅÅ-MM-DD i dag>&categories=&page=1`
+  (WebFetch, eller nettleseren hvis WebFetch avviser adressen). Svaret er JSON med `result` (tittel, `startTime`,
+  `church` = sted, `description`, `paymentUrl`/`registrationUrl`/`homePageUrl`) og `moreResults`. Øk `page` til
+  `moreResults` er false eller datoene er forbi horisonten. Listesiden
+  https://www.kirken.no/nb-NO/fellesrad/trondheim-kirkelige-fellesrad/menigheter/byasen-menighet/kalender/
+  henger etter og viser bare ca. 5 uker; bruk den ikke som kilde. Detaljer (beskrivelse, billettlenke) står også på
+  arrangementssiden `…/kalender/activity?id=<id>`.
+- **Horisont:** hele kalenderen 6 uker fram hver dag (samlesider 3 uker, konserter 6 uker). Tirsdag ser du i tillegg
+  etter store arrangementer lenger fram (konserter med billettsalg, høytider) som bør få egen plakat i tide.
 - **NMS:** https://www.nms.no/land/thailand (nyheter fra misjonsprosjektet).
 
 ## Når kjøres hva
@@ -194,10 +202,8 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
 
 ## Åpne saker (oppdater listen når noe er løst eller nytt kommer til)
 
-- Listevisningen av kalenderen på kirken.no kan henge etter selve arrangementssidene. Er noe uklart, les
-  arrangementssiden (lenken fra lista) før du flagger det. Julaften kl. 16.00 er rettet til «Julaftensgudstjeneste».
-- Soul Kids-øvelsene: Torkil sier de ligger i kalenderen, men de vises ikke i den offentlige lista fram til 24. desember.
-  Torkil er spurt 19. november om datoer. Kommer de fram, legg dem inn som `barn`.
+- Soul Kids: første øvelse som ligger i kalenderen er 30. november kl. 17.30 (lagt inn 19. november). Nye øvelser
+  legges inn fra kalenderen som `barn`.
 - «Adventssamling med julegrantenning» 6. desember kl. 17.00: stedet overstyres til Selsbakk menighetshus i
   `motor.js` fordi kalenderen ikke lar seg rette. Ikke flagg det igjen.
 - Lian 6. desember kl. 15.00: kalenderen sier fortsatt utendørs ved Lianvannet. Skjermen bruker det som ble
