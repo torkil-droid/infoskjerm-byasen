@@ -196,8 +196,6 @@ Den eneste veien fra innboksen rett til skjermen, uten stabsmøtet.
 
 - Listevisningen av kalenderen på kirken.no kan henge etter selve arrangementssidene. Er noe uklart, les
   arrangementssiden (lenken fra lista) før du flagger det. Julaften kl. 16.00 er rettet til «Julaftensgudstjeneste».
-- «Julekonsert med Trondheimsolistene» 4. desember: kalenderen lenker til https://trondheimsolistene.hoopla.no/event/201076653,
-  QR-koden på skjermen peker til …/event/1360741619 (fra innboksen). Torkil er spurt 19. november om hvilken som er riktig.
 - Soul Kids-øvelsene: Torkil sier de ligger i kalenderen, men de vises ikke i den offentlige lista fram til 24. desember.
   Torkil er spurt 19. november om datoer. Kommer de fram, legg dem inn som `barn`.
 - «Adventssamling med julegrantenning» 6. desember kl. 17.00: stedet overstyres til Selsbakk menighetshus i
