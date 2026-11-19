@@ -220,9 +220,12 @@ html,body{margin:0;background:#000;font-family:var(--body);overflow:hidden}
 .stille li span{display:block;color:#a39d92;font-size:calc(2*var(--u));margin-top:calc(.3*var(--u))}
 /* Rolig variant: lite, levende lys nede i venstre hjørne, teksten nesten midt på. Samme lys og tekst som ellers, bare mindre fremtredende lys. */
 .stille.rolig{display:block;padding:0}
-.stille.rolig .lys{position:absolute;left:calc(6*var(--u));bottom:0;transform:scale(.5);transform-origin:0 100%}
+.stille.rolig .lys{position:absolute;left:calc(7*var(--u));bottom:calc(8*var(--u));transform:scale(.5);transform-origin:0 100%}
 .stille.rolig .glod{opacity:.8}
-.stille.rolig .tekst{position:absolute;left:50%;top:50%;width:calc(52*var(--u));transform:translate(-44%,-50%)}
+.stille.rolig .stamme{background:linear-gradient(180deg,rgba(11,10,13,0) 0,rgba(11,10,13,.35) 40%,#0b0a0d 100%),
+    radial-gradient(ellipse at 50% 0,rgba(255,214,150,.6),rgba(255,214,150,0) 40%),
+    linear-gradient(90deg,#8f8574 0,#d8cfbe 30%,#efe7d8 52%,#a99e8a 100%)}
+.stille.rolig .tekst{position:absolute;left:50%;top:50%;width:calc(52*var(--u));transform:translate(-27%,-50%)}
 /* «uten»: ingen lys, bare teksten, dempet. */
 .stille.uten{background:#08080a;color:#bdb7ac;padding-left:calc(18*var(--u))}
 .stille.uten h2{font-size:calc(3.6*var(--u));color:#cfc9be}
