@@ -3025,8 +3025,10 @@ window.Skjerm=(function(){
     var rest=datert.concat(fastPool);
     if(lav.length&&!fresh) rest=rest.concat(rest,lav);
     var fri=Math.max(0,Math.min(maks-valgt.length, Math.floor((maksSek-sek)/REGLER.sek.vanlig))), fyll=[], omgang=[];
-    if(rest.length<=fri) fyll=rest;
-    else if(fri>0){fyll=rest.slice(0,fri-1);omgang=rest.slice(fri-1);fyll.push(omgang[runde%omgang.length]);}
+    // Samme plakat skal aldri stå to ganger i én runde (lav prioritet dobler listen for å veie omgangen)
+    var unik=rest.filter(function(h,i){return rest.indexOf(h)===i;});
+    if(unik.length<=fri) fyll=unik;
+    else if(fri>0){fyll=unik.slice(0,fri-1);omgang=rest.filter(function(h){return fyll.indexOf(h)<0;});fyll.push(omgang[runde%omgang.length]);}
     // Fast rekkefølge på skjermen
     var vis=["hast","feat1","gud","note1","barn","feat2","mote","feat3","kons"];
     var rekke=vis.filter(function(k){return valgt.indexOf(k)>=0;}).concat(valgt.filter(function(k){return vis.indexOf(k)<0;}).sort(function(a,b){return (/^uka/.test(a)?0:1)-(/^uka/.test(b)?0:1);}));
