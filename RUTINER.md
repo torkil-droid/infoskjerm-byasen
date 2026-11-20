@@ -221,10 +221,9 @@ eller feiler `add_repo`, hopper du over F uten å skrive noe. F4 (nødbryteren) 
 - **Ingenting publiseres uten godkjenning** på gjennomgangssiden. Det finnes ingen hastevei for Facebook.
 - **Innleide arrangementer** (f.eks. Byåsen sangkor, Trondheimsolistene, Lørdagsskolen og andre eksterne arrangører)
   får aldri fremheving. De kan få et forslag om å dele arrangørens eget innlegg, uten penger.
-- **Penger i en vanlig uke:** høyst 200 kr samlet. 30–50 kr per post til `folgere` i 1–2 dager fra publisering.
-  80–100 kr til nærmiljøet (`naer-familie`, `naer-55`, `naer-alle`, `byen-10`) bare for store egne arrangementer.
-  Budsjett diskuteres ikke i stabsmøtet: der vises bare hvilke poster som får vanlig fremheving innenfor 200 kr.
-  Større beløp bare når Torkil og Ingrid har bestemt det og det står under «Planer med større budsjett».
+- **Penger: ikke bestemt ennå** (nov. 2026). Torkil og Ingrid avgjør et ukebudsjett, og kan sette egne grenser for
+  enkeltarrangementer som konserter. Til det står her, får utkastene **ingen fremheving** (`fremheving` utelatt).
+  Nevn i tirsdagsmailen hvilke poster du ville fremhevet, i én linje uten beløp. Budsjett diskuteres ikke i stabsmøtet.
 - **Innholdsmiks:** 3–5 poster i uka. Minst én som ikke er et arrangement: mennesker, bak kulissene eller kunnskap.
 - **Tekst:** første linje sier hva og når. Én tydelig handling (kom, meld deg på, kjøp billett, del). Navngi alltid
   arrangementet med dato. Kort. Høyst ett eller to emoji, gjerne ingen. Skriv aldri «begrenset antall plasser» eller
@@ -332,7 +331,8 @@ Høyst 4 linjer. Les også `ko/` og nevn poster med status `feil` eller `for_sen
 
 ### Planer med større budsjett
 
-Torkil og Ingrid avgjør budsjett utenom stabsmøtet og lager retningslinjer for det (ikke klare ennå, nov. 2026).
+Torkil og Ingrid avgjør budsjett utenom stabsmøtet og lager retningslinjer for det (ikke bestemt ennå, nov. 2026):
+et ukebudsjett, og egne grenser for enkeltarrangementer som konserter.
 Foreslå aldri større beløp på gjennomgangssiden eller i tirsdagsmailen. Når en plan er bestemt og skrevet inn her,
 lages postene etter tre faser: **bli kjent** (video eller
 mennesker, 3–4 uker før, bred målgruppe), **invitasjon** (billettlenke, 1–2 uker før) og **påminnelse** (siste
