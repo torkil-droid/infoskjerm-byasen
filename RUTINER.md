@@ -280,8 +280,9 @@ Statusene staben setter: `godkjent`, `venterpaa` («Godkjent når det kommer», 
    Bildet er lagt inn. Ett trykk på Godkjenn, så går posten ut mandag kl. 07.30.»). Publiser siden på nytt hvis
    det er nye bilder, og send e-post til Torkil og Ingrid: emne «Facebook: siste blikk på <KODE> <arrangement og
    dato>», to linjer og lenken til gjennomgangssiden.
-4. Er utkastet allerede publisert eller ligger i køen (`ko/<KODE>.json` med status `klar`): ikke endre det. Lag et
-   nytt utkast med ny kode i stedet, og nevn det i neste e-post.
+4. Er utkastet allerede i køen (`ko/<KODE>.json` med status `klar`, `planlagt` eller `publisert`): ikke endre det.
+   En planlagt post ligger allerede hos Meta. Lag et nytt utkast med ny kode i stedet, og nevn det i neste e-post.
+   Skal en planlagt post stoppes helt, er det nødbryteren (F4) eller Torkil som sletter den i Meta Business Suite.
 5. Fra andre avsendere, eller uten kode: vanlig innboksbehandling (rutine A). Gjelder det Facebook, lag et
    info-punkt eller et nytt utkast.
 6. Merk meldingen `behandlet`.
@@ -315,9 +316,12 @@ siste blikk behandles som i F3. Er det ingen, gjør ingenting.
 
 - Melding fra en av de tre godkjente avsenderne for hastemeldinger med emne som begynner med «STOPP FACEBOOK»:
   sett `{"stopp": true}` i `stopp.json` i byasen-facebook, commit og push straks (det starter publiseringen, som
-  setter alle aktive fremhevinger på pause). Svar avsenderen: «Facebook er stoppet. Alle fremhevinger er satt på
-  pause, og ingenting nytt publiseres før noen sender «START FACEBOOK».»
-- «START FACEBOOK»: sett `{"stopp": false}`, push og svar. Fremhevinger som ble satt på pause, startes ikke igjen.
+  setter alle aktive fremhevinger på pause og sletter planlagte poster hos Meta). Svar avsenderen: «Facebook er
+  stoppet. Alle fremhevinger er satt på pause, planlagte poster er slettet, og ingenting nytt publiseres før noen
+  sender «START FACEBOOK».»
+- «START FACEBOOK»: sett `{"stopp": false}`, push og svar. Fremhevinger som ble satt på pause, startes ikke igjen,
+  og slettede poster (status `stoppet` i `ko/`) kommer ikke tilbake av seg selv. Nevn dem i svaret, så kan staben
+  godkjenne dem på nytt.
 - Merk meldingen `behandlet`.
 
 ### F5. Tall (tirsdag, i e-posten fra B)
