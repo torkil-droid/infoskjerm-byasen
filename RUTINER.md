@@ -27,6 +27,7 @@ Skriv alt på norsk bokmål. Når du omtaler et arrangement, si alltid hva det e
 - **Horisont:** les kalenderen 4 måneder fram hver dag, og hold `E` oppdatert for hele perioden, så konserter
   og store arrangementer er kjent tidlig (også for Facebook). Det som vises på skjermen, styres fortsatt av
   rundereglene: samlesider 3 uker, konserter 6 uker, egne plakater fra 3 (konserter 6) uker før.
+  Gudstjenester, barn og familier og møteplasser har alltid plass i runden (Torkil 20. november 2026).
 - **NMS:** https://www.nms.no/land/thailand (nyheter fra misjonsprosjektet).
 
 ## Når kjøres hva

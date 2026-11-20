@@ -3042,7 +3042,9 @@ window.Skjerm=(function(){
     // arrangementene de neste 8 dagene som ikke har egen plakat, på siden «Denne uka i kirka».
     kritisk:{dager:8, maks:10, maksSek:120},
     // Rekkefølgen plassene fordeles i. Gudstjenester er alltid med.
-    prioritet:["gud","feat1","note1","barn","mote","feat2","kons","feat3"]
+    prioritet:["gud","feat1","note1","barn","mote","feat2","kons","feat3"],
+    // Samlesider som alltid har plass i runden (gudstjenester er alltid med i tillegg)
+    alltid:["barn","mote"]
   };
   function varighet(h){return /^<section class="slide" |qrbox|class="prog"/.test(h)?REGLER.sek.lang:REGLER.sek.vanlig;}
 
@@ -3065,8 +3067,10 @@ window.Skjerm=(function(){
     }
     I.gud=gudItems;
     I.kons=up.filter(function(e){return e.cat==="kons";}).filter(within("kons")).slice(0,R.kons.antall);
-    I.barn=up.filter(function(e){return e.cat==="barn"||e.alsoBarn;}).filter(within("barn")).slice(0,R.barn.antall);
-    I.mote=up.filter(function(e){return e.cat==="mote"||e.alsoMote;}).filter(within("mote")).slice(0,R.mote.antall);
+    // Barn og møteplasser skal alltid ha plass i runden: er det ingenting de neste 3 ukene, vises de neste som kommer.
+    var allBarn=up.filter(function(e){return e.cat==="barn"||e.alsoBarn;}), allMote=up.filter(function(e){return e.cat==="mote"||e.alsoMote;});
+    I.barn=allBarn.filter(within("barn")).slice(0,R.barn.antall); if(!I.barn.length) I.barn=allBarn.slice(0,R.barn.antall);
+    I.mote=allMote.filter(within("mote")).slice(0,R.mote.antall); if(!I.mote.length) I.mote=allMote.slice(0,R.mote.antall);
     var kqr=I.kons.length?qr("https://www.hoopla.no"):"";
     S.gud=listSlide(gName,gSub,gC,null,I.gud,gExtra,now);
     S.barn=listSlide(CAT.barn.name,CAT.barn.sub,CAT.barn.c,CAT.barn.on,I.barn,'<div class="art barn">'+ART.barn()+'</div>',now);
@@ -3099,32 +3103,34 @@ window.Skjerm=(function(){
       if(ut.length){FE=FE.filter(function(e){return ut.indexOf(e)<0;});konsSamlet=true;}
     }
     var prioritet=konsSamlet?["gud","feat1","note1","barn","mote","kons","feat2","feat3"]:REGLER.prioritet;
-    K.gud={h:S.gud,krit:true};
+    K.gud={h:S.gud,krit:true,alltid:true};
     var AH=aktivHast(now); if(AH) K.hast={h:hastSlide(AH,now),krit:true};
     FE.forEach(function(e,i){K["feat"+(i+1)]={h:featSlide(e,now),krit:snart(dt(e)),e:e}; if(i>=3) ekstra.push("feat"+(i+1));});
     NA.forEach(function(n,i){K["note"+(i+1)]={h:noteSlide(n,now),krit:snart(ymd(n.until))}; if(i>=1) ekstra.push("note"+(i+1));});
-    // Samlesider tas bare med når de har noe som ikke allerede har egen plakat
+    // Samlesider: gudstjenester, barn og møteplasser er alltid med; konsertsiden når den har noe uten egen plakat
     var rester={};
     ["barn","mote","kons"].forEach(function(k){
       rester[k]=L.I[k].filter(function(e){return FE.indexOf(e)<0;});
-      if(rester[k].length) K[k]={h:S[k],krit:rester[k].some(function(e){return snart(dt(e));})};
+      // Barn og møteplasser er alltid med (REGLER.alltid); konsertsiden bare når den har noe uten egen plakat
+      var alltid=REGLER.alltid.indexOf(k)>=0;
+      if(rester[k].length||(alltid&&L.I[k].length)) K[k]={h:S[k],krit:rester[k].some(function(e){return snart(dt(e));}),alltid:alltid};
     });
     var orden=["hast"].concat(prioritet).concat(ekstra).filter(function(k){return K[k];});
     var lengde=function(ks){return ks.reduce(function(a,k){return a+varighet(K[k].h);},0);};
-    var krit=orden.filter(function(k){return K[k].krit;});
+    var krit=orden.filter(function(k){return K[k].krit||K[k].alltid;});
     var maks=REGLER.maks, maksSek=REGLER.maksSek;
     // For mye tidskritisk for 8 plakater: løft taket til 10 plakater og 120 sekunder
     if(krit.length>maks-1||lengde(krit)>maksSek-REGLER.sek.lang){maks=RK.maks;maksSek=RK.maksSek;}
     // Fortsatt for mye: samle det som skjer de neste 8 dagene, uten egen plakat, på «Denne uka i kirka»
     if(krit.length>maks||lengde(krit)>maksSek){
       var uka=[], ut=[];
-      ["barn","mote","kons"].forEach(function(k){ if(K[k]&&K[k].krit){ rester[k].forEach(function(e){if(snart(dt(e))&&uka.indexOf(e)<0) uka.push(e);}); ut.push(k);} });
+      ["barn","mote","kons"].forEach(function(k){ if(K[k]&&K[k].krit&&!K[k].alltid){ rester[k].forEach(function(e){if(snart(dt(e))&&uka.indexOf(e)<0) uka.push(e);}); ut.push(k);} });
       ekstra.forEach(function(k){ if(/^feat/.test(k)&&K[k].krit){uka.push(K[k].e);ut.push(k);} });
       uka.sort(function(a,b){return dt(a)-dt(b);});
       ut.forEach(function(k){delete K[k];});
       for(var u=0;u*5<uka.length;u++) K["uka"+(u+1)]={h:listSlide("Denne uka i kirka","Det som skjer de neste åtte dagene","#2b2a30",null,uka.slice(u*5,u*5+5),"",now,true),krit:true};
       orden=["hast"].concat(prioritet).concat(ekstra).concat(Object.keys(K).filter(function(k){return /^uka/.test(k);})).filter(function(k){return K[k];});
-      krit=orden.filter(function(k){return K[k].krit;});
+      krit=orden.filter(function(k){return K[k].krit||K[k].alltid;});
     }
     // Fast innhold: en ny misjonssak er alene om plassen i 14 dager
     var fast=FAST.filter(function(f){return !f.utkast&&(!f.until||now<new Date(ymd(f.until).getTime()+864e5));});

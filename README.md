@@ -18,7 +18,7 @@ Står i `REGLER` øverst i rundekoden i `kilde/motor.js`. De bygger på rapporte
 - Høyst 8 plakater og 90 sekunder per runde. Plassen på omgang kan gi inntil 2 sekunder ekstra når den plakaten har QR-kode.
 - 10 sekunder for en vanlig plakat, 12 for samlesider, programlister og plakater med QR-kode.
 - Overskrift ≤ 7 ord, hele plakaten ≤ 20 ord (klokkeslett og tall telles ikke). Sjekkes med `node sjekk.js`.
-- Samlesider: høyst 5 linjer, 3 uker fram (konserter 6 uker). Vises bare når de har noe som ikke allerede har egen plakat. «Byåsen kirke» som sted utelates i linjene.
+- Samlesider: høyst 5 linjer, 3 uker fram (konserter 6 uker). Gudstjenester, barn og familier og møteplasser har alltid plass i runden; er det ingenting de neste 3 ukene, vises de neste som kommer. Konsertsiden vises bare når den har noe som ikke allerede har egen plakat. «Byåsen kirke» som sted utelates i linjene.
 - Egen plakat fra 3 uker før (konserter 6 uker). Inntil tre får fast plass.
 - Prioritet: gudstjenester (alltid med), egen plakat 1, påmelding, barn, møteplasser, egen plakat 2, konserter, egen plakat 3.
 - Travel uke (flere kandidater enn faste plasser): konserter som ikke er de neste 8 dagene, samles på konsertsiden i stedet for å få egne plakater, og konsertsiden får plass før egen plakat 2. Konserten får egen plakat igjen når den er 8 dager unna.
