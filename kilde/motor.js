@@ -34,9 +34,10 @@ window.Skjerm=(function(){
     {d:"2027-01-24",t:"11.00",title:"Gudstjeneste",place:"Byåsen kirke",cat:"gud"},
     {d:"2027-01-31",t:"11.00",title:"Gudstjeneste med søndagsskole",place:"Byåsen kirke",cat:"gud"},
     {d:"2027-02-02",t:"11.30",title:"Hyggestund: «Fra gata til Nordkapp»",note:"Dokumentar på storskjerm",place:"Menighetssalen",cat:"mote"},
-    {d:"2026-12-29",t:"16.00",title:"Romjulstreff med måltidsfellesskap",place:"Menighetssalen",cat:"mote"},
+    // Nye typer arrangementer fra kalenderen: utkast til stabsmøtet har sagt ja (RUTINER.md, A steg 0).
+    {d:"2026-12-29",t:"16.00",title:"Romjulstreff med måltidsfellesskap",place:"Menighetssalen",cat:"mote",utkast:true},
     {d:"2027-02-07",t:"19.00",title:"Kveldsgudstjeneste med konfirmantdåp",place:"Byåsen kirke",cat:"gud"},
-    {d:"2027-02-09",t:"19.00",title:"Flygelkonsert: Messiaen, «Vingt Regards»",note:"Pianostudenter fra NMH og NTNU",place:"Kirkerommet",cat:"kons"},
+    {d:"2027-02-09",t:"19.00",title:"Flygelkonsert: Messiaen, «Vingt Regards»",note:"Pianostudenter fra NMH og NTNU",place:"Kirkerommet",cat:"kons",utkast:true},
     {d:"2027-02-14",t:"11.00",title:"Gudstjeneste med konfirmantpresentasjon",place:"Byåsen kirke",cat:"gud"},
     {d:"2027-02-16",t:"11.30",title:"Hyggestund: «Kjærlig hilsen»",note:"Kirsti Kielland forteller fra boken",place:"Menighetssalen",cat:"mote"},
     {d:"2027-02-21",t:"11.00",title:"Gudstjeneste for liten og stor",place:"Byåsen kirke",cat:"gud",alsoBarn:true},

@@ -63,8 +63,8 @@ Er det ingenting å gjøre, avsluttes kjøringen uten å klone repoet og uten å
   hastemeldinger (rutine D) og stillemodus ved gravferd (rutine E). Nye plakater lages med `utkast:true`
   (vises bare i forhåndsvisningen). Skal de erstatte en eksisterende plakat, gi dem ny id (f.eks. `julemesse-ny`)
   og `erstatter:"<gammel id>"`.
-- Kalenderinnhold (arrangementslinjer på samlesidene, gudstjenester) oppdateres automatisk uten godkjenning.
-  Nye *egne plakater* (feat) og alt fra innboksen krever godkjenning.
+- Kalenderinnhold av kjente typer (arrangementslinjer på samlesidene, gudstjenester) oppdateres automatisk uten
+  godkjenning. Nye typer arrangementer, konserter, nye *egne plakater* (feat) og alt fra innboksen krever godkjenning.
 - Gravferder, vielser og lukkede arrangementer vises aldri. Avlyste arrangementer vises ikke.
 - Ingen personsaker eller sensitive opplysninger på skjermen. Telefonnummer bare når avsenderen vil ha det på
   plakaten (f.eks. påmelding på sms).
@@ -94,7 +94,11 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
 
 0. **Kalenderen** (hver dag, så endringer er på skjermen dagen etter): les kalenderen og sammenlign med `E` i
    `motor.js`. Rett titler, klokkeslett og notater som er endret, legg inn nye arrangementer på samlesidene og fjern
-   avlyste og slettede. Dette skjer uten godkjenning. Rom i kirka (kirkerommet, menighetssalen, ungdomssalen) trengs
+   avlyste og slettede. Faste, kjente typer (gudstjenester, hyggestund, åpen kafé, babysang, familiekor,
+   Soul Kids, legokafé o.l.) legges inn uten godkjenning. **Nye typer arrangementer og alle konserter** legges inn
+   med `utkast:true` og får et punkt på gjennomgangssiden (`seksjon:"flagg"`, `type:"sporsmal"`, `valg` f.eks.
+   «Ta med på skjermen» / «Ta med, og lag egen plakat» / «Ikke på skjermen»), så de kommer med i tirsdagsmailen
+   og tas på stabsmøtet. Er du i tvil om noe er en ny type, behandle det som nytt. Rom i kirka (kirkerommet, menighetssalen, ungdomssalen) trengs
    ikke i `place`; skjermen skjuler dem uansett. Steder utenfor kirka (Selsbakk, Lian, Shelter, Marken …) skal stå.
    Overstyringer som står som kommentar i `motor.js` (f.eks. adventssamlingen 6. desember) beholdes. Nye egne
    plakater og uklarheter tas bare i rutine B (tirsdag), ikke her. Bygg, sjekk, commit og push hvis noe er endret.
@@ -349,3 +353,5 @@ mennesker, 3–4 uker før, bred målgruppe), **invitasjon** (billettlenke, 1–
   `motor.js` fordi kalenderen ikke lar seg rette. Ikke flagg det igjen.
 - Lian 6. desember kl. 15.00: kalenderen sier fortsatt utendørs ved Lianvannet. Skjermen bruker det som ble
   avklart (inne, juletregang ute etterpå). Ikke flagg det igjen.
+- Dåpssamlinger (kalenderen: 28. januar, 18. februar, 4. mars, 18. mars 2027): ikke lagt på skjermen. Spørsmål
+  til stabsmøtet 25. november om de skal være med.
