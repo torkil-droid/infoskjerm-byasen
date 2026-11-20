@@ -2683,6 +2683,7 @@ var qrcode = function() {
 window.Skjerm=(function(){
   // ---- Arrangementslista: den eneste kilden. Sidene er visninger av denne. ----
   // cat: gud | kons | barn | mote.  feat: egen plakat (id brukes av forhåndsvisningen).  jul: med på sesongsiden.
+  // dobbel:true = den egne plakaten vises to ganger per runde på selve dagen (den andre gangen midt i runden, i stedet for plassen på omgang).
   var E = [
     {d:"2026-11-15",t:"11.00",title:"Gudstjeneste med søndagsskole",place:"Byåsen kirke",cat:"gud"},
     {d:"2026-11-17",t:"10.30",title:"Babymassasje og babysang",note:"Babymassasje 10.30, babysang 11.00",place:"Ungdomssalen",cat:"barn"},
@@ -2726,7 +2727,8 @@ window.Skjerm=(function(){
 
     // ---- Forslag fra skjerminnboksen. utkast:true til stabsmøtet har godkjent dem. ----
     // erstatter: id-en til raden eller plakaten forslaget skal erstatte når det godkjennes.
-    {d:"2026-11-21",t:"11.00",tt:"11.00–15.00",title:"Julemesse",place:"Byåsen kirke",cat:"mote",feat:true,id:"julemesse",art:"jul",pynt:"gaver",
+    // Torkil 20.11: programplakaten to ganger per runde på selve dagen. last:"13.00" holder den på skjermen til kl. 15.00.
+    {d:"2026-11-21",t:"11.00",tt:"11.00–15.00",last:"13.00",title:"Julemesse",place:"Byåsen kirke",cat:"mote",feat:true,id:"julemesse",dobbel:true,art:"jul",pynt:"gaver",
       prog:[["11.00","Salget åpner. Kor Læne synger"],["12.15","Byåsen Soul Kids"],["12.30","Grøt"],["13.45","Byåsen familiekor"],["14.30","Trekning av hovedlotteriet"]]},
     {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert",relieff:"krystall",
       lead:"Solist er Stine Bogsveen. Skann koden for billetter på Hoopla.",qr:"https://trondheimsolistene.hoopla.no/event/201076653",
@@ -3157,7 +3159,16 @@ window.Skjerm=(function(){
     // Fast rekkefølge på skjermen
     var vis=["hast","feat1","gud","note1","barn","feat2","mote","feat3","kons"];
     var rekke=vis.filter(function(k){return valgt.indexOf(k)>=0;}).concat(valgt.filter(function(k){return vis.indexOf(k)<0;}).sort(function(a,b){return (/^uka/.test(a)?0:1)-(/^uka/.test(b)?0:1);}));
-    var slides=rekke.map(function(k){return K[k].h;}).concat(fyll);
+    var slides=rekke.map(function(k){return K[k].h;});
+    // dobbel:true: på selve dagen vises den egne plakaten to ganger, med jevn avstand i runden.
+    // Den andre gangen tar plassen som ellers går på omgang, så runden ikke blir lengre.
+    rekke.forEach(function(k){
+      var e=K[k].e; if(!e||!e.dobbel||dayDiff(dt(e),now)!==0) return;
+      fyll=[]; omgang=[];
+      var i=slides.indexOf(K[k].h), n=slides.length;
+      slides.splice(i+Math.ceil(n/2),0,K[k].h);
+    });
+    slides=slides.concat(fyll);
     return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now),hast:hast(now)};
   }
   function nextText(now){

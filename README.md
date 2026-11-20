@@ -26,3 +26,4 @@ Står i `REGLER` øverst i rundekoden i `kilde/motor.js`. De bygger på rapporte
 - Tidskritisk (arrangementer og påmeldingsfrister de neste 8 dagene) står i hver runde. Trengs det, går runden opp til 10 plakater og 120 sekunder. Holder ikke det, samles arrangementene de neste 8 dagene uten egen plakat på «Denne uka i kirka».
 - Flere påmeldinger kan vises samtidig.
 - Faste, gjentakende ting får fast innhold uten dato (`neste:` henter neste dato fra kalenderen).
+- `dobbel:true` på en egen plakat: på selve dagen vises den to ganger per runde, med jevn avstand. Den andre gangen tar plassen som ellers går på omgang (brukt på julemessa 21. november 2026).
