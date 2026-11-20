@@ -79,6 +79,32 @@ Er det ingenting å gjøre, avsluttes kjøringen uten å klone repoet og uten å
 - Gjennomgangssiden skal være strømlinjeformet: ingen unødvendige spørsmål. Skriv «slik gjør vi det», og
   bruk feltet `forslag` bare for noe som faktisk må avgjøres.
 
+## Kjente arrangementstyper (katalog)
+
+Arrangementer av disse typene legges inn fra kalenderen uten godkjenning (rutine A, steg 0). Alt annet, og alle
+konserter, går som utkast og spørsmål til stabsmøtet. Når stabsmøtet sier ja til en ny type som kommer igjen,
+legges den til her i rutine C.
+
+- Gudstjenester av alle slag (søndag, kveld, for liten og stor, høytid, med konfirmanter, med søndagsskole)
+- Menighetens hyggestund (`mote`)
+- Åpen kafé (`mote`)
+- Babysang og babymassasje, babykonsert (`barn`)
+- Familiekoret, øvelse (`barn`)
+- Soul Kids (`barn`)
+- Legokafé og barnesangstund (`barn`, også møteplasser)
+- Menighetens julemiddag, julemesse, adventssamling med julegrantenning (`mote`)
+- Romjulstreff med måltidsfellesskap (`mote`; godkjent av Torkil 20. november 2026)
+- Aldri på skjermen: gravferder, vielser, lukkede arrangementer, «Ingen gudstjeneste». Dåpssamlinger: venter på
+  svar fra stabsmøtet 25. november 2026.
+
+## Plakatoversikten
+
+https://torkil-droid.github.io/infoskjerm-byasen/plakater.html (bygges av `bygg.py` fra `kilde/plakater.html`)
+viser alle plakater som ligger inne: hva som vises nå, hva som kommer, utkast som venter, og hva som ligger inne
+uten å vises. For hver plakat står datoene den etter planen er med i runden (beregnet med rundereglene 4 måneder
+fram; `?dato=ÅÅÅÅ-MM-DD` bak adressen regner fra en annen dag). Lenken står øverst på gjennomgangssiden og
+i tirsdagsmailen.
+
 ## Gjennomgangsdatabasen
 
 Samling `punkter`, ett dokument per punkt. Felter: `seksjon` (`oppstart`, `plakat`, `innboks`, `flagg`, `info`),
@@ -94,8 +120,8 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
 
 0. **Kalenderen** (hver dag, så endringer er på skjermen dagen etter): les kalenderen og sammenlign med `E` i
    `motor.js`. Rett titler, klokkeslett og notater som er endret, legg inn nye arrangementer på samlesidene og fjern
-   avlyste og slettede. Faste, kjente typer (gudstjenester, hyggestund, åpen kafé, babysang, familiekor,
-   Soul Kids, legokafé o.l.) legges inn uten godkjenning. **Nye typer arrangementer og alle konserter** legges inn
+   avlyste og slettede. Typer som står i katalogen («Kjente arrangementstyper» under) legges inn uten
+   godkjenning. **Nye typer arrangementer og alle konserter** legges inn
    med `utkast:true` og får et punkt på gjennomgangssiden (`seksjon:"flagg"`, `type:"sporsmal"`, `valg` f.eks.
    «Ta med på skjermen» / «Ta med, og lag egen plakat» / «Ikke på skjermen»), så de kommer med i tirsdagsmailen
    og tas på stabsmøtet. Er du i tvil om noe er en ny type, behandle det som nytt. Rom i kirka (kirkerommet, menighetssalen, ungdomssalen) trengs
@@ -138,7 +164,7 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
    - Emne: «Infoskjermen: gjennomgang på stabsmøtet <dato>» eller «Infoskjermen: ingen gjennomgang denne uka».
    - Gjennomgang trengs når det finnes plakat- eller spørsmålspunkter med status `venter` eller `endre`
      (uten `gjennomfort`). Ramse dem opp kort, én linje hver (arrangement og dato, hva som skal avgjøres),
-     og antall info-punkter. Avslutt med lenken til gjennomgangssiden.
+     og antall info-punkter. Avslutt med lenken til gjennomgangssiden og lenken til plakatoversikten.
    - Ellers: «Ingen gjennomgang denne uka», pluss 1–3 linjer om hva som er nytt på skjermen og hva som går ut.
    - Maks ca. 15 linjer. Ingen kontaktopplysninger eller sensitive opplysninger.
 
@@ -152,7 +178,8 @@ Dokumentet `moter/aktiv` har `undertittel` («Byåsen kirke · stabsmøtet onsda
    - `endre`: gjør det notatet sier, og legg den ut (fjern `utkast`). Er notatet uklart, gjør det du sikkert kan,
      og la punktet stå som `venter` med en kort forklaring i `forslag`, og ikke arkiver det.
    - `avvist`: fjern utkastet, eller fjern plakaten fra runden hvis den allerede vises.
-   - `besvart` spørsmål: gjør det svaret (og eventuelt notatet) sier.
+   - `besvart` spørsmål: gjør det svaret (og eventuelt notatet) sier. Gjelder det en ny arrangementstype som skal
+     med, legg typen til i «Kjente arrangementstyper», så den går rett inn neste gang.
 3. Bygg, sjekk, se på de endrede plakatene, commit og push.
 4. **Rydd siden, så den er klar for neste uke.** Lagre møtet i arkivet: dokument `arkiv/<møtedato>` med `dato`,
    `tittel` («Stabsmøtet onsdag <dato>»), `punkter` (liste med `tittel`, `status`, og `notat`/`svar` når de finnes)
@@ -355,3 +382,5 @@ mennesker, 3–4 uker før, bred målgruppe), **invitasjon** (billettlenke, 1–
   avklart (inne, juletregang ute etterpå). Ikke flagg det igjen.
 - Dåpssamlinger (kalenderen: 28. januar, 18. februar, 4. mars, 18. mars 2027): ikke lagt på skjermen. Spørsmål
   til stabsmøtet 25. november om de skal være med.
+- Romjulstreffet 29. desember står på møteplasser-siden. Egen plakat (`feat:romjulstreff`, erstatter `romjul-rad`)
+  tas på stabsmøtet 25. november.

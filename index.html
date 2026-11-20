@@ -2587,7 +2587,7 @@ window.Skjerm=(function(){
     {d:"2027-01-31",t:"11.00",title:"Gudstjeneste med søndagsskole",place:"Byåsen kirke",cat:"gud"},
     {d:"2027-02-02",t:"11.30",title:"Hyggestund: «Fra gata til Nordkapp»",note:"Dokumentar på storskjerm",place:"Menighetssalen",cat:"mote"},
     // Nye typer arrangementer fra kalenderen: utkast til stabsmøtet har sagt ja (RUTINER.md, A steg 0).
-    {d:"2026-12-29",t:"16.00",title:"Romjulstreff med måltidsfellesskap",place:"Menighetssalen",cat:"mote",utkast:true},
+    {d:"2026-12-29",t:"16.00",title:"Romjulstreff med måltidsfellesskap",place:"Menighetssalen",cat:"mote",id:"romjul-rad"},
     {d:"2027-02-07",t:"19.00",title:"Kveldsgudstjeneste med konfirmantdåp",place:"Byåsen kirke",cat:"gud"},
     {d:"2027-02-09",t:"19.00",title:"Flygelkonsert: Messiaen, «Vingt Regards»",note:"Pianostudenter fra NMH og NTNU",place:"Kirkerommet",cat:"kons",utkast:true},
     {d:"2027-02-14",t:"11.00",title:"Gudstjeneste med konfirmantpresentasjon",place:"Byåsen kirke",cat:"gud"},
@@ -2609,6 +2609,9 @@ window.Skjerm=(function(){
     {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",note:"150 kr, barn under 16 gratis",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",art:"jul",pynt:"advent",
       lead:"Gjester: Byåsen skoleorkester, Harmonien kor og Else Bø. Kafé fra 18.15.",
       hint:"150 kr, barn under 16 gratis."},
+    // Torkil 20.11: romjulstreffet på møteplasser og med egen plakat like før jul. Plakaten tas på stabsmøtet 25.11.
+    {d:"2026-12-29",t:"16.00",title:"Romjulstreff",place:"Menighetssalen",cat:"mote",feat:true,id:"romjulstreff",utkast:true,erstatter:"romjul-rad",art:"jul",pynt:"bjeller",
+      lead:"Vi spiser sammen i romjula. Alle er velkomne!",hint:"Gave til maten: 75 kr"},
     {d:"2026-12-12",t:"13.00",title:"Lørdagsskolen 40 år: jubileumskonsert",note:"Gratis",place:"Byåsen kirke",cat:"kons",feat:true,id:"lordagsskolen",relieff:"krystall",
       lead:"Elever fra kulturskolens Lørdagsskolen spiller klassisk musikk. Konsert nummer 1192 i en serie fra 1986.",
       hint:"Gratis. Hjertelig velkommen!",qr:"https://trondheimkulturskole.no/arrangementer/",qrtxt:"Les mer"}
@@ -3049,7 +3052,38 @@ window.Skjerm=(function(){
       .concat(NOTES.map(function(n){return "note:"+n.id;})).concat(FAST.map(function(f){return "fast:"+f.id;})).concat(["nytt"]).concat(aktivHast(new Date())?["hast"]:[]);
   }
 
-  return {build:build,stilleSide:stilleSide,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler};
+  // ---- Plakatoversikten (plakater.html): hvilke dager hver plakat er med i runden ----
+  // Simulerer runden kl. 12 hver dag fra «fra» og «dager» framover. s:"fast" = i hver runde, "omgang" = på omgang.
+  function plan(fra,dager){
+    var P={}, keys=nokler().filter(function(k){return k!=="hast";}).concat(["liste:gud","liste:barn","liste:mote","liste:kons"]);
+    keys.forEach(function(k){P[k]=[];});
+    for(var i=0;i<dager;i++){
+      var d=new Date(fra.getFullYear(),fra.getMonth(),fra.getDate()+i,12);
+      if(stilleAktiv(d)) continue;
+      var r0=build(d,0), n=Math.max(1,r0.omgang), alle={}, hver={};
+      r0.slides.forEach(function(h){hver[h]=1;});
+      for(var r=0;r<n;r++){var rr=r?build(d,r):r0, her={};rr.slides.forEach(function(h){alle[h]=1;her[h]=1;});
+        Object.keys(hver).forEach(function(h){if(!her[h]) delete hver[h];});}
+      var L=lists(d,false);
+      keys.forEach(function(k){
+        var p=k.split(":"), h=p[0]==="liste"?L.S[p[1]]:slide(k,d);
+        if(h&&alle[h]) P[k].push({d:d,s:hver[h]?"fast":"omgang"});
+      });
+    }
+    return P;
+  }
+  // Data om en plakat til oversikten: tittel, type, dato for arrangementet og om den er utkast
+  function info(k){
+    var p=k.split(":"), e;
+    if(p[0]==="feat"){e=E.filter(function(x){return x.id===p[1];})[0];return e&&{tittel:e.title,type:"Egen plakat",dato:dt(e),utkast:!!e.utkast,dager:e.cat==="kons"?REGLER.fremhevet.konsertDager:REGLER.fremhevet.dager};}
+    if(p[0]==="note"){e=NOTES.filter(function(x){return x.id===p[1];})[0];return e&&{tittel:e.title,type:"Påmelding med frist",fra:ymd(e.from),til:ymd(e.until),utkast:!!e.utkast};}
+    if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e&&{tittel:e.title,type:"Fast innhold",til:e.until?ymd(e.until):null,utkast:!!e.utkast};}
+    if(p[0]==="nytt") return {tittel:NEWS.title,type:"Nytt fra misjonsprosjektet",utkast:!!NEWS.utkast};
+    if(p[0]==="liste") return {tittel:"Samleside: "+CAT[p[1]].name,type:"Samleside",utkast:false};
+    return null;
+  }
+
+  return {build:build,stilleSide:stilleSide,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler,plan:plan,info:info};
 })();
 
 </script>

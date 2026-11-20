@@ -2,6 +2,7 @@
 
   index.html                 skjermsiden (GitHub Pages, vises i våpenhuset)
   gjennomgang/index.html     gjennomgangssiden for stabsmøtet (publiseres som Claude-artefakt)
+  plakater.html              oversikt over alle plakater og når de etter planen vises (GitHub Pages)
 
 Begge får samme plakatmal (kilde/skjerm.css) og samme plakatkode (kilde/motor.js),
 så forhåndsvisningen i stabsmøtet alltid er lik det skjermen viser.
@@ -38,6 +39,7 @@ def bygg(mal, ut):
 
 bygg("skjerm.html", "index.html")
 bygg("gjennomgang.html", "gjennomgang/index.html")
+bygg("plakater.html", "plakater.html")
 
 # Bilder som plakatene bruker, må ligge ved siden av begge sidene
 for bilde in ["nms-bilde.jpg"]:
