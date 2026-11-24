@@ -1,0 +1,3187 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alle plakater – infoskjermen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<!-- Bygget av bygg.py fra kilde/plakater.html. Alle plakater som ligger inne, med når de etter planen vises. -->
+<style>
+:root{
+  --paper:#ffffff;       /* skjermflaten */
+  --ink:#16151a;
+  --dim:#5d5b63;
+  --rule:#e4e2dd;
+  --gud:#c8102e;         /* gudstjenester: kirkens rødfarge */
+  --kons:#1b1470;        /* konsert og kultur */
+  --barn:#e9a100;        /* barn og familier */
+  --mote:#1f6f5b;        /* møteplasser */
+  --advent:#5b2a86;      /* kirkeårets farge i advent */
+  --display:"Source Serif 4", Georgia, serif;
+  --body:"Nunito Sans", "Segoe UI", Arial, sans-serif;
+
+  --o-bg:#f3f1ec; --o-card:#fff; --o-dim:#5f5c66; --o-rule:#e2dfd8; --o-ok:#1f6f5b; --o-warn:#b26b00;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--o-bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45}
+header{background:var(--ink);color:#fff;padding:16px 28px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+header h1{font:700 24px/1.1 var(--display);margin:0}
+header p{margin:0;color:#c9c6cf;font-size:15px}
+header a{color:#fff;font-weight:700;font-size:15px;border:1px solid #57555e;border-radius:8px;padding:7px 12px;text-decoration:none;margin-left:auto}
+main{padding:20px 28px 50px;max-width:1700px}
+h2.grp{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--o-dim);margin:28px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:22px}
+.card{background:var(--o-card);border-radius:12px;padding:14px;box-shadow:0 1px 0 var(--o-rule)}
+.card h3{font:700 20px/1.2 var(--display);margin:12px 4px 4px}
+.meta{margin:0 4px;font-size:15.5px;color:var(--o-dim)}
+.meta b{color:var(--ink)}
+.pill{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 9px;border-radius:20px;background:#efece6;color:var(--o-dim);margin-right:6px}
+.pill.na{background:#dcefe8;color:var(--o-ok)}
+.pill.ut{background:#f6e7cf;color:var(--o-warn)}
+.tom{color:var(--o-dim)}
+/* ---------- Skjermen ---------- */
+.stage{position:relative;width:100%;aspect-ratio:16/9;background:var(--paper);color:var(--ink);
+  container-type:inline-size;overflow:hidden;border-radius:6px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.slide{position:absolute;inset:0 0 calc(7*var(--u)) 0;display:flex;opacity:0;transition:opacity .7s ease;pointer-events:none}
+.slide.on{opacity:1;pointer-events:auto}
+
+/* Samleside */
+.panel{flex:0 0 33%;position:relative;background:var(--c);color:var(--on,#fff);padding:calc(4.2*var(--u)) calc(5*var(--u)) calc(4.2*var(--u)) calc(3.4*var(--u));display:flex;flex-direction:column;gap:calc(1.2*var(--u));
+  clip-path:polygon(0 0,100% 0,90% 100%,0 100%)}
+.panel::before{content:"";position:absolute;right:calc(-9*var(--u));top:calc(-9*var(--u));width:calc(24*var(--u));height:calc(24*var(--u));border-radius:50%;background:rgba(255,255,255,.13)}
+.kicker{font-size:calc(1.35*var(--u));font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.85;position:relative}
+.panel h2{font-family:var(--display);font-weight:700;font-size:calc(4.6*var(--u));line-height:1.02;margin:0;text-wrap:balance;position:relative}
+.panel .sub{font-size:calc(1.7*var(--u));line-height:1.3;margin:0;opacity:.92;max-width:13em}
+.panel .mark{position:absolute;left:calc(2.6*var(--u));bottom:calc(2.4*var(--u));width:calc(13*var(--u));height:calc(13*var(--u));opacity:.28}
+.mark svg,.ico svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.candles{margin-top:auto;width:calc(15*var(--u))}
+.candles svg{display:block;width:100%}
+.candles small{display:block;font-size:calc(1.25*var(--u));font-weight:700;margin-top:calc(0.6*var(--u));opacity:.9}
+.panel .qr{margin-top:auto;display:flex;align-items:flex-end;gap:calc(1.4*var(--u));position:relative}
+.qrbox{background:#fff;padding:calc(0.9*var(--u));border-radius:calc(0.6*var(--u));width:calc(11*var(--u));height:calc(11*var(--u));flex:none}
+.qrbox svg{display:block;width:100%;height:100%}
+.qrtxt{font-size:calc(1.35*var(--u));line-height:1.3;font-weight:600}
+.rows{flex:1;list-style:none;margin:0;padding:calc(2.4*var(--u)) calc(4*var(--u)) calc(2.4*var(--u)) calc(1.6*var(--u));display:flex;flex-direction:column;justify-content:center}
+.rows li{display:grid;grid-template-columns:calc(6.4*var(--u)) calc(6.6*var(--u)) 1fr;column-gap:calc(1.3*var(--u));align-items:center;padding:calc(1.3*var(--u)) 0;border-bottom:calc(0.12*var(--u)) solid var(--rule)}
+.rows li:last-child{border-bottom:0}
+.num{font-family:var(--display);font-weight:700;font-size:calc(4.5*var(--u));line-height:1;text-align:right;color:var(--c);font-variant-numeric:tabular-nums}
+.wd{font-size:calc(1.4*var(--u));font-weight:800;letter-spacing:.08em;text-transform:uppercase;line-height:1.25}
+.wd span{display:block;color:var(--dim);font-weight:600}
+.what h3{font-family:var(--display);font-weight:600;font-size:calc(2.4*var(--u));line-height:1.12;margin:0}
+.what p{font-size:calc(1.75*var(--u));color:var(--dim);margin:calc(0.45*var(--u)) 0 0}
+.what p b{color:var(--c);font-weight:800;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-family:var(--body);font-size:calc(1.1*var(--u));font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--c);color:#fff;border-radius:calc(10*var(--u));padding:calc(0.25*var(--u)) calc(0.9*var(--u));margin-left:calc(0.8*var(--u));vertical-align:calc(0.4*var(--u))}
+.slide.on .rows li{animation:rise .6s both}
+.slide.on .rows li:nth-child(2){animation-delay:.08s}.slide.on .rows li:nth-child(3){animation-delay:.16s}
+.slide.on .rows li:nth-child(4){animation-delay:.24s}.slide.on .rows li:nth-child(5){animation-delay:.32s}
+@keyframes rise{from{opacity:0;transform:translateY(calc(1.2*var(--u)))}to{opacity:1;transform:none}}
+
+/* Fremhevet */
+.feat{color:var(--on,#fff);padding:calc(4.4*var(--u)) calc(5*var(--u));gap:calc(4*var(--u));align-items:stretch;
+  background:radial-gradient(circle at 86% 4%,rgba(255,255,255,.15) 0 calc(19*var(--u)),transparent calc(19.1*var(--u))),
+             radial-gradient(circle at 104% 108%,rgba(0,0,0,.16) 0 calc(30*var(--u)),transparent calc(30.1*var(--u))),var(--c)}
+.feat .main{flex:1;display:flex;flex-direction:column}
+.chip{display:inline-block;background:#fff;color:var(--ink);font-size:calc(1.25*var(--u));font-weight:800;letter-spacing:.1em;text-transform:uppercase;border-radius:calc(10*var(--u));padding:calc(0.35*var(--u)) calc(1.1*var(--u));margin-left:calc(1*var(--u));opacity:1}
+.feat h2{font-family:var(--display);font-weight:700;font-size:calc(7.2*var(--u));line-height:.98;margin:calc(2.4*var(--u)) 0 0;text-wrap:balance}
+.feat .lead{font-size:calc(2.5*var(--u));line-height:1.32;max-width:28em;margin:calc(1.8*var(--u)) 0 0}
+.feat .place{margin-top:auto;font-size:calc(1.8*var(--u));font-weight:600}
+.feat .side{flex:0 0 calc(18*var(--u));display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;text-align:right}
+.big b{display:block;font-family:var(--display);font-weight:700;font-size:calc(15*var(--u));line-height:.82;font-variant-numeric:tabular-nums}
+.big span{display:block;font-size:calc(3*var(--u));font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-top:calc(0.8*var(--u))}
+.big em{display:block;font-style:normal;font-size:calc(1.8*var(--u));font-weight:600;margin-top:calc(0.5*var(--u))}
+.feat .side .qrbox{width:calc(13*var(--u));height:calc(13*var(--u));padding:calc(1*var(--u))}
+.feat .side .qrtxt{font-size:calc(1.3*var(--u));margin-top:calc(0.5*var(--u))}
+
+/* Oppslag: beskjed med frist */
+.note{background:#f4f1ea;padding:calc(4.4*var(--u)) calc(5*var(--u));gap:calc(4*var(--u));align-items:center;border-left:calc(1.6*var(--u)) solid var(--gud)}
+.note .main{flex:1}
+.note .kicker{color:var(--gud);opacity:1}
+.note h2{font-family:var(--display);font-weight:700;font-size:calc(5.6*var(--u));line-height:1.02;margin:calc(1.4*var(--u)) 0 0;text-wrap:balance}
+.note p{font-size:calc(2.5*var(--u));line-height:1.35;margin:calc(1.6*var(--u)) 0 0;max-width:24em}
+.note .act{font-weight:800}
+.badge{flex:0 0 calc(19*var(--u));height:calc(19*var(--u));border-radius:50%;background:var(--gud);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.badge b{font-family:var(--display);font-size:calc(8.5*var(--u));line-height:.9;font-variant-numeric:tabular-nums}
+.badge span{font-size:calc(1.5*var(--u));font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-top:calc(0.6*var(--u))}
+
+/* Fast innhold: uten dato */
+.fast{background:var(--ink);color:#fff;padding:calc(4.4*var(--u)) calc(5*var(--u));gap:calc(4*var(--u));align-items:center}
+.fast .main{flex:1}
+.fast .kicker{color:#ffb3bd;opacity:1}
+.fast h2{font-family:var(--display);font-weight:700;font-size:calc(5.8*var(--u));line-height:1.02;margin:calc(1.4*var(--u)) 0 0;text-wrap:balance}
+.fast p{font-size:calc(2.5*var(--u));line-height:1.36;margin:calc(1.6*var(--u)) 0 0;max-width:24em;color:#e6e3dc}
+.fast .side{flex:0 0 calc(17*var(--u));display:flex;flex-direction:column;align-items:center;gap:calc(1*var(--u));text-align:center}
+.fast .side .qrbox{width:calc(15*var(--u));height:calc(15*var(--u));padding:calc(1.1*var(--u))}
+.fast .ico{width:calc(15*var(--u));height:calc(15*var(--u));color:#ffb3bd}
+.nytt h2{font-size:calc(4.3*var(--u))}.nytt p{font-size:calc(2.4*var(--u))}.nytt .src{font-size:calc(1.35*var(--u));color:#a9a6b0;margin-top:calc(1.8*var(--u));font-weight:600}
+.photo{flex:none;width:calc(24*var(--u));height:calc(30*var(--u));border-radius:calc(0.8*var(--u));border:calc(0.14*var(--u)) dashed #6d6a75;display:flex;align-items:center;justify-content:center;
+  font-size:calc(1.3*var(--u));color:#a9a6b0;text-align:center;padding:calc(2*var(--u));
+  background:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 calc(1.2*var(--u)),transparent calc(1.2*var(--u)) calc(2.4*var(--u)))}
+
+.photo.img{position:relative;width:calc(30*var(--u));height:calc(24*var(--u));padding:0;border:0;overflow:hidden;background:#000}
+.photo.img img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.cred{position:absolute;left:0;right:0;bottom:0;padding:calc(0.5*var(--u)) calc(0.8*var(--u));font-size:calc(1*var(--u));color:#e6e3dc;background:rgba(0,0,0,.55);text-align:left}
+
+
+/* Illustrasjoner: strek i relieff, samme farge som teksten */
+.panel .art{position:absolute;left:calc(2.6*var(--u));bottom:calc(2.4*var(--u));opacity:.3}
+.panel .art svg{display:block;width:100%;height:100%}
+.panel .art.mote{width:calc(13*var(--u));height:calc(14.4*var(--u))}
+.panel .art.barn{width:calc(18*var(--u));height:calc(15*var(--u))}
+.feat>.main,.feat>.side{position:relative;z-index:1}
+.art-top{position:absolute;left:0;right:0;top:0;height:calc(9*var(--u));pointer-events:none}
+.art-fill,.art-bot{position:absolute;left:0;right:0;bottom:0;pointer-events:none}
+.art-fill{top:0}
+.art-krystall{position:absolute;right:calc(-13*var(--u));top:calc(-15*var(--u));width:calc(44*var(--u));height:calc(44*var(--u));pointer-events:none}
+.art-krystall svg{display:block;width:100%;height:100%}
+.feat.bilde .art-krystall{right:auto;top:auto;left:calc(-8*var(--u));bottom:calc(-14*var(--u))}
+.art-bot{height:calc(16*var(--u))}
+.art-hj{position:absolute;right:calc(4.6*var(--u));bottom:calc(3.2*var(--u));width:calc(15*var(--u));height:calc(12.8*var(--u));pointer-events:none;opacity:.28}
+.art-hj svg{display:block;width:100%;height:100%}
+.art-top svg,.art-fill svg,.art-bot svg{display:block;width:100%;height:100%}
+.feat.jul{padding-top:calc(9.6*var(--u))}
+.feat .prog{list-style:none;margin:calc(1.8*var(--u)) 0 0;padding:0;font-size:calc(2.5*var(--u));line-height:1.2}
+.feat .prog li{display:flex;gap:calc(1.2*var(--u));padding:calc(0.2*var(--u)) 0}
+.feat .prog b{flex:0 0 calc(8.4*var(--u));font-variant-numeric:tabular-nums;font-weight:800}
+.feat.jul .lead{margin-top:calc(1.2*var(--u))}
+.feat.jul h2{margin-top:calc(1.6*var(--u))}
+
+/* Fremhevet med bilde */
+.feat.bilde .side{flex:0 0 calc(38*var(--u));align-items:stretch;justify-content:flex-start;text-align:left;gap:calc(2*var(--u))}
+.feat.bilde h2{font-size:calc(6*var(--u))}
+.feat.bilde .lead{font-size:calc(2.3*var(--u))}
+.feat .pic{position:relative;width:100%;height:calc(25.3*var(--u));border-radius:calc(0.8*var(--u));overflow:hidden;background:#000}
+.feat .pic img{display:block;width:100%;height:100%;object-fit:cover}
+.feat .when{display:flex;justify-content:space-between;align-items:flex-end;margin-top:auto}
+.feat.bilde .big b{font-size:calc(10*var(--u))}
+.feat.bilde .big span{font-size:calc(2.2*var(--u))}
+.feat.bilde .big em{font-size:calc(1.6*var(--u))}
+.feat.bilde .when .qrw{text-align:center}
+.feat.bilde .side .qrbox{width:calc(11*var(--u));height:calc(11*var(--u))}
+
+/* Oppslag med illustrasjon */
+.note.medart{gap:calc(3*var(--u))}
+.nside{position:relative;flex:0 0 calc(36*var(--u));color:var(--gud)}
+.nart svg{display:block;width:100%}
+.nside .badge{position:absolute;left:50%;top:63.3%;transform:translate(-50%,-50%);width:calc(14*var(--u));height:calc(14*var(--u))}
+.nside .badge b{font-size:calc(6.4*var(--u))}
+.badge b.txt{font-size:calc(5.4*var(--u))}
+.nside .badge b.txt{font-size:calc(3.2*var(--u))}
+.nside .badge span{font-size:calc(0.95*var(--u));letter-spacing:.06em;line-height:1.3;margin-top:calc(0.3*var(--u))}
+
+/* Oppslag med relieff i bakgrunnen */
+.note .kicker.frist{font-size:calc(2*var(--u));letter-spacing:.02em;text-transform:none;color:var(--gud);font-weight:800}
+.note>.main,.note>.nside{position:relative;z-index:1}
+.art-tre{position:absolute;top:0;bottom:0;right:calc(1*var(--u));width:calc(52*var(--u));pointer-events:none}
+.art-tre svg{display:block;width:100%;height:100%}
+.note .nart circle{fill:#f4f1ea}
+
+/* Fast innhold med bilde */
+.fast.medbilde .photo.img{width:calc(27*var(--u));height:calc(21.6*var(--u))}
+.fast.medbilde .photo.img img{object-position:50% 20%}
+.fast.stort .photo.img{width:calc(42*var(--u));height:calc(33.6*var(--u))}
+.fast.stort h2{font-size:calc(4.6*var(--u))}
+.fast.medbilde h2{font-size:calc(4.3*var(--u))}
+.fast.medbilde p{font-size:calc(2.4*var(--u))}
+.fast.medbilde .side{flex-basis:calc(15*var(--u))}
+.fast.medbilde .side .qrbox{width:calc(13*var(--u));height:calc(13*var(--u))}
+
+/* Fast bunnlinje */
+.foot{position:absolute;left:0;right:0;bottom:0;height:calc(7*var(--u));background:var(--ink);color:#fff;display:flex;align-items:center;
+  gap:calc(2*var(--u));padding:0 calc(3.4*var(--u));font-size:calc(1.7*var(--u))}
+.foot .lbl{font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:calc(1.2*var(--u));color:#ffb3bd;flex:none}
+.foot .next{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.foot .today{flex:none;opacity:.8}
+.foot .logo{flex:none;display:flex;width:calc(5*var(--u));height:calc(4*var(--u));color:#fff;opacity:.9;margin-right:calc(-0.2*var(--u))}
+.foot .logo svg{width:100%;height:100%}
+.foot.hast{background:var(--gud)}
+.foot.hast .lbl{color:#fff}
+.foot.hast .next{font-weight:800}
+.foot.hast .today{display:none}
+.dots{position:absolute;left:0;right:0;bottom:calc(7*var(--u));height:calc(0.5*var(--u));display:flex;gap:calc(0.3*var(--u));background:var(--paper)}
+.dots i{flex:1;background:var(--rule);position:relative;overflow:hidden}
+.dots i.done{background:var(--ink)}
+.dots i.now::after{content:"";position:absolute;inset:0;background:var(--ink);transform-origin:left;animation:fill var(--dur) linear forwards}
+.paused .dots i.now::after{animation-play-state:paused}
+@keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.empty{position:absolute;inset:0 0 calc(7*var(--u)) 0;display:flex;align-items:center;justify-content:center;font-size:calc(2.4*var(--u));color:var(--dim)}
+
+/* ---- Stillemodus: svart, levende lys, de neste gudstjenestene ---- */
+.stage.stillemodus{background:#0b0a0d}
+.stage.stillemodus .dots,.stage.stillemodus .foot{display:none}
+.stille{position:absolute;inset:0;background:#0b0a0d;color:#e9e4da;display:flex;align-items:center;padding:0 calc(9*var(--u)) 0 calc(14*var(--u));gap:calc(12*var(--u))}
+.stille .lys{position:relative;flex:none;width:calc(22*var(--u));height:calc(46*var(--u))}
+.stille .glod{position:absolute;left:50%;top:calc(3*var(--u));width:calc(44*var(--u));height:calc(44*var(--u));margin-left:calc(-22*var(--u));border-radius:50%;
+  background:radial-gradient(circle,rgba(255,200,120,.38) 0,rgba(255,160,70,.14) 28%,rgba(255,140,50,0) 62%);animation:glod 3.1s ease-in-out infinite}
+.stille .flamme{position:absolute;left:50%;top:calc(13*var(--u));width:calc(3.4*var(--u));height:calc(9*var(--u));margin-left:calc(-1.7*var(--u));
+  border-radius:50% 50% 45% 45% / 70% 70% 30% 30%;transform-origin:50% 92%;
+  background:radial-gradient(ellipse at 50% 80%,#fffdf4 0,#fff2c4 22%,#ffcf6a 42%,#ff9a2e 68%,rgba(255,110,20,.0) 100%);
+  animation:flamme 2.3s ease-in-out infinite,vipp 3.7s ease-in-out infinite}
+.stille .flamme i{position:absolute;left:30%;right:30%;bottom:8%;height:28%;border-radius:50%;background:radial-gradient(ellipse at 50% 70%,rgba(120,160,255,.55),rgba(120,160,255,0) 70%)}
+.stille .veke{position:absolute;left:50%;top:calc(21.2*var(--u));width:calc(0.35*var(--u));height:calc(1.6*var(--u));margin-left:calc(-0.175*var(--u));background:#2a2018;border-radius:2px}
+.stille .stamme{position:absolute;left:50%;top:calc(22.4*var(--u));width:calc(7.5*var(--u));bottom:0;margin-left:calc(-3.75*var(--u));border-radius:calc(0.8*var(--u)) calc(0.8*var(--u)) 0 0;
+  background:linear-gradient(180deg,rgba(11,10,13,0) 0,rgba(11,10,13,.25) 45%,rgba(11,10,13,.92) 100%),
+    radial-gradient(ellipse at 50% 0,rgba(255,214,150,.6),rgba(255,214,150,0) 40%),
+    linear-gradient(90deg,#8f8574 0,#d8cfbe 30%,#efe7d8 52%,#a99e8a 100%)}
+.stille .tekst{flex:1}
+.stille .avs{display:flex;align-items:center;gap:calc(1.6*var(--u));color:#a39d92;font-size:calc(1.6*var(--u));font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.stille .avs .fisk{width:calc(5*var(--u));height:calc(4*var(--u))}
+.stille h2{font-family:var(--display);font-weight:600;font-size:calc(4.6*var(--u));line-height:1.1;margin:calc(2.2*var(--u)) 0 calc(3*var(--u))}
+.stille ol{list-style:none;margin:0;padding:0}
+.stille li{padding:calc(1.6*var(--u)) 0;border-top:1px solid rgba(233,228,218,.14)}
+.stille li b{display:block;font-family:var(--display);font-weight:600;font-size:calc(2.8*var(--u))}
+.stille li span{display:block;color:#a39d92;font-size:calc(2*var(--u));margin-top:calc(.3*var(--u))}
+/* Rolig variant: lite, levende lys nede i venstre hjørne, teksten nesten midt på. Samme lys og tekst som ellers, bare mindre fremtredende lys. */
+.stille.rolig{display:block;padding:0}
+.stille.rolig .lys{position:absolute;left:calc(7*var(--u));bottom:calc(8*var(--u));transform:scale(.5);transform-origin:0 100%}
+.stille.rolig .glod{opacity:.8}
+.stille.rolig .stamme{background:linear-gradient(180deg,rgba(11,10,13,0) 0,rgba(11,10,13,.35) 40%,#0b0a0d 100%),
+    radial-gradient(ellipse at 50% 0,rgba(255,214,150,.6),rgba(255,214,150,0) 40%),
+    linear-gradient(90deg,#8f8574 0,#d8cfbe 30%,#efe7d8 52%,#a99e8a 100%)}
+.stille.rolig .tekst{position:absolute;left:50%;top:50%;width:calc(52*var(--u));transform:translate(-27%,-50%)}
+/* «uten»: ingen lys, bare teksten, dempet. */
+.stille.uten{background:#08080a;color:#bdb7ac;padding-left:calc(18*var(--u))}
+.stille.uten h2{font-size:calc(3.6*var(--u));color:#cfc9be}
+.stille.uten li b{font-size:calc(2.3*var(--u));color:#bdb7ac}
+.stille.uten li span,.stille.uten .avs{color:#7f7a71}
+@keyframes flamme{0%,100%{transform:scale(1,1)}20%{transform:scale(.97,1.05)}45%{transform:scale(1.03,.96)}70%{transform:scale(.98,1.08)}85%{transform:scale(1.02,.99)}}
+@keyframes vipp{0%,100%{margin-left:calc(-1.7*var(--u))}30%{margin-left:calc(-1.55*var(--u))}60%{margin-left:calc(-1.85*var(--u))}}
+@keyframes glod{0%,100%{opacity:1;transform:scale(1)}35%{opacity:.82;transform:scale(.97)}55%{opacity:.95;transform:scale(1.02)}80%{opacity:.86;transform:scale(.99)}}
+@media (prefers-reduced-motion:reduce){.stille .flamme,.stille .glod{animation:none}}
+
+.pv .stage{--u:1cqw;box-shadow:0 6px 20px rgba(0,0,0,.15);border-radius:6px}
+.pv .slide{opacity:1}
+.pv .foot{justify-content:flex-start}
+@media (max-width:600px){main{padding:16px}.grid{grid-template-columns:1fr}header{padding:14px 16px}}
+@media (prefers-reduced-motion:reduce){.slide.on .rows li{animation:none}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>Alle plakater på infoskjermen</h1><p id="sub">Byåsen kirke</p></div>
+  <a href="./" target="_blank" rel="noopener">Åpne skjermen</a>
+</header>
+<main id="main"><p class="tom">Regner ut planen…</p></main>
+<script>/* qrcode-generator 1.4.4 (MIT, Kazuhiko Arase), lagt inn i siden så skjermen ikke trenger nettet for QR-koder */
+//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(row * cellSize, col * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+
+</script>
+
+<script>
+/* Plakatmotoren for infoskjermen i Byåsen kirke.
+   Brukes av både skjermsiden og gjennomgangssiden for stabsmøtet, så forhåndsvisningen
+   alltid er lik det skjermen viser. Endres her, og bygges med bygg.py.
+
+   utkast:true = venter på godkjenning i stabsmøtet. Vises i forhåndsvisningen, ikke på skjermen. */
+window.Skjerm=(function(){
+  // ---- Arrangementslista: den eneste kilden. Sidene er visninger av denne. ----
+  // cat: gud | kons | barn | mote.  feat: egen plakat (id brukes av forhåndsvisningen).  jul: med på sesongsiden.
+  // dobbel:true = den egne plakaten vises to ganger per runde på selve dagen (den andre gangen midt i runden, i stedet for plassen på omgang).
+  var E = [
+    {d:"2026-11-15",t:"11.00",title:"Gudstjeneste med søndagsskole",place:"Byåsen kirke",cat:"gud"},
+    {d:"2026-11-17",t:"10.30",title:"Babymassasje og babysang",note:"Babymassasje 10.30, babysang 11.00",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-11-17",t:"11.30",title:"Menighetens hyggestund",note:"Ønskesnutter fra YouTube. Siste før jul",place:"Menighetssalen",cat:"mote"},
+    {d:"2026-11-22",t:"11.00",title:"Gudstjeneste og KRIK 10+",note:"Avskjed for kapellan Sara Krog",place:"Byåsen kirke",cat:"gud"},
+    {d:"2026-11-23",t:"17.00",title:"Familiekoret, øvelse",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-11-24",t:"10.30",title:"Babykonsert",note:"Avslutning på høstens babysang",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-11-24",t:"11.30",tt:"11.30–13.30",title:"Åpen kafé",place:"Menighetssalen",cat:"mote"},
+    {d:"2026-11-28",t:"11.00",tt:"11.00–13.00",title:"Legokafé",note:"Barnesangstund kl. 12.30",place:"Kirkerommet",cat:"barn",alsoMote:true},
+    {d:"2026-11-30",t:"17.30",title:"Soul Kids",note:"Øvelse",place:"Kirkerommet",cat:"barn"},
+    {d:"2026-11-29",t:"11.00",title:"Gudstjeneste for liten og stor",note:"1. søndag i advent",place:"Byåsen kirke",cat:"gud",alsoBarn:true,jul:true},
+    {d:"2026-12-05",t:"14.00",title:"Menighetens julemiddag",note:"Med underholdning",place:"Menighetssalen",cat:"mote"},
+    {d:"2026-12-06",t:"15.00",title:"Adventsgudstjeneste på Lian",note:"Julemagi på Lian gård",place:"Julemagi på Lian gård",cat:"gud",feat:true,id:"lian",jul:true,
+      lead:"Gudstjeneste inne, og juletregang ute etterpå. Prest er Maren Græsli Evensen.",art:"skog",relieff:"krystall",pynt:"advent"},
+    // Overstyrt: kalenderen sier Byåsen kirke i stedsfeltet og lar seg ikke rette. Stedet er Selsbakk menighetshus (stabsmøtet 18.11).
+    {d:"2026-12-06",t:"17.00",title:"Adventssamling med julegrantenning",place:"Selsbakk menighetshus",cat:"mote",alsoBarn:true},
+    {d:"2026-12-06",t:"19.00",title:"Kveldsgudstjeneste",place:"Byåsen kirke",cat:"gud",jul:true},
+    {d:"2026-12-07",t:"17.00",title:"Familiekoret, øvelse",place:"Ungdomssalen",cat:"barn"},
+    {d:"2026-12-13",t:"11.00",title:"Vi synger julen inn",note:"Gudstjeneste",place:"Byåsen kirke",cat:"gud",jul:true},
+    {d:"2026-12-24",t:"13.00",tt:"13.00 · 14.30 · 16.00",last:"16.00",title:"Julaftensgudstjenester",note:"Byåsen skolemusikkorps spiller kl. 13.00",place:"Byåsen kirke",cat:"gud",jul:true},
+    {d:"2026-12-25",t:"13.00",title:"Høytidsgudstjeneste",note:"1. juledag",place:"Byåsen kirke",cat:"gud",jul:true},
+    {d:"2027-01-10",t:"11.00",title:"Juletrefest for liten og stor",note:"Gudstjeneste",place:"Byåsen kirke",cat:"gud",alsoBarn:true,id:"juletrefest-rad"},
+    {d:"2027-01-12",t:"11.30",tt:"11.30–13.30",title:"Åpen kafé",note:"Oppstart etter nyttår",place:"Ungdomssalen",cat:"mote"},
+    {d:"2027-01-17",t:"11.00",title:"Gudstjeneste",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-01-19",t:"11.30",title:"Hyggestund: nyttårsfest",note:"Trekkspillmusikk ved Dagfinn Gården",place:"Menighetssalen",cat:"mote"},
+    {d:"2027-01-24",t:"11.00",title:"Gudstjeneste",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-01-31",t:"11.00",title:"Gudstjeneste med søndagsskole",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-02-02",t:"11.30",title:"Hyggestund: «Fra gata til Nordkapp»",note:"Dokumentar på storskjerm",place:"Menighetssalen",cat:"mote"},
+    // Nye typer arrangementer fra kalenderen: utkast til stabsmøtet har sagt ja (RUTINER.md, A steg 0).
+    {d:"2026-12-29",t:"16.00",title:"Romjulstreff med måltidsfellesskap",place:"Menighetssalen",cat:"mote",id:"romjul-rad"},
+    {d:"2027-02-07",t:"19.00",title:"Kveldsgudstjeneste med konfirmantdåp",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-02-09",t:"19.00",title:"Flygelkonsert: Messiaen, «Vingt Regards»",note:"Pianostudenter fra NMH og NTNU",place:"Kirkerommet",cat:"kons",utkast:true},
+    {d:"2027-02-14",t:"11.00",title:"Gudstjeneste med konfirmantpresentasjon",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-02-16",t:"11.30",title:"Hyggestund: «Kjærlig hilsen»",note:"Kirsti Kielland forteller fra boken",place:"Menighetssalen",cat:"mote"},
+    {d:"2027-02-21",t:"11.00",title:"Gudstjeneste for liten og stor",place:"Byåsen kirke",cat:"gud",alsoBarn:true},
+    {d:"2027-02-28",t:"11.00",title:"Gudstjeneste",note:"Ingen søndagsskole i vinterferien",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-03-02",t:"11.30",title:"Hyggestund: bingo",note:"Med flotte premier",place:"Menighetssalen",cat:"mote"},
+    {d:"2027-03-07",t:"19.00",title:"Kveldsgudstjeneste",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-03-14",t:"11.00",title:"Gudstjeneste",place:"Byåsen kirke",cat:"gud"},
+    {d:"2027-03-16",t:"11.30",title:"Hyggestund: quiz",note:"Ved Kjellrun S. Utstrand",place:"Menighetssalen",cat:"mote"},
+    {d:"2027-03-21",t:"11.00",title:"Gudstjeneste for liten og stor",place:"Byåsen kirke",cat:"gud",alsoBarn:true},
+
+    // ---- Forslag fra skjerminnboksen. utkast:true til stabsmøtet har godkjent dem. ----
+    // erstatter: id-en til raden eller plakaten forslaget skal erstatte når det godkjennes.
+    // Torkil 20.11: programplakaten to ganger per runde på selve dagen. last:"13.00" holder den på skjermen til kl. 15.00.
+    {d:"2026-11-21",t:"11.00",tt:"11.00–15.00",last:"13.00",title:"Julemesse",place:"Byåsen kirke",cat:"mote",feat:true,id:"julemesse",dobbel:true,art:"jul",pynt:"gaver",
+      prog:[["11.00","Salget åpner. Kor Læne synger"],["12.15","Byåsen Soul Kids"],["12.30","Grøt"],["13.45","Byåsen familiekor"],["14.30","Trekning av hovedlotteriet"]]},
+    {d:"2026-12-04",t:"19.00",title:"Julekonsert med Trondheimsolistene",note:"Solist: Stine Bogsveen",place:"Byåsen kirke, ungdomssalen",cat:"kons",feat:true,id:"julekonsert",relieff:"krystall",
+      lead:"Solist er Stine Bogsveen. Skann koden for billetter på Hoopla.",qr:"https://trondheimsolistene.hoopla.no/event/201076653",
+      img:"bilder/trondheimsolistene.jpg",credit:"Trondheimsolistene"},
+    {d:"2026-12-08",t:"19.00",title:"Adventskonsert med Byåsen sangkor",note:"150 kr, barn under 16 gratis",place:"Byåsen kirke",cat:"kons",feat:true,id:"adventskonsert",art:"jul",pynt:"advent",
+      lead:"Gjester: Byåsen skoleorkester, Harmonien kor og Else Bø. Kafé fra 18.15.",
+      hint:"150 kr, barn under 16 gratis."},
+    // Torkil 20.11: romjulstreffet på møteplasser og med egen plakat like før jul. Plakaten tas på stabsmøtet 25.11.
+    {d:"2026-12-29",t:"16.00",title:"Romjulstreff",place:"Menighetssalen",cat:"mote",feat:true,id:"romjulstreff",utkast:true,erstatter:"romjul-rad",art:"jul",pynt:"bjeller",
+      lead:"Vi spiser sammen i romjula. Alle er velkomne!",hint:"Gave til maten: 75 kr"},
+    {d:"2026-12-12",t:"13.00",title:"Lørdagsskolen 40 år: jubileumskonsert",note:"Gratis",place:"Byåsen kirke",cat:"kons",feat:true,id:"lordagsskolen",relieff:"krystall",
+      lead:"Elever fra kulturskolens Lørdagsskolen spiller klassisk musikk. Konsert nummer 1192 i en serie fra 1986.",
+      hint:"Gratis. Hjertelig velkommen!",qr:"https://trondheimkulturskole.no/arrangementer/",qrtxt:"Les mer"},
+    // Ingrid 22.11: teaser for juletrefesten, tidligst på skjermen 6. desember. Tas på stabsmøtet 25.11.
+    {d:"2027-01-10",t:"11.00",title:"Juletrefest for liten og stor",place:"Byåsen kirke",cat:"gud",alsoBarn:true,feat:true,id:"juletrefest",utkast:true,erstatter:"juletrefest-rad",art:"jul",pynt:"gaver",
+      lead:"For hele familien: juletregang, poser til barna og de hellige tre kongene.",hint:"Gudstjeneste. Velkommen!"}
+  ];
+  // Avlyste arrangementer (avlyst:true) vises ikke noe sted.
+  E=E.filter(function(e){return !e.avlyst;});
+
+  // ---- Hastemelding: erstatter «Neste i kirka»-linja nederst til og med datoen «til». ----
+  // Kun etter e-post fra Torkil, Ingrid eller Maren, se RUTINER.md («D. Hastemelding»). Nyeste aktive vises.
+  // Valgfritt plakat:{kicker ("Avlyst"/"Endret"/"Beskjed"; dagen legges til selv),tittel,tekst,cat,titler} gir i tillegg en egen plakat først i runden: teksten til venstre
+  // og de neste arrangementene for samme målgruppe til høyre (titler: liste med deler av titler som skal tas med).
+  var HAST=[
+  ];
+  function hast(now){
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    var a=HAST.filter(function(h){return ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
+    return a.length?a[a.length-1].tekst:"";
+  }
+  // ---- Stillemodus ved gravferd: svart side med levende lys og de neste tre gudstjenestene. ----
+  // Slås på med e-post fra Torkil, Ingrid eller Maren (RUTINER.md, «E. Stillemodus»). fra/til: "ÅÅÅÅ-MM-DDTTT:MM".
+  var STILLE=[
+  ];
+  // Utforming av stillemodus: "" = levende lys (dagens), "rolig" = lite, levende lys nede til venstre og teksten nesten midt på, "uten" = uten lys.
+  // Forslag etter innspill 18. november; endres bare etter vedtak på stabsmøtet.
+  var STILLEVARIANT="";
+  function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}
+  function stilleAktiv(now){return STILLE.some(function(x){return tid(x.fra)<=now&&now<tid(x.til);});}
+  // Stedet sløyfes når tittelen allerede nevner det («… på Lian» / «Julemagi på Lian gård»)
+  function delerOrd(a,b){var o=a.toLowerCase().split(/[^a-zæøå]+/).filter(function(w){return w.length>=4;});
+    return b.toLowerCase().split(/[^a-zæøå]+/).some(function(w){return w.length>=4&&o.indexOf(w)>=0;});}
+  // Rom i Byåsen kirke (kirkerommet, menighetssalen, ungdomssalen …) vises ikke: det er samme inngang.
+  // Bare steder utenfor kirka (Selsbakk, Lian, Shelter, Marken …) skrives ut.
+  function hjemme(p){return !p||/^\s*(byåsen kirke|byåsen\s*[-–,]|menighetssal|ungdomssal|kirkerom|møterom|kjeller|foaje|våpenhus)/i.test(p);}
+  function stilleSide(now,variant){
+    variant=variant===undefined?STILLEVARIANT:variant;
+    var g=E.filter(function(e){return e.cat==="gud"&&!e.utkast&&!e.erstatter&&dt(e)>now;}).sort(function(a,b){return dt(a)-dt(b);}).slice(0,3);
+    return '<section class="stille'+(variant?' '+variant:'')+'">'+(variant==="uten"?'':'<div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>')+
+      '<div class="tekst"><div class="avs">'+'<svg class="fisk" aria-hidden="true" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10"><path d="M268 0V544M138 121H398"/><path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/><ellipse cx="272" cy="332" rx="122" ry="124"/></svg>'+'<span>Byåsen kirke</span></div><h2>Velkommen til gudstjeneste</h2><ol>'+
+      g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(!hjemme(e.place)&&!delerOrd(e.title,e.place)?' · '+esc(e.place):'')+'</span></li>';}).join("")+
+      '</ol></div></section>';
+  }
+  function aktivHast(now){
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    var a=HAST.filter(function(h){return h.plakat&&ymd(h.til)>=d&&(!h.fra||ymd(h.fra)<=d);});
+    return a.length?a[a.length-1]:null;
+  }
+  var CAT = {
+    gud:{name:"Gudstjenester",sub:"Velkommen til gudstjeneste i Byåsen kirke",c:"var(--gud)"},
+    kons:{name:"Konserter",sub:"Musikk i kirka de neste ukene",c:"var(--kons)"},
+    barn:{name:"For barn og familier",sub:"Sang, kor og gudstjenester for de minste",c:"var(--barn)",on:"#16151a"},
+    mote:{name:"Møteplasser",sub:"Kaffe, prat og fellesskap. Alle er velkomne",c:"var(--mote)"}
+  };
+  // Oppslag: beskjeder med frist. Forsvinner når fristen er ute.
+  var NOTES=[
+    {id:"julemiddag",from:"2026-11-01",until:"2026-11-27",title:"Meld deg på julemiddagen",
+     nedtelling:true,
+     text:"Lørdag 5. desember kl. 14, 450 kr. Hjertelig velkommen!",
+     act:"Påmeldingsliste i menighetssalen, eller kontakt Lin‑Silvia på 418 08 744",art:"middag",relieff:"tre"}
+  ];
+  // Fast innhold: uten dato. Én per runde, og bare når det er plass.
+  var FAST=[
+    {id:"giver",title:"Bli fast giver",text:"Arbeidet i menigheten er avhengig av gaver. Faste givere gir oss stabile og forutsigbare rammer.",
+     kicker:"Støttelaget",qr:"https://minpamelding.agrando.no/?skjemaId=2e12e62a-9180-409c-a5a8-700412289220",qrtxt:"Skann for å bli giver"},
+    {id:"ramallah",title:"Vår vennskapsmenighet i Ramallah",text:"Vi har vennskapsavtale med Church of Hope i Ramallah, og ber for hverandre.",
+     kicker:"Church of Hope",img:"bilder/ramallah.jpg",credit:"Foto: Byåsen menighet"},
+    {id:"kafe",neste:"Åpen kafé",title:"Åpen kafé",
+     text:"God mat og drikke, og du forsyner deg selv. Anbefalt kaffegave 75 kr.",
+     img:"bilder/kafe.jpg",credit:"Foto: Byåsen kirke",qrtxt:""},
+    {id:"samisk",lav:true,until:"2027-01-31",kicker:"Samisk kirkeråd",title:"Samisk konfirmantleir 2027",
+     text:"For samiske konfirmanter fra hele landet. 11.–14. februar i Skogn, gratis reise og opphold.",
+     img:"bilder/samisk.jpg",credit:"Bilde: Samisk kirkeråd",qr:"https://event.checkin.no/227741/samisk-konfirmantleir-2027",qrtxt:"Meld deg på"},
+    // Ingrid 22.11: verving av frivillige til matutdelingen. Utkast til stabsmøtet 25.11.
+    {id:"matutdeling",utkast:true,kicker:"Bli frivillig",title:"Bli med på matutdelingen",
+     text:"Vi trenger flere hender når vi deler ut mat. Ta kontakt med menighetskontoret.",qrtxt:"Takk for at du vil hjelpe!"}
+  ];
+  // Siste nyhetssak fra misjonsprosjektet. Byttes når NMS publiserer en ny.
+  var NEWS={published:new Date(2026,9,5),kicker:"Misjonsprosjektet vårt · NMS i Asia",
+    title:"Tretti deltakere kartla talentene sine i Yangon",
+    text:"Kurs for fire lutherske kirker i Myanmar, med ny bok på burmesisk.",
+    src:"nms.no · 5. oktober 2026",url:"https://nms.no/nyhet/entusiasme-for-use-your-talents-i-myanmar",
+    img:"nms-bilde.jpg",credit:"Foto: Marieke Rode-Christoffersen / NMS"};
+  var ADVENT=[new Date(2026,10,29),new Date(2026,11,6),new Date(2026,11,13),new Date(2026,11,20)];
+  var SEASON=[new Date(2026,10,23),new Date(2026,11,27)];
+
+  var DAYS=["Søn","Man","Tir","Ons","Tor","Fre","Lør"], DAYL=["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"];
+  var MON=["jan","feb","mars","april","mai","juni","juli","aug","sep","okt","nov","des"];
+  var MONL=["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
+
+  function dt(e,time){var p=e.d.split("-"),h=(time||e.t).split(".");return new Date(+p[0],+p[1]-1,+p[2],+h[0],+h[1]);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function dShort(x){return DAYS[x.getDay()]+" "+x.getDate()+". "+MON[x.getMonth()];}
+  function dLong(x){return DAYL[x.getDay()]+" "+x.getDate()+". "+MONL[x.getMonth()];}
+  function qr(url){
+    if(typeof qrcode!=="function") return "";
+    try{var q=qrcode(0,"M");q.addData(url);q.make();return '<div class="qrbox">'+q.createSvgTag({cellSize:4,margin:0,scalable:true})+'</div>';}catch(err){return "";}
+  }
+  var ICON={
+    gud:'<path d="M24 6v36M13 17h22"/>',
+    kons:'<path d="M18 34V12l18-4v22"/><circle cx="14" cy="34" r="4"/><circle cx="32" cy="30" r="4"/>',
+    barn:'<ellipse cx="24" cy="18" rx="10" ry="12"/><path d="M24 30l-2 3h4zM24 33c0 5-5 5-5 10"/>',
+    mote:'<path d="M10 18h22v10a11 11 0 0 1-22 0zM32 20h4a5 5 0 0 1 0 10h-4M14 8c0 3 3 3 3 6M22 8c0 3 3 3 3 6M8 42h26"/>',
+    heart:'<path d="M24 40S8 30 8 18a8 8 0 0 1 16-3 8 8 0 0 1 16 3c0 12-16 22-16 22z"/>',
+    globe:'<circle cx="24" cy="24" r="17"/><ellipse cx="24" cy="24" rx="7" ry="17"/><path d="M7 24h34"/>'
+  };
+  function icon(k){return '<svg viewBox="0 0 48 48" aria-hidden="true">'+ICON[k]+'</svg>';}
+  function mark(k){return '<div class="mark">'+icon(k)+'</div>';}
+  function candles(now){
+    var lit=ADVENT.filter(function(d){return d<=now;}).length,h="";
+    for(var k=0;k<4;k++){
+      var x=6+k*22;
+      h+='<rect x="'+x+'" y="24" width="10" height="36" rx="1.5" fill="#fff" opacity="'+(k<lit?1:.45)+'"/><path d="M'+(x+5)+' 24v-4" stroke="#fff" stroke-width="1"/>';
+      if(k<lit) h+='<ellipse cx="'+(x+5)+'" cy="13" rx="3.6" ry="6.5" fill="#ffd35a"/>';
+    }
+    var txt=lit?lit+". søndag i advent":"Advent begynner 29. november";
+    return '<div class="candles"><svg viewBox="0 0 88 62" aria-hidden="true">'+h+'</svg><small>'+txt+'</small></div>';
+  }
+  function mid(x){return new Date(x.getFullYear(),x.getMonth(),x.getDate());}
+  function dayDiff(x,now){return Math.round((mid(x)-mid(now))/864e5);}
+  function rel(x,now){var n=dayDiff(x,now);return n<=0?"I dag":n===1?"I morgen":"Om "+n+" dager";}
+  function ymd(s){var a=s.split("-");return new Date(+a[0],+a[1]-1,+a[2]);}
+
+
+  // ---- Illustrasjoner. Enkle flate tegninger i profilens farger, laget som SVG i koden. ----
+  function rnd(seed){return function(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};}
+  function star(x,y,r){return 'M'+x+' '+(y-r)+'Q'+x+' '+y+' '+(x+r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y+r)+'Q'+x+' '+y+' '+(x-r)+' '+y+'Q'+x+' '+y+' '+x+' '+(y-r)+'Z';}
+  var ART={
+    // Granbar med julekuler langs toppen, og noen stjerner
+    jul:function(){
+      var r=rnd(11),P=["","",""],bb="",k,x,t,y,sl,ang,j,sd,L,d,px,py,cx;
+      for(k=0;k<4;k++){
+        for(x=k*250;x<=(k+1)*250;x+=3.5){
+          t=(x-k*250)/250; y=4+34*4*t*(1-t); sl=Math.atan2(34*4*(1-2*t)/250,1);
+          for(sd=-1;sd<=1;sd+=2) for(j=0;j<2;j++){
+            ang=sl+Math.PI-sd*(0.75+r()*0.55); L=11+r()*8; px=x+(r()-.5)*4; py=y+(r()-.5)*4;
+            d='M'+px.toFixed(1)+' '+py.toFixed(1)+'l'+(Math.cos(ang)*L).toFixed(1)+' '+(Math.sin(ang)*L).toFixed(1);
+            P[r()<.45?0:r()<.7?1:2]+=d;
+          }
+        }
+        cx=k*250+125;
+        bb+='<path d="M'+cx+' 38v13" stroke="rgba(255,255,255,.22)" stroke-width="1.6"/><circle cx="'+cx+'" cy="64" r="11" fill="rgba(0,0,0,.16)" transform="translate(2 2)"/>'+
+            '<circle cx="'+cx+'" cy="64" r="11" fill="rgba(255,255,255,.16)"/>';
+      }
+      return '<div class="art-top"><svg viewBox="0 0 1000 90" preserveAspectRatio="xMidYMin meet" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-width="3.2">'+
+             '<path stroke="rgba(0,0,0,.24)" d="'+P[0]+'"/><path stroke="rgba(0,0,0,.12)" d="'+P[1]+'"/><path stroke="rgba(255,255,255,.14)" d="'+P[2]+'"/></g>'+bb+'</svg></div>';
+    },
+    // Gaver og pepperkakehjerte, til julemessa
+    gaver:function(){
+      var h='M150 108C122 90 108 75 108 60a21 21 0 0 1 42-6a21 21 0 0 1 42 6c0 15-14 30-42 48z';
+      return '<svg viewBox="0 0 200 170" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">'+
+        '<g transform="rotate(-12 150 78)"><path d="'+h+'"/><path d="'+h+'" transform="translate(150 78) scale(.78) translate(-150 -78)" stroke-dasharray=".5 7"/></g>'+
+        '<path d="M20 86h92v76H20zM14 70h104v16H14zM66 70v92M66 70c-16-22-36-12-26-2s26 2 26 2zm0 0c16-22 36-12 26-2s-26 2-26 2z"/>'+
+        '<path d="M106 118h70v44h-70zM102 106h78v12h-78zM141 106v56M141 106c-11-15-26-8-18-1s18 1 18 1zm0 0c11-15 26-8 18-1s-18 1-18 1z"/></svg>';
+    },
+    bjeller:function(){
+      var bell='<path d="M0 0c-15 0-23 13-23 31v17l-9 11h64l-9-11V31C23 13 15 0 0 0z"/><circle cy="66" r="6"/>';
+      return '<svg viewBox="0 0 200 170" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">'+
+        '<path d="M100 50L66 74M100 50l34 24"/><g transform="translate(64 74) rotate(-20)">'+bell+'</g><g transform="translate(136 74) rotate(20)">'+bell+'</g>'+
+        '<path d="M100 46c-10-16-30-18-30-6s20 8 30 6zm0 0c10-16 30-18 30-6s-20 8-30 6z"/></svg>';
+    },
+    // Granskog i silhuett langs bunnen, til gudstjenesten ute på Lian
+    skog:function(){
+      var r=rnd(5),h="",x,w,ht,y0=160,k;
+      for(x=-20;x<1020;x+=34+r()*30){
+        w=34+r()*26; ht=70+r()*80; k='';
+        for(var j=0;j<3;j++){var top=y0-ht+j*ht*.28,bot=y0-ht*(.42-j*.21);k+='M'+(x+w/2).toFixed(0)+' '+top.toFixed(0)+'L'+(x+w*(.5+.18+j*.16)).toFixed(0)+' '+bot.toFixed(0)+'H'+(x+w*(.5-.18-j*.16)).toFixed(0)+'Z';}
+        h+='<path d="'+k+'"/>';
+      }
+      return '<div class="art-bot"><svg viewBox="0 0 1000 160" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><g fill="#fff" opacity=".13">'+h+'</g></svg></div>';
+    },
+    // Kaffekopp med damp, i strek som relieff
+    mote:function(){
+      return '<svg viewBox="0 0 72 80" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+
+        '<path d="M24 22c-3-4 3-6 0-10s3-6 0-9M34 22c-3-4 3-6 0-10s3-6 0-9M44 22c-3-4 3-6 0-10s3-6 0-9"/>'+
+        '<path d="M12 30h44v14a22 22 0 0 1-44 0z"/><path d="M56 34h5a8 8 0 0 1 0 16h-6"/><path d="M4 72h60"/>'+
+        '</svg>';
+    },
+    // Én stor snøkrystall, ton i ton
+    krystall:function(){
+      var arm='<path d="M0 0V-92M0-30l-18-16M0-30l18-16M0-58l-14-12M0-58l14-12M0-80l-8-8M0-80l8-8"/>', g="";
+      for(var i=0;i<6;i++) g+='<g transform="rotate('+(i*60)+')">'+arm+'</g>';
+      return '<div class="art-krystall"><svg viewBox="-100 -100 200 200" aria-hidden="true"><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".12">'+g+
+        '<circle r="10"/></g></svg></div>';
+    },
+    // Adventsstake med fire lys. Lysene som er tent, følger adventssøndagene fram til arrangementet.
+    advent:function(e){
+      var n=e?ADVENT.filter(function(d){return d<=dt(e);}).length:4, h="";
+      for(var k=0;k<4;k++){
+        var x=30+k*40;
+        h+='<rect x="'+(x-8)+'" y="70" width="16" height="66" rx="2"/>';
+        h+=k<n?'<path d="M'+x+' 62c-7-8-5-16 0-24 5 8 7 16 0 24z" fill="currentColor"/>':'<path d="M'+x+' 70v-6"/>';
+      }
+      return '<svg viewBox="0 0 200 170" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">'+h+
+        '<path d="M8 136h184M22 136c0 14 10 22 24 22h108c14 0 24-8 24-22"/></svg>';
+    },
+    // Ballong og en liten giraff, i strek
+    barn:function(){
+      return '<svg viewBox="0 0 120 100" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+
+        '<ellipse cx="22" cy="20" rx="12" ry="15"/><path d="M22 35l-2 3h4zM22 38c0 10-8 14-4 26s12 14 16 18"/>'+
+        '<path d="M40 70C40 62 50 60 64 60H76L84 27C85 21 92 19 99 22C105 25 104 31 98 31H92L87 63C89 68 89 72 86 76V96H81V80H76V96H71V80H56V96H51V80H46V96H41V78C38 76 38 72 40 70Z"/>'+
+        '<path d="M40 70c-4 2-6 6-6 12M88 22l-1-7M95 21l1-7M86 26c-4-1-6 1-6 3"/><circle cx="87" cy="13" r="1.8"/><circle cx="96" cy="12" r="1.8"/><circle cx="96" cy="25" r=".7"/>'+
+        '<circle cx="57" cy="68" r="2.4"/><circle cx="68" cy="71" r="2"/><circle cx="84" cy="44" r="1.8"/>'+
+        '</svg>';
+    },
+    // Juletre i relieff: samme farge som bakgrunnen, med lys kant oppe og skygge nede
+    tre:function(){
+      var cx=260, T=[[40,150,74],[104,246,114],[178,346,156],[262,452,200]], f="";
+      T.forEach(function(q){f+='M'+cx+' '+q[0]+'L'+(cx+q[2])+' '+q[1]+'Q'+cx+' '+(q[1]+30)+' '+(cx-q[2])+' '+q[1]+'Z';});
+      f+='M'+(cx-22)+' 452h44v40h-44z';
+      var kuler=[[228,206,10],[302,292,12],[206,384,13],[334,414,10],[272,128,8],[250,316,9]].map(function(k){return 'M'+(k[0]-k[2])+' '+k[1]+'a'+k[2]+' '+k[2]+' 0 1 0 '+(2*k[2])+' 0a'+k[2]+' '+k[2]+' 0 1 0 '+(-2*k[2])+' 0z';}).join("");
+      var lag=function(d){return '<path d="'+d+'" transform="translate(5 6)" fill="#e3ddd0"/><path d="'+d+'" transform="translate(-3 -3)" fill="#fcfaf6"/><path d="'+d+'" fill="#efebe2"/>';};
+      var st=[],r;for(var i=0;i<10;i++){r=i%2?9:22;st.push((cx+r*Math.sin(i*Math.PI/5)).toFixed(1)+' '+(30-r*Math.cos(i*Math.PI/5)).toFixed(1));}
+      return '<div class="art-tre"><svg viewBox="0 0 520 492" preserveAspectRatio="xMidYMax meet" aria-hidden="true">'+lag(f)+lag(kuler)+
+        lag('M'+st.join("L")+'Z')+'</svg></div>';
+    },
+    // Varm middagstallerken i strek
+    middag:function(){
+      return '<svg viewBox="0 0 160 120" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">'+
+        '<path d="M64 34c-6-7 6-10 0-17s5-10 0-16"/><path d="M80 31c-6-7 6-10 0-17s5-10 0-16"/><path d="M96 34c-6-7 6-10 0-17s5-10 0-16"/>'+
+        '<circle cx="80" cy="76" r="37"/>'+
+        '<path d="M22 46v16a5 5 0 0 0 10 0V46M27 46v16M27 67v41"/>'+
+        '<path d="M138 46c-8 5-9 22-8 32h8zM138 78v30"/>'+
+        '</svg>';
+    }
+  };
+
+  // ---- Plakattypene ----
+  function row(e,now,farge){
+    var x=dt(e),n=dayDiff(x,now),tag=n<=0?'<span class="tag">I dag</span>':n===1?'<span class="tag">I morgen</span>':'';
+    var k=farge&&CAT[e.cat]?CAT[e.cat]:null;
+    return '<li'+(k?' style="--c:'+(k.cat==="barn"||e.cat==="barn"?"#b37a00":k.c)+'"':'')+'><span class="num">'+x.getDate()+'</span><span class="wd">'+DAYS[x.getDay()]+'<span>'+MON[x.getMonth()]+'</span></span><div class="what"><h3>'+
+      esc(e.title)+tag+'</h3><p><b>kl. '+esc(e.tt||e.t)+'</b>'+esc([e.note,hjemme(e.place)?"":e.place].filter(Boolean).map(function(x){return " · "+x;}).join(""))+'</p></div></li>';
+  }
+  function listSlide(name,sub,c,on,items,extra,now,farge,tom){
+    if(!items.length&&!tom) return "";
+    return '<section class="slide" style="--c:'+c+(on?';--on:'+on:'')+'"><aside class="panel"><div class="kicker">Byåsen kirke</div><h2>'+
+      esc(name)+'</h2><p class="sub">'+esc(sub)+'</p>'+(extra||'')+'</aside><ol class="rows" style="--c:'+(on?'var(--ink)':c)+'">'+
+      items.map(function(e){return row(e,now,farge);}).join("")+'</ol></section>';
+  }
+  // Hasteplakat: beskjed til venstre, de neste relevante arrangementene til høyre
+  function hastSlide(h,now){
+    var P=h.plakat, k=CAT[P.cat]||CAT.mote;
+    var items=E.filter(function(e){
+      if(e.utkast||e.erstatter||dt(e,e.last).getTime()+2*3600e3<=now.getTime()||(dt(e)-now)/864e5>42) return false;
+      if(P.titler&&P.titler.length) return P.titler.some(function(t){return e.title.toLowerCase().indexOf(t.toLowerCase())>=0;});
+      return e.cat===P.cat||(P.cat==="barn"&&e.alsoBarn)||(P.cat==="mote"&&e.alsoMote);
+    }).sort(function(a,b){return dt(a)-dt(b);}).slice(0,4);
+    var art=ART[P.cat]?'<div class="art '+P.cat+'">'+ART[P.cat]()+'</div>':'';
+    return listSlide(P.tittel,P.tekst,k.c,k.on,items,art,now,false,true)
+      .replace('<div class="kicker">Byåsen kirke</div>','<div class="kicker">'+esc((P.kicker||"Beskjed")+" · "+(dayDiff(ymd(h.til),now)<=0?"i dag":dShort(ymd(h.til)).toLowerCase()))+'</div>')
+      .replace('<section class="slide"','<section class="slide hastplakat"');
+  }
+  function featSlide(e,now){
+    var k=CAT[e.cat],x=dt(e),code=e.qr?qr(e.qr):"",cls="slide feat"+(e.art?" "+e.art:"")+(e.img?" bilde":"");
+    var date='<div class="big"><b>'+x.getDate()+'</b><span>'+MON[x.getMonth()]+'</span><em>'+DAYL[x.getDay()]+' kl. '+esc(e.tt||e.t)+'</em></div>';
+    var qrd=code?'<div class="qrw">'+code+'<div class="qrtxt">'+esc(e.qrtxt||"Skann for billetter")+'</div></div>':'';
+    var side=e.img?'<div class="side"><div class="pic"><img src="'+esc(e.img)+'" alt="">'+(e.credit?'<span class="cred">'+esc(e.credit)+'</span>':'')+'</div><div class="when">'+date+qrd+'</div></div>'
+                  :'<div class="side">'+date+qrd+'</div>';
+    var prog=e.prog?'<ul class="prog">'+e.prog.map(function(p){return '<li><b>'+esc(p[0])+'</b><span>'+esc(p[1])+'</span></li>';}).join("")+'</ul>':'';
+    return '<section class="'+cls+'" style="--c:'+k.c+(k.on?';--on:'+k.on:'')+'">'+(e.relieff&&ART[e.relieff]?ART[e.relieff]():'')+(e.art&&ART[e.art]?ART[e.art]():'')+(e.pynt&&!e.qr&&!e.img?'<div class="art-hj">'+ART[e.pynt](e)+'</div>':'')+'<div class="main"><div class="kicker">'+
+      esc(e.cat==="gud"?"Gudstjeneste":e.cat==="kons"?"Konsert":"Byåsen kirke")+'<span class="chip">'+rel(x,now)+'</span></div><h2>'+
+      esc(e.title)+'</h2>'+((e.lead||e.note)?'<p class="lead">'+esc(e.lead||e.note)+'</p>':'')+prog+'<div class="place">'+(hjemme(e.place)?esc(e.hint||"Byåsen kirke"):esc(e.place+(e.hint?" · "+e.hint:"")))+'</div></div>'+side+'</section>';
+  }
+  function fristTekst(N,left){
+    var u=ymd(N.until), d=u.getDate()+". "+["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"][u.getMonth()];
+    return left<=0?"Siste frist for påmelding er i dag":"Påmelding innen "+d;
+  }
+  function noteSlide(N,now){
+    var left=dayDiff(ymd(N.until),now);
+    var badge='<div class="badge"><b'+(left<=0?' class="txt"':'')+'>'+(left<=0?"I dag":left)+'</b><span>'+(left<=0?"siste frist<br>for påmelding":(left===1?"dag igjen":"dager igjen")+"<br>å melde seg på")+'</span></div>';
+    return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker'+(N.nedtelling?' frist':'')+'">'+esc(N.nedtelling?fristTekst(N,left):(N.kicker||"Påmelding"))+'</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
+      '</p><p class="act">'+esc(N.act)+'</p></div>'+(N.art&&ART[N.art]?'<div class="nside"><div class="nart">'+ART[N.art]()+'</div>'+badge+'</div>':badge)+'</section>';
+  }
+  function newsSlide(){
+    var ph=NEWS.img?'<div class="photo img"><img src="'+esc(NEWS.img)+'" alt=""><span class="cred">'+esc(NEWS.credit||"")+'</span></div>':'<div class="photo">'+esc(NEWS.photo||"")+'</div>';
+    return '<section class="slide fast nytt">'+ph+'<div class="main"><div class="kicker">'+esc(NEWS.kicker)+
+      '</div><h2>'+esc(NEWS.title)+'</h2><p>'+esc(NEWS.text)+'</p><div class="src">'+esc(NEWS.src)+'</div></div><div class="side">'+
+      (qr(NEWS.url)||'<div class="ico">'+icon("globe")+'</div>')+'<div class="qrtxt">Les hele saken</div></div></section>';
+  }
+  function nesteGang(title,now){
+    return E.filter(function(e){return e.title===title&&!e.utkast&&dt(e,e.last).getTime()>now.getTime();})[0];
+  }
+  function fastSlide(fa,now){
+    var kicker=fa.kicker;
+    if(fa.neste){var n=nesteGang(fa.neste,now||new Date());if(!n) return "";kicker="Neste gang "+dLong(dt(n)).toLowerCase()+" kl. "+(n.tt||n.t)+(hjemme(n.place)?"":" · "+n.place);}
+    var ph=fa.img?'<div class="photo img"><img src="'+esc(fa.img)+'" alt=""><span class="cred">'+esc(fa.credit||"")+'</span></div>':'';
+    var side=(fa.img&&!fa.qr)?'':(fa.photo&&!fa.img)?'<div class="photo">'+esc(fa.photo)+'</div>':
+      '<div class="side">'+(qr(fa.qr)||'<div class="ico">'+icon("heart")+'</div>')+'<div class="qrtxt">'+esc(fa.qrtxt)+'</div></div>';
+    return '<section class="slide fast'+(fa.img?' medbilde':'')+(fa.img&&!fa.qr?' stort':'')+'">'+ph+'<div class="main"><div class="kicker">'+esc(kicker)+'</div><h2>'+esc(fa.title)+'</h2><p>'+esc(fa.text)+
+      '</p></div>'+side+'</section>';
+  }
+
+  // ---- Regler for runden. Justeres her. ----
+  // Bygger på rapporten «Infoskjerm i våpenhuset: anbefalinger for plakater og karusell» (november 2026).
+  // Rapporten anbefaler 6–8 plakater, 8–12 s hver og en runde på 60–90 s. Vi bruker den øvre grensen.
+  var REGLER={
+    maks:8,                 // plakater i runden
+    maksSek:90,             // lengste runde i sekunder
+    sek:{vanlig:10, lang:12},  // 10 s for en vanlig plakat (≤ 20 ord), 12 s for samlesider, programlister og plakater med QR-kode
+    ord:{tittel:7, totalt:20}, // overskrift ≤ 7 ord, hele plakaten ≤ 20 ord, klokkeslett og tall ikke medregnet (sjekk.js)
+    fremhevet:{dager:21, konsertDager:42},   // egen plakat fra 3 uker før, konserter med billettsalg fra 6 uker før
+    liste:{                 // samlesider: høyst 5 linjer, 3 uker fram (konserter 6 uker)
+      gud:{antall:5,dager:21}, barn:{antall:5,dager:21}, mote:{antall:5,dager:21}, kons:{antall:5,dager:42}
+    },
+    // Tidskritisk: alt som skjer de neste 8 dagene, og påmeldingsfrister de neste 8 dagene, skal stå i hver runde.
+    // Trengs det, kan runden da gå opp til 10 plakater og 120 sekunder. Holder ikke det heller, samles
+    // arrangementene de neste 8 dagene som ikke har egen plakat, på siden «Denne uka i kirka».
+    kritisk:{dager:8, maks:10, maksSek:120},
+    // Rekkefølgen plassene fordeles i. Gudstjenester er alltid med.
+    prioritet:["gud","feat1","note1","barn","mote","feat2","kons","feat3"],
+    // Samlesider som alltid har plass i runden (gudstjenester er alltid med i tillegg)
+    alltid:["barn","mote"]
+  };
+  function varighet(h){return /^<section class="slide" |qrbox|class="prog"/.test(h)?REGLER.sek.lang:REGLER.sek.vanlig;}
+
+  // ---- Samlesidene for en gitt dato ----
+  function lists(now,withDrafts){
+    var up=E.filter(function(e){return !e.erstatter&&(withDrafts||!e.utkast)&&dt(e,e.last).getTime()+2*3600e3>now.getTime();}).sort(function(a,b){return dt(a)-dt(b);});
+    var days=function(e){return (dt(e)-now)/864e5;};
+    var R=REGLER.liste, within=function(k){return function(e){return days(e)<=R[k].dager;};};
+    var season=now>=SEASON[0]&&now<SEASON[1], S={}, I={};
+    var gudItems=[], gName, gSub, gC, gExtra;
+    if(season){
+      gudItems=up.filter(function(e){return e.cat==="gud"&&e.jul;}).slice(0,5);
+      gName="Advent og jul"; gSub="Gudstjenester fram til 1. juledag"; gC="var(--advent)"; gExtra=candles(now);
+    }
+    if(!season||!gudItems.length){
+      var allGud=up.filter(function(e){return e.cat==="gud";});
+      gudItems=allGud.filter(within("gud")).slice(0,R.gud.antall);
+      if(!gudItems.length) gudItems=allGud.slice(0,R.gud.antall);
+      gName=CAT.gud.name; gSub=CAT.gud.sub; gC=CAT.gud.c; gExtra=mark("gud");
+    }
+    I.gud=gudItems;
+    I.kons=up.filter(function(e){return e.cat==="kons";}).filter(within("kons")).slice(0,R.kons.antall);
+    // Barn og møteplasser skal alltid ha plass i runden: er det ingenting de neste 3 ukene, vises de neste som kommer.
+    var allBarn=up.filter(function(e){return e.cat==="barn"||e.alsoBarn;}), allMote=up.filter(function(e){return e.cat==="mote"||e.alsoMote;});
+    I.barn=allBarn.filter(within("barn")).slice(0,R.barn.antall); if(!I.barn.length) I.barn=allBarn.slice(0,R.barn.antall);
+    I.mote=allMote.filter(within("mote")).slice(0,R.mote.antall); if(!I.mote.length) I.mote=allMote.slice(0,R.mote.antall);
+    var kqr=I.kons.length?qr("https://www.hoopla.no"):"";
+    S.gud=listSlide(gName,gSub,gC,null,I.gud,gExtra,now);
+    S.barn=listSlide(CAT.barn.name,CAT.barn.sub,CAT.barn.c,CAT.barn.on,I.barn,'<div class="art barn">'+ART.barn()+'</div>',now);
+    S.kons=listSlide(CAT.kons.name,CAT.kons.sub,CAT.kons.c,null,I.kons,kqr?'<div class="qr">'+kqr+'<div class="qrtxt">Billetter og<br>mer informasjon</div></div>':mark("kons"),now);
+    S.mote=listSlide(CAT.mote.name,CAT.mote.sub,CAT.mote.c,null,I.mote,'<div class="art mote">'+ART.mote()+'</div>',now);
+    return {S:S,I:I,up:up,days:days};
+  }
+
+  // ---- Hele runden på skjermen ----
+  // runde: tellende rundenummer fra skjermsiden. Bestemmer hvem som har plassen som går på omgang.
+  function build(now,runde){
+    runde=runde||0;
+    if(stilleAktiv(now)) return {slides:[],durs:[],omgang:0,next:"",hast:"",stille:stilleSide(now)};
+    var L=lists(now,false), S=L.S, RF=REGLER.fremhevet, RK=REGLER.kritisk;
+    var snart=function(d){return (d-now)/864e5<=RK.dager;};
+    // Fremhevet: alle som er innenfor horisonten, nærmeste først
+    var FE=E.filter(function(e){return e.feat&&!e.utkast&&dt(e,e.last).getTime()+2*3600e3>now.getTime()&&L.days(e)<=(e.cat==="kons"?RF.konsertDager:RF.dager);})
+            .sort(function(a,b){return dt(a)-dt(b);});
+    // Påmeldinger med frist, nærmeste frist først
+    var NA=NOTES.filter(function(n){return !n.utkast&&now>=ymd(n.from)&&now<new Date(ymd(n.until).getTime()+86399e3);})
+            .sort(function(a,b){return ymd(a.until)-ymd(b.until);});
+    // Alle kandidater med nøkkel, innhold og om de er tidskritiske
+    var K={}, ekstra=[];
+    // Travel uke: flere kandidater enn faste plasser. Da samles konserter som ikke er tidskritiske på
+    // konsertsiden i stedet for å få egne plakater, og konsertsiden får plass før egen plakat 2.
+    var kandidater=1+FE.length+NA.length+["barn","mote","kons"].filter(function(k){return L.I[k].some(function(e){return FE.indexOf(e)<0;});}).length;
+    var konsSamlet=false;
+    if(kandidater>REGLER.maks-1){
+      var ut=FE.filter(function(e){return e.cat==="kons"&&!snart(dt(e))&&L.I.kons.indexOf(e)>=0;});
+      if(ut.length){FE=FE.filter(function(e){return ut.indexOf(e)<0;});konsSamlet=true;}
+    }
+    var prioritet=konsSamlet?["gud","feat1","note1","barn","mote","kons","feat2","feat3"]:REGLER.prioritet;
+    K.gud={h:S.gud,krit:true,alltid:true};
+    var AH=aktivHast(now); if(AH) K.hast={h:hastSlide(AH,now),krit:true};
+    FE.forEach(function(e,i){K["feat"+(i+1)]={h:featSlide(e,now),krit:snart(dt(e)),e:e}; if(i>=3) ekstra.push("feat"+(i+1));});
+    NA.forEach(function(n,i){K["note"+(i+1)]={h:noteSlide(n,now),krit:snart(ymd(n.until))}; if(i>=1) ekstra.push("note"+(i+1));});
+    // Samlesider: gudstjenester, barn og møteplasser er alltid med; konsertsiden når den har noe uten egen plakat
+    var rester={};
+    ["barn","mote","kons"].forEach(function(k){
+      rester[k]=L.I[k].filter(function(e){return FE.indexOf(e)<0;});
+      // Barn og møteplasser er alltid med (REGLER.alltid); konsertsiden bare når den har noe uten egen plakat
+      var alltid=REGLER.alltid.indexOf(k)>=0;
+      if(rester[k].length||(alltid&&L.I[k].length)) K[k]={h:S[k],krit:rester[k].some(function(e){return snart(dt(e));}),alltid:alltid};
+    });
+    var orden=["hast"].concat(prioritet).concat(ekstra).filter(function(k){return K[k];});
+    var lengde=function(ks){return ks.reduce(function(a,k){return a+varighet(K[k].h);},0);};
+    var krit=orden.filter(function(k){return K[k].krit||K[k].alltid;});
+    var maks=REGLER.maks, maksSek=REGLER.maksSek;
+    // For mye tidskritisk for 8 plakater: løft taket til 10 plakater og 120 sekunder
+    if(krit.length>maks-1||lengde(krit)>maksSek-REGLER.sek.lang){maks=RK.maks;maksSek=RK.maksSek;}
+    // Fortsatt for mye: samle det som skjer de neste 8 dagene, uten egen plakat, på «Denne uka i kirka»
+    if(krit.length>maks||lengde(krit)>maksSek){
+      var uka=[], ut=[];
+      ["barn","mote","kons"].forEach(function(k){ if(K[k]&&K[k].krit&&!K[k].alltid){ rester[k].forEach(function(e){if(snart(dt(e))&&uka.indexOf(e)<0) uka.push(e);}); ut.push(k);} });
+      ekstra.forEach(function(k){ if(/^feat/.test(k)&&K[k].krit){uka.push(K[k].e);ut.push(k);} });
+      uka.sort(function(a,b){return dt(a)-dt(b);});
+      ut.forEach(function(k){delete K[k];});
+      for(var u=0;u*5<uka.length;u++) K["uka"+(u+1)]={h:listSlide("Denne uka i kirka","Det som skjer de neste åtte dagene","#2b2a30",null,uka.slice(u*5,u*5+5),"",now,true),krit:true};
+      orden=["hast"].concat(prioritet).concat(ekstra).concat(Object.keys(K).filter(function(k){return /^uka/.test(k);})).filter(function(k){return K[k];});
+      krit=orden.filter(function(k){return K[k].krit||K[k].alltid;});
+    }
+    // Fast innhold: en ny misjonssak er alene om plassen i 14 dager
+    var fast=FAST.filter(function(f){return !f.utkast&&(!f.until||now<new Date(ymd(f.until).getTime()+864e5));});
+    var fresh=!NEWS.utkast&&dayDiff(now,NEWS.published)<=14;
+    // Fast innhold med lav prioritet kommer halvparten så ofte som resten
+    var vanlig=[NEWS.utkast?"":newsSlide()].concat(fast.filter(function(f){return !f.lav;}).map(function(f){return fastSlide(f,now);})).filter(Boolean);
+    var lav=fast.filter(function(f){return f.lav;}).map(function(f){return fastSlide(f,now);}).filter(Boolean);
+    var fastPool=fresh?[newsSlide()]:vanlig;
+    // Tidskritisk først, så resten etter prioritet. Den siste plassen holdes av til omgang.
+    var valgt=krit.slice(), sek=lengde(valgt), faste=maks-1, fasteSek=maksSek-REGLER.sek.vanlig;
+    orden.forEach(function(k){
+      if(valgt.indexOf(k)<0&&valgt.length<faste&&sek+varighet(K[k].h)<=fasteSek){valgt.push(k);sek+=varighet(K[k].h);}
+    });
+    // Det som ikke fikk fast plass, går på omgang. Alt kommer like ofte, unntatt fast innhold med lav prioritet,
+    // som kommer halvparten så ofte.
+    var datert=orden.filter(function(k){return valgt.indexOf(k)<0;}).map(function(k){return K[k].h;});
+    var rest=datert.concat(fastPool);
+    if(lav.length&&!fresh) rest=rest.concat(rest,lav);
+    var fri=Math.max(0,Math.min(maks-valgt.length, Math.floor((maksSek-sek)/REGLER.sek.vanlig))), fyll=[], omgang=[];
+    // Samme plakat skal aldri stå to ganger i én runde (lav prioritet dobler listen for å veie omgangen)
+    var unik=rest.filter(function(h,i){return rest.indexOf(h)===i;});
+    if(unik.length<=fri) fyll=unik;
+    else if(fri>0){fyll=unik.slice(0,fri-1);omgang=rest.filter(function(h){return fyll.indexOf(h)<0;});fyll.push(omgang[runde%omgang.length]);}
+    // Fast rekkefølge på skjermen
+    var vis=["hast","feat1","gud","note1","barn","feat2","mote","feat3","kons"];
+    var rekke=vis.filter(function(k){return valgt.indexOf(k)>=0;}).concat(valgt.filter(function(k){return vis.indexOf(k)<0;}).sort(function(a,b){return (/^uka/.test(a)?0:1)-(/^uka/.test(b)?0:1);}));
+    var slides=rekke.map(function(k){return K[k].h;});
+    // dobbel:true: på selve dagen vises den egne plakaten to ganger, med jevn avstand i runden.
+    // Den andre gangen tar plassen som ellers går på omgang, så runden ikke blir lengre.
+    rekke.forEach(function(k){
+      var e=K[k].e; if(!e||!e.dobbel||dayDiff(dt(e),now)!==0) return;
+      fyll=[]; omgang=[];
+      var i=slides.indexOf(K[k].h), n=slides.length;
+      slides.splice(i+Math.ceil(n/2),0,K[k].h);
+    });
+    slides=slides.concat(fyll);
+    return {slides:slides,durs:slides.map(varighet),omgang:omgang.length,next:nextText(now),hast:hast(now)};
+  }
+  function nextText(now){
+    var n=E.filter(function(e){return !e.utkast&&!e.erstatter&&dt(e,e.last).getTime()+2*3600e3>now.getTime();}).sort(function(a,b){return dt(a)-dt(b);})[0];
+    return n?dShort(dt(n)).toLowerCase()+" kl. "+n.t+"  "+n.title:"Se kirken.no for program";
+  }
+
+  // ---- Én bestemt plakat, også utkast. Brukes av forhåndsvisningen i stabsmøtet. ----
+  // nøkler: feat:<id> · note:<id> · fast:<id> · nytt · liste:gud|barn|kons|mote
+  function slide(key,now){
+    var p=key.split(":"), e;
+    if(p[0]==="feat"){e=E.filter(function(x){return x.id===p[1];})[0];return e?featSlide(e,now):"";}
+    if(p[0]==="note"){e=NOTES.filter(function(x){return x.id===p[1];})[0];return e?noteSlide(e,now):"";}
+    if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e?fastSlide(e,now):"";}
+    if(p[0]==="nytt") return newsSlide();
+    if(p[0]==="stille") return stilleSide(now,p[1]||"");
+    if(p[0]==="hast"){e=aktivHast(now);return e?hastSlide(e,now):"";}
+    if(p[0]==="liste") return lists(now,true).S[p[1]]||"";
+    return "";
+  }
+
+  // Alle plakatnøkler, for sjekk.js
+  function nokler(){
+    return E.filter(function(e){return e.feat;}).map(function(e){return "feat:"+e.id;})
+      .concat(NOTES.map(function(n){return "note:"+n.id;})).concat(FAST.map(function(f){return "fast:"+f.id;})).concat(["nytt"]).concat(aktivHast(new Date())?["hast"]:[]);
+  }
+
+  // ---- Plakatoversikten (plakater.html): hvilke dager hver plakat er med i runden ----
+  // Simulerer runden kl. 12 hver dag fra «fra» og «dager» framover. s:"fast" = i hver runde, "omgang" = på omgang.
+  function plan(fra,dager){
+    var P={}, keys=nokler().filter(function(k){return k!=="hast";}).concat(["liste:gud","liste:barn","liste:mote","liste:kons"]);
+    keys.forEach(function(k){P[k]=[];});
+    for(var i=0;i<dager;i++){
+      var d=new Date(fra.getFullYear(),fra.getMonth(),fra.getDate()+i,12);
+      if(stilleAktiv(d)) continue;
+      var r0=build(d,0), n=Math.max(1,r0.omgang), alle={}, hver={};
+      r0.slides.forEach(function(h){hver[h]=1;});
+      for(var r=0;r<n;r++){var rr=r?build(d,r):r0, her={};rr.slides.forEach(function(h){alle[h]=1;her[h]=1;});
+        Object.keys(hver).forEach(function(h){if(!her[h]) delete hver[h];});}
+      var L=lists(d,false);
+      keys.forEach(function(k){
+        var p=k.split(":"), h=p[0]==="liste"?L.S[p[1]]:slide(k,d);
+        if(h&&alle[h]) P[k].push({d:d,s:hver[h]?"fast":"omgang"});
+      });
+    }
+    return P;
+  }
+  // Data om en plakat til oversikten: tittel, type, dato for arrangementet og om den er utkast
+  function info(k){
+    var p=k.split(":"), e;
+    if(p[0]==="feat"){e=E.filter(function(x){return x.id===p[1];})[0];return e&&{tittel:e.title,type:"Egen plakat",dato:dt(e),utkast:!!e.utkast,dager:e.cat==="kons"?REGLER.fremhevet.konsertDager:REGLER.fremhevet.dager};}
+    if(p[0]==="note"){e=NOTES.filter(function(x){return x.id===p[1];})[0];return e&&{tittel:e.title,type:"Påmelding med frist",fra:ymd(e.from),til:ymd(e.until),utkast:!!e.utkast};}
+    if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e&&{tittel:e.title,type:"Fast innhold",til:e.until?ymd(e.until):null,utkast:!!e.utkast};}
+    if(p[0]==="nytt") return {tittel:NEWS.title,type:"Nytt fra misjonsprosjektet",utkast:!!NEWS.utkast};
+    if(p[0]==="liste") return {tittel:"Samleside: "+CAT[p[1]].name,type:"Samleside",utkast:false};
+    return null;
+  }
+
+  return {build:build,stilleSide:stilleSide,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler,plan:plan,info:info};
+})();
+
+</script>
+<script>
+(function(){
+  var MND=["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
+  var DAGER=120;
+  var q=(location.search.match(/[?&]dato=(\d{4}-\d\d-\d\d)/)||[])[1];
+  var fra=q?new Date(+q.slice(0,4),+q.slice(5,7)-1,+q.slice(8,10)):new Date();
+  fra=new Date(fra.getFullYear(),fra.getMonth(),fra.getDate());
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function dag(d){return d.getDate()+". "+MND[d.getMonth()];}
+  function spenn(a,b){return a.getTime()===b.getTime()?dag(a):(a.getMonth()===b.getMonth()?a.getDate()+".–"+dag(b):dag(a)+" – "+dag(b));}
+  function perioder(L){ // sammenhengende dager slås sammen
+    var out=[];L.forEach(function(x){var s=out[out.length-1];
+      if(s&&(x.d-s.til)/864e5<=1.01&&s.s===x.s){s.til=x.d;} else out.push({fra:x.d,til:x.d,s:x.s});});
+    return out;
+  }
+  document.getElementById("sub").textContent="Plan beregnet fra "+dag(fra)+" "+fra.getFullYear()+" og "+DAGER/30+" måneder fram, etter rundereglene. Datoene er anslag: de kan flytte seg når nye plakater kommer til.";
+  setTimeout(function(){
+    var P=Skjerm.plan(fra,DAGER), nokler=Object.keys(P), grupper={na:[],kommer:[],ingen:[],utkast:[]};
+    nokler.forEach(function(k){
+      var inf=Skjerm.info(k); if(!inf) return;
+      var L=P[k], c={k:k,inf:inf,L:L};
+      if(inf.utkast) grupper.utkast.push(c);
+      else if(L.length&&L[0].d.getTime()-fra.getTime()<864e5) grupper.na.push(c);
+      else if(L.length) grupper.kommer.push(c);
+      else grupper.ingen.push(c);
+    });
+    grupper.kommer.sort(function(a,b){return a.L[0].d-b.L[0].d;});
+    grupper.utkast.sort(function(a,b){return (a.inf.dato||0)-(b.inf.dato||0);});
+    function kort(c){
+      var inf=c.inf, L=c.L, vis=L.length?L[0].d:fra, tekst;
+      if(inf.utkast){
+        var anslag="";
+        if(inf.dato){var f=new Date(inf.dato.getFullYear(),inf.dato.getMonth(),inf.dato.getDate()-inf.dager);
+          if(f<fra) f=fra; vis=new Date(f.getFullYear(),f.getMonth(),f.getDate(),12);
+          anslag=" Hvis den godkjennes, vises den etter planen "+spenn(new Date(f.getFullYear(),f.getMonth(),f.getDate()),new Date(inf.dato.getFullYear(),inf.dato.getMonth(),inf.dato.getDate()))+".";}
+        tekst='<span class="pill ut">Utkast</span>Venter på godkjenning i stabsmøtet.'+anslag;
+      } else if(L.length){
+        var slutt=new Date(fra.getFullYear(),fra.getMonth(),fra.getDate()+DAGER-1,12);
+        tekst=perioder(L).map(function(p){return '<b>'+(p.til.getTime()===slutt.getTime()?"fra "+dag(p.fra)+" og utover":spenn(p.fra,p.til))+'</b>'+(p.s==="omgang"?" (på omgang)":"");}).join(", ");
+        tekst=(c.L[0].d.getTime()-fra.getTime()<864e5?'<span class="pill na">Vises nå</span>':'')+"Vises "+tekst+".";
+      } else tekst="Ikke med i runden de neste "+DAGER/30+" månedene"+(inf.til&&inf.til<fra?" (utløpt "+dag(inf.til)+")":"")+".";
+      var d=new Date(vis.getFullYear(),vis.getMonth(),vis.getDate(),12);
+      var h=c.k.indexOf("liste:")===0?Skjerm.slide(c.k,d):Skjerm.slide(c.k,d);
+      return '<article class="card"><div class="pv"><div class="stage">'+h+'<div class="foot"><span class="lbl">Neste i kirka</span></div></div></div>'+
+        '<h3>'+esc(inf.tittel)+(inf.dato?' · '+dag(inf.dato):'')+'</h3><p class="meta">'+esc(inf.type)+'. '+tekst+'</p></article>';
+    }
+    var navn={na:"Vises nå",kommer:"Kommer",utkast:"Utkast som venter på godkjenning",ingen:"Ligger inne, men vises ikke de neste månedene"};
+    var html="";
+    ["na","kommer","utkast","ingen"].forEach(function(g){ if(grupper[g].length) html+='<h2 class="grp">'+navn[g]+' ('+grupper[g].length+')</h2><div class="grid">'+grupper[g].map(kort).join("")+'</div>'; });
+    document.getElementById("main").innerHTML=html||'<p class="tom">Ingen plakater.</p>';
+  },30);
+})();
+</script>
+</body>
+</html>
