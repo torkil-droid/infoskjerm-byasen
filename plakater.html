@@ -108,15 +108,16 @@ h2.grp{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:upperc
 .badge span{font-size:calc(1.5*var(--u));font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-top:calc(0.6*var(--u))}
 
 /* Fast innhold: uten dato */
-.fast{background:var(--ink);color:#fff;padding:calc(4.4*var(--u)) calc(5*var(--u));gap:calc(4*var(--u));align-items:center}
+/* Fargene i malen for fast innhold. Variantene under (.fast.sand osv.) er forslag; hvilken som brukes, står i FASTVARIANT i motor.js. */
+.fast{--fb:var(--ink);--ft:#fff;--fp:#e6e3dc;--fk:#ffb3bd;--fs:#a9a6b0;--fq:transparent;background:var(--fb);color:var(--ft);padding:calc(4.4*var(--u)) calc(5*var(--u));gap:calc(4*var(--u));align-items:center}
 .fast .main{flex:1}
-.fast .kicker{color:#ffb3bd;opacity:1}
+.fast .kicker{color:var(--fk);opacity:1}
 .fast h2{font-family:var(--display);font-weight:700;font-size:calc(5.8*var(--u));line-height:1.02;margin:calc(1.4*var(--u)) 0 0;text-wrap:balance}
-.fast p{font-size:calc(2.5*var(--u));line-height:1.36;margin:calc(1.6*var(--u)) 0 0;max-width:24em;color:#e6e3dc}
+.fast p{font-size:calc(2.5*var(--u));line-height:1.36;margin:calc(1.6*var(--u)) 0 0;max-width:24em;color:var(--fp)}
 .fast .side{flex:0 0 calc(17*var(--u));display:flex;flex-direction:column;align-items:center;gap:calc(1*var(--u));text-align:center}
 .fast .side .qrbox{width:calc(15*var(--u));height:calc(15*var(--u));padding:calc(1.1*var(--u))}
-.fast .ico{width:calc(15*var(--u));height:calc(15*var(--u));color:#ffb3bd}
-.nytt h2{font-size:calc(4.3*var(--u))}.nytt p{font-size:calc(2.4*var(--u))}.nytt .src{font-size:calc(1.35*var(--u));color:#a9a6b0;margin-top:calc(1.8*var(--u));font-weight:600}
+.fast .ico{width:calc(15*var(--u));height:calc(15*var(--u));color:var(--fk)}
+.nytt h2{font-size:calc(4.3*var(--u))}.nytt p{font-size:calc(2.4*var(--u))}.nytt .src{font-size:calc(1.35*var(--u));color:var(--fs);margin-top:calc(1.8*var(--u));font-weight:600}
 .photo{flex:none;width:calc(24*var(--u));height:calc(30*var(--u));border-radius:calc(0.8*var(--u));border:calc(0.14*var(--u)) dashed #6d6a75;display:flex;align-items:center;justify-content:center;
   font-size:calc(1.3*var(--u));color:#a9a6b0;text-align:center;padding:calc(2*var(--u));
   background:repeating-linear-gradient(135deg,rgba(255,255,255,.04) 0 calc(1.2*var(--u)),transparent calc(1.2*var(--u)) calc(2.4*var(--u)))}
@@ -209,6 +210,18 @@ h2.grp{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:upperc
 @keyframes fill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .empty{position:absolute;inset:0 0 calc(7*var(--u)) 0;display:flex;align-items:center;justify-content:center;font-size:calc(2.4*var(--u));color:var(--dim)}
 
+/* Forslag til nye farger for fast innhold (stabsmøtet 25. november 2026: malen skal ikke være svart).
+   Bygger på Olavsmerkets farger i Den norske kirkes profil: rød, gul og hvit. */
+.fast.sand{--fb:#f3eee4;--ft:var(--ink);--fp:#3d3b43;--fk:var(--gud);--fs:var(--dim);--fq:#e2dccf;
+  background:radial-gradient(circle at 96% -6%,rgba(200,16,46,.07) 0 calc(21*var(--u)),transparent calc(21.1*var(--u))),var(--fb)}
+.fast.rose{--fb:#f8e4e1;--ft:var(--ink);--fp:#3d3b43;--fk:#a80d26;--fs:#6b5a5c;--fq:#ecc9c5;
+  background:radial-gradient(circle at 96% -6%,rgba(200,16,46,.09) 0 calc(21*var(--u)),transparent calc(21.1*var(--u))),var(--fb)}
+.fast.vin{--fb:#6d1322;--ft:#fff;--fp:#f6e7e3;--fk:#ffd66b;--fs:#e3c3c1;
+  background:radial-gradient(circle at 96% -6%,rgba(255,255,255,.08) 0 calc(21*var(--u)),transparent calc(21.1*var(--u))),
+             radial-gradient(circle at 104% 110%,rgba(0,0,0,.18) 0 calc(28*var(--u)),transparent calc(28.1*var(--u))),var(--fb)}
+.fast.sand .qrbox,.fast.rose .qrbox{box-shadow:0 0 0 calc(0.14*var(--u)) var(--fq)}
+.fast.sand .qrtxt,.fast.rose .qrtxt{color:var(--ink)}
+
 /* ---- Stillemodus: svart, levende lys, de neste gudstjenestene ---- */
 .stage.stillemodus{background:#0b0a0d}
 .stage.stillemodus .dots,.stage.stillemodus .foot{display:none}
@@ -247,6 +260,22 @@ h2.grp{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:upperc
 .stille.uten h2{font-size:calc(3.6*var(--u));color:#cfc9be}
 .stille.uten li b{font-size:calc(2.3*var(--u));color:#bdb7ac}
 .stille.uten li span,.stille.uten .avs{color:#7f7a71}
+/* Forslag etter stabsmøtet 25. november 2026: dempet bakgrunnsfarge som ikke er svart. Samme oppsett som «rolig»
+   (lite lys nede til venstre, teksten nesten midt på). «skifer» = dempet blågrå, «sand» = dempet lys sand. */
+.stille.skifer{background:#2b353d;color:#ece7dd}
+.stille.skifer .avs,.stille.skifer li span{color:#aab2b6}
+.stille.skifer li{border-top-color:rgba(236,231,221,.16)}
+.stille.skifer .glod{opacity:.55}
+.stille.skifer .stamme{background:linear-gradient(180deg,rgba(43,53,61,0) 0,rgba(43,53,61,.35) 40%,#2b353d 100%),
+    radial-gradient(ellipse at 50% 0,rgba(255,214,150,.6),rgba(255,214,150,0) 40%),
+    linear-gradient(90deg,#8f8574 0,#d8cfbe 30%,#efe7d8 52%,#a99e8a 100%)}
+.stille.sand{background:#ddd5c6;color:#2c2a2f}
+.stille.sand .avs,.stille.sand li span{color:#625d55}
+.stille.sand li{border-top-color:rgba(44,42,47,.16)}
+.stille.sand .glod{background:radial-gradient(circle,rgba(255,244,214,.75) 0,rgba(255,236,196,.3) 30%,rgba(255,236,196,0) 62%);opacity:1}
+.stille.sand .veke{background:#4a3c2e}
+.stille.sand .stamme{background:linear-gradient(180deg,rgba(221,213,198,0) 0,rgba(221,213,198,.4) 45%,#ddd5c6 100%),
+    linear-gradient(90deg,#b9ae9a 0,#f4eee2 32%,#fffaf0 52%,#c6bba7 100%)}
 @keyframes flamme{0%,100%{transform:scale(1,1)}20%{transform:scale(.97,1.05)}45%{transform:scale(1.03,.96)}70%{transform:scale(.98,1.08)}85%{transform:scale(1.02,.99)}}
 @keyframes vipp{0%,100%{margin-left:calc(-1.7*var(--u))}30%{margin-left:calc(-1.55*var(--u))}60%{margin-left:calc(-1.85*var(--u))}}
 @keyframes glod{0%,100%{opacity:1;transform:scale(1)}35%{opacity:.82;transform:scale(.97)}55%{opacity:.95;transform:scale(1.02)}80%{opacity:.86;transform:scale(.99)}}
@@ -2659,7 +2688,9 @@ window.Skjerm=(function(){
   ];
   // Utforming av stillemodus: "" = levende lys (dagens), "rolig" = lite, levende lys nede til venstre og teksten nesten midt på, "uten" = uten lys.
   // Forslag etter innspill 18. november; endres bare etter vedtak på stabsmøtet.
+  // Nye forslag etter stabsmøtet 25. november: "skifer" (dempet blågrå) og "sand" (dempet lys sand), begge med oppsettet fra "rolig".
   var STILLEVARIANT="";
+  var STILLEKLASSE={skifer:"rolig skifer",sand:"rolig sand"};
   function tid(s){var a=s.split("T"),d=a[0].split("-"),t=(a[1]||"00:00").split(":");return new Date(+d[0],+d[1]-1,+d[2],+t[0],+t[1]);}
   function stilleAktiv(now){return STILLE.some(function(x){return tid(x.fra)<=now&&now<tid(x.til);});}
   // Stedet sløyfes når tittelen allerede nevner det («… på Lian» / «Julemagi på Lian gård»)
@@ -2671,7 +2702,7 @@ window.Skjerm=(function(){
   function stilleSide(now,variant){
     variant=variant===undefined?STILLEVARIANT:variant;
     var g=E.filter(function(e){return e.cat==="gud"&&!e.utkast&&!e.erstatter&&dt(e)>now;}).sort(function(a,b){return dt(a)-dt(b);}).slice(0,3);
-    return '<section class="stille'+(variant?' '+variant:'')+'">'+(variant==="uten"?'':'<div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>')+
+    return '<section class="stille'+(variant?' '+(STILLEKLASSE[variant]||variant):'')+'">'+(variant==="uten"?'':'<div class="lys" aria-hidden="true"><div class="glod"></div><div class="flamme"><i></i></div><div class="veke"></div><div class="stamme"></div></div>')+
       '<div class="tekst"><div class="avs">'+'<svg class="fisk" aria-hidden="true" viewBox="0 0 679 544" fill="none" stroke="currentColor" stroke-width="22" stroke-miterlimit="10"><path d="M268 0V544M138 121H398"/><path d="M665 470C460 150 170 165 14 335C170 505 460 518 665 205"/><ellipse cx="272" cy="332" rx="122" ry="124"/></svg>'+'<span>Byåsen kirke</span></div><h2>Velkommen til gudstjeneste</h2><ol>'+
       g.map(function(e){var x=dt(e);return '<li><b>'+DAYL[x.getDay()]+' '+x.getDate()+'. '+MONL[x.getMonth()]+'</b><span>kl. '+esc(e.t)+' · '+esc(e.title)+(!hjemme(e.place)&&!delerOrd(e.title,e.place)?' · '+esc(e.place):'')+'</span></li>';}).join("")+
       '</ol></div></section>';
@@ -2695,6 +2726,9 @@ window.Skjerm=(function(){
      act:"Påmeldingsliste i menighetssalen, eller kontakt Lin‑Silvia på 418 08 744",art:"middag",relieff:"tre"}
   ];
   // Fast innhold: uten dato. Én per runde, og bare når det er plass.
+  // Fargene i malen: "" = svart (dagens), "sand" = lys sand, "rose" = lys rosa, "vin" = dyp rød. Forslag etter stabsmøtet 25. november 2026;
+  // endres bare etter vedtak. Gjelder også «Nytt fra misjonsprosjektet», som bruker samme mal.
+  var FASTVARIANT="";
   var FAST=[
     {id:"giver",title:"Bli fast giver",text:"Arbeidet i menigheten er avhengig av gaver. Faste givere gir oss stabile og forutsigbare rammer.",
      kicker:"Støttelaget",qr:"https://minpamelding.agrando.no/?skjemaId=2e12e62a-9180-409c-a5a8-700412289220",qrtxt:"Skann for å bli giver"},
@@ -2907,22 +2941,24 @@ window.Skjerm=(function(){
     return '<section class="slide note'+(N.art?' medart':'')+'">'+(N.relieff&&ART[N.relieff]?ART[N.relieff]():'')+'<div class="main"><div class="kicker'+(N.nedtelling?' frist':'')+'">'+esc(N.nedtelling?fristTekst(N,left):(N.kicker||"Påmelding"))+'</div><h2>'+esc(N.title)+'</h2><p>'+esc(N.text)+
       '</p><p class="act">'+esc(N.act)+'</p></div>'+(N.art&&ART[N.art]?'<div class="nside"><div class="nart">'+ART[N.art]()+'</div>'+badge+'</div>':badge)+'</section>';
   }
-  function newsSlide(){
+  function newsSlide(variant){
+    variant=variant===undefined?FASTVARIANT:variant;
     var ph=NEWS.img?'<div class="photo img"><img src="'+esc(NEWS.img)+'" alt=""><span class="cred">'+esc(NEWS.credit||"")+'</span></div>':'<div class="photo">'+esc(NEWS.photo||"")+'</div>';
-    return '<section class="slide fast nytt">'+ph+'<div class="main"><div class="kicker">'+esc(NEWS.kicker)+
+    return '<section class="slide fast nytt'+(variant?' '+variant:'')+'">'+ph+'<div class="main"><div class="kicker">'+esc(NEWS.kicker)+
       '</div><h2>'+esc(NEWS.title)+'</h2><p>'+esc(NEWS.text)+'</p><div class="src">'+esc(NEWS.src)+'</div></div><div class="side">'+
       (qr(NEWS.url)||'<div class="ico">'+icon("globe")+'</div>')+'<div class="qrtxt">Les hele saken</div></div></section>';
   }
   function nesteGang(title,now){
     return E.filter(function(e){return e.title===title&&!e.utkast&&dt(e,e.last).getTime()>now.getTime();})[0];
   }
-  function fastSlide(fa,now){
+  function fastSlide(fa,now,variant){
+    variant=variant===undefined?FASTVARIANT:variant;
     var kicker=fa.kicker;
     if(fa.neste){var n=nesteGang(fa.neste,now||new Date());if(!n) return "";kicker="Neste gang "+dLong(dt(n)).toLowerCase()+" kl. "+(n.tt||n.t)+(hjemme(n.place)?"":" · "+n.place);}
     var ph=fa.img?'<div class="photo img"><img src="'+esc(fa.img)+'" alt=""><span class="cred">'+esc(fa.credit||"")+'</span></div>':'';
     var side=(fa.img&&!fa.qr)?'':(fa.photo&&!fa.img)?'<div class="photo">'+esc(fa.photo)+'</div>':
       '<div class="side">'+(qr(fa.qr)||'<div class="ico">'+icon("heart")+'</div>')+'<div class="qrtxt">'+esc(fa.qrtxt)+'</div></div>';
-    return '<section class="slide fast'+(fa.img?' medbilde':'')+(fa.img&&!fa.qr?' stort':'')+'">'+ph+'<div class="main"><div class="kicker">'+esc(kicker)+'</div><h2>'+esc(fa.title)+'</h2><p>'+esc(fa.text)+
+    return '<section class="slide fast'+(fa.img?' medbilde':'')+(fa.img&&!fa.qr?' stort':'')+(variant?' '+variant:'')+'">'+ph+'<div class="main"><div class="kicker">'+esc(kicker)+'</div><h2>'+esc(fa.title)+'</h2><p>'+esc(fa.text)+
       '</p></div>'+side+'</section>';
   }
 
@@ -3076,13 +3112,15 @@ window.Skjerm=(function(){
   }
 
   // ---- Én bestemt plakat, også utkast. Brukes av forhåndsvisningen i stabsmøtet. ----
-  // nøkler: feat:<id> · note:<id> · fast:<id> · nytt · liste:gud|barn|kons|mote
+  // nøkler: feat:<id> · note:<id> · fast:<id> · nytt · liste:gud|barn|kons|mote · stille[:<variant>]
+  // Fargeforslag vises med en variant bak: fast:<id>:sand, nytt:sand (variantene står ved FASTVARIANT).
+  function vari(v){return v===undefined?undefined:(/^[a-z]+$/.test(v)?v:"");}
   function slide(key,now){
     var p=key.split(":"), e;
     if(p[0]==="feat"){e=E.filter(function(x){return x.id===p[1];})[0];return e?featSlide(e,now):"";}
     if(p[0]==="note"){e=NOTES.filter(function(x){return x.id===p[1];})[0];return e?noteSlide(e,now):"";}
-    if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e?fastSlide(e,now):"";}
-    if(p[0]==="nytt") return newsSlide();
+    if(p[0]==="fast"){e=FAST.filter(function(x){return x.id===p[1];})[0];return e?fastSlide(e,now,vari(p[2])):"";}
+    if(p[0]==="nytt") return newsSlide(vari(p[1]));
     if(p[0]==="stille") return stilleSide(now,p[1]||"");
     if(p[0]==="hast"){e=aktivHast(now);return e?hastSlide(e,now):"";}
     if(p[0]==="liste") return lists(now,true).S[p[1]]||"";
