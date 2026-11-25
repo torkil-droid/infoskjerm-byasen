@@ -3149,7 +3149,16 @@ window.Skjerm=(function(){
     return null;
   }
 
-  return {build:build,stilleSide:stilleSide,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler,plan:plan,info:info};
+  // ---- Til fanen «Hast og stille» på gjennomgangssiden. Endrer ingenting på skjermen. ----
+  // hastPlakat: hasteplakaten for en beskjed som ikke er lagt inn i HAST ennå, så den kan vises før den sendes.
+  // kommende: arrangementene de neste dagene, til lista man velger fra når noe avlyses eller endres.
+  function hastPlakat(h,now){return h&&h.plakat?hastSlide(h,now):"";}
+  function kommende(now,dager){
+    return E.filter(function(e){return !e.utkast&&!e.erstatter&&dt(e,e.last).getTime()+2*3600e3>now.getTime()&&(dt(e)-now)/864e5<=dager;})
+      .sort(function(a,b){return dt(a)-dt(b);}).map(function(e){return {d:e.d,t:e.t,title:e.title,cat:e.cat};});
+  }
+
+  return {build:build,stilleSide:stilleSide,slide:slide,nextText:nextText,hast:hast,dLong:dLong,nokler:nokler,plan:plan,info:info,hastPlakat:hastPlakat,kommende:kommende};
 })();
 
 </script>
